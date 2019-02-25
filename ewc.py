@@ -41,6 +41,8 @@ traind_01234 = traind[class01234Mask]
 
 traind_01234 = traind_01234.reshape(-1, 784)
 
+#print("XXX",trainl.argmax(axis=1))
+
 # print(trainl_01234.shape)
 # print(traind_01234.shape)
 
@@ -200,6 +202,7 @@ zero_optimizer = tf.train.GradientDescentOptimizer(learning_rate=0)
 grads = zero_optimizer.compute_gradients(loss_op)
 # pprint(grads)
 
+# keys are strings/variable names
 gradients = {}
 variables = {}
 
@@ -211,6 +214,7 @@ for step in range(0, epoch_iterations):
     # print("step: " + str(step) + ", epoch: " + str(epoch))
 
     for grad in grads:
+        # get variable name
         grad_name = grad[1].name
         gard_name = grad_name.partition(':')[0]
         # print(gard_name)
@@ -218,7 +222,7 @@ for step in range(0, epoch_iterations):
         result = sess.run(grad, feed_dict={X: batch_x, Y: batch_y})
         gradient = result[0]
 
-        gradient_power = np.power(gradient, 2)
+        gradient_power = np.power(gradient, 2.)
 
         if gard_name in gradients:
             gradients[gard_name] = np.add(gradients[gard_name], gradient_power)
@@ -265,21 +269,26 @@ for key, gradient in gradients.items():
     # print("Key: ", key)
 
     # flatten
-    varsA = tf.reshape(taskA[key], [-1])
-    gradientA = tf.reshape(gradient, [-1])
+    #FWvarsA = tf.reshape(taskA[key], [-1])
+    #FWgradientA = tf.reshape(gradient, [-1])
+
+    varsA = taskA[key] ;
+    gradientA = gradient ;
 
     if key in weights:
-        varsB = tf.reshape(weights[key], [-1])
+        #FW varsB = tf.reshape(weights[key], [-1])
+        varsB = weights[key] ;
     elif key in biases:
-        varsB = tf.reshape(biases[key], [-1])
+        #FW varsB = tf.reshape(biases[key], [-1])
+        varsB = biases[key] ;
 
     # calc EWC appendix
     subAB = tf.subtract(varsB, varsA)
-    powAB = tf.pow(subAB, 2)
+    powAB = tf.pow(subAB, 2.)
 
     multiplyF = tf.multiply(powAB, gradientA)
 
-    lambda_multiply = tf.multiply(multiplyF, 5)
+    lambda_multiply = tf.multiply(multiplyF, 1000)
 
     ewc_sum += tf.reduce_sum(lambda_multiply)
 
@@ -290,11 +299,12 @@ for key, gradient in gradients.items():
 print("-----TASK B")
 
 loss_op_B = tf.add(loss_op, ewc_sum)
-update_B = optimizer.minimize(loss_op_B)
+optimizerB = tf.train.GradientDescentOptimizer(learning_rate=0.00001)
+update_B = optimizerB.minimize(loss_op_B)
 
 iteration = 0
 epoch = 0
-for step in range(0, training_iters):
+for step in range(0, training_iters//10):
     batch_x, batch_y, iteration, epoch = get_batch(
         traind_5, trainl_5, batch_size, iteration, epoch)
 
