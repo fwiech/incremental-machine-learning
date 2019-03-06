@@ -8,6 +8,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
+import sys
 import os
 import time
 import calendar
@@ -41,12 +42,12 @@ if __name__ == '__main__':
     training_iters_a = 20000
     batch_size_a = 128
     batch_size_fisher_matrix = 1
-    task_a_model_name = "tmp/model_a.ckpt"
+    task_a_model_name = "tmp/checkpoint_model_a.ckpt"
 
     learning_rate_b = 0.0001
-    training_iters_b = 20
+    training_iters_b = 30
     batch_size_b = 128
-    lambda_val = (1./learning_rate_b)
+    lambda_val = 1.# (1./learning_rate_b)
 
 
     # get MNIST data
@@ -145,6 +146,15 @@ if __name__ == '__main__':
     logging.info("* TASK B *")
     logging.info("**********")
 
+    # optimizer B
+    optimizer_b = tf.train.GradientDescentOptimizer(
+        learning_rate=learning_rate_b)
+    ewc, ewc_print = nn.compute_ewc(
+        gradients, variables, lambda_val=lambda_val)
+    ewc_print = tf.print("****************new iteration ****************", ewc_print, output_stream="file://tmp/tensor_" + str(ts) + ".log")
+    update_b = optimizer_b.minimize(
+        tf.add(nn.loss, ewc))
+
     """ TRAINING """
     logging.info("**************")
     logging.info("* TRAINING B *")
@@ -154,7 +164,7 @@ if __name__ == '__main__':
     sess.run(iter_train_b)
 
     for i in range(training_iters_b):
-        l, _, acc = sess.run([nn.loss, update_b, nn.accuracy])
+        l, _, acc, ewc_print_result = sess.run([nn.loss, update_b, nn.accuracy, ewc_print])
         logging.info(
             "Step: {}, loss: {:.3f}, training accuracy: {:.2f}%".format(i, l, acc * 100))
 

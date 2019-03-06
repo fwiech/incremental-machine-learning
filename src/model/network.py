@@ -4,6 +4,8 @@ import tensorflow as tf
 import numpy as np
 import logging
 
+from pprint import pprint
+
 class Network():
 
     n_input = 784  # MNIST data input (img shape: 28*28)
@@ -64,6 +66,8 @@ class Network():
         logging.debug("* CALC EWC *")
         logging.debug("************")
 
+        prints = []
+
         ewc = 0
         for key, gradient in gradients.items():
 
@@ -77,6 +81,29 @@ class Network():
             powAB = tf.pow(subAB, 2)
             multiplyF = tf.multiply(powAB, gradient)
             lambda_multiply = tf.multiply(multiplyF, lambda_val)
-            ewc += tf.reduce_sum(lambda_multiply)
 
-        return ewc
+            prints.append("------------------")
+            prints.append(key)
+            prints.append(subAB)
+            prints.append("----")
+            prints.append(powAB)
+            prints.append("----")
+            prints.append(gradient)
+            prints.append("----")
+            prints.append(multiplyF)
+            prints.append("----")
+            prints.append(lambda_multiply)
+            prints.append("----")
+            prints.append(tf.reduce_sum(lambda_multiply))
+            prints.append("----")
+
+            if ewc is 0:
+                ewc = tf.reduce_sum(lambda_multiply)
+                pprint(tf.reduce_sum(lambda_multiply))
+            else:
+                ewc += tf.reduce_sum(lambda_multiply)
+            
+            prints.append("CURRENT EWC: ")
+            prints.append(ewc)
+
+        return ewc, prints
