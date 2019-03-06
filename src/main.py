@@ -106,12 +106,16 @@ if __name__ == '__main__':
         nn.loss)
     gradients = {}
     variables = {}
-
-    # optimizer B
-    optimizer_b = tf.train.GradientDescentOptimizer(
-        learning_rate=learning_rate_b)
-    update_b = optimizer_b.minimize(
-        nn.loss + nn.compute_ewc(gradients, variables, lambda_val=lambda_val))
+    for key, weight in nn.weights.items():
+        gradients[key] = tf.Variable(
+            tf.zeros(shape=tf.shape(weight)), name="gradient_" + key)
+        variables[key] = tf.Variable(
+            tf.zeros(shape=tf.shape(weight)), name="variable_" + key)
+    for key, bias in nn.biases.items():
+        gradients[key] = tf.Variable(
+            tf.zeros(shape=tf.shape(bias)), name="gradient_" + key)
+        variables[key] = tf.Variable(
+            tf.zeros(shape=tf.shape(bias)), name="variable_" + key)
 
     """ TF SESSION """
     # Initialize the variables (i.e. assign their default value)

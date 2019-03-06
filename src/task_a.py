@@ -86,7 +86,7 @@ def compute_task_a(sess, nn, update, iter_train_a, iter_test_a, training_iters_a
         logging.debug("* GRADIENTS *")
         for key, gradient in gradients.items():
             gradient = np.true_divide(gradient, iterations)
-            gradients[key] = tf.constant(gradient, name="gradient_" + key)
+            gradients[key] = tf.Variable(gradient, name="gradient_" + key)
             logging.debug("key: " + key)
             logging.debug("shape: " + str(gradient.shape))
             logging.debug("min: " + str(gradient.min()))
@@ -96,7 +96,7 @@ def compute_task_a(sess, nn, update, iter_train_a, iter_test_a, training_iters_a
         logging.debug("*************")
         logging.debug("* VARIABLES *")
         for key, variable in variables.items():
-            variables[key] = tf.constant(variable, name="variable_" + key)
+            variables[key] = tf.Variable(variable, name="variable_" + key)
             logging.debug("key: " + key)
             logging.debug("shape: " + str(variable.shape))
             logging.debug("min: " + str(variable.min()))
