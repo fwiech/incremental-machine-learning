@@ -47,7 +47,7 @@ if __name__ == '__main__':
     learning_rate_b = 0.0001
     training_iters_b = 30
     batch_size_b = 128
-    lambda_val = 1.# (1./learning_rate_b)
+    lambda_val = (1./learning_rate_b)
 
 
     # get MNIST data
@@ -105,6 +105,8 @@ if __name__ == '__main__':
         learning_rate=0)
     fisher_matrix_gradient_tensors = fisher_matrix_optimizer.compute_gradients(
         nn.loss)
+    
+    # init gradients & variables
     gradients = {}
     variables = {}
     for key, weight in nn.weights.items():
@@ -135,8 +137,8 @@ if __name__ == '__main__':
         logging.info("* TASK A *")
         logging.info("**********")
 
-        compute_task_a(sess, nn, update_a, iter_train_a, iter_test_a,
-                       training_iters_a, fisher_matrix_gradient_tensors)
+        gradients, variables = compute_task_a(sess, nn, update_a, iter_train_a, iter_test_a,
+                       training_iters_a, fisher_matrix_gradient_tensors, gradients, variables)
         
         """ SAVING """
         save_path = saver.save(sess, task_a_model_name)
@@ -150,7 +152,7 @@ if __name__ == '__main__':
     optimizer_b = tf.train.GradientDescentOptimizer(
         learning_rate=learning_rate_b)
     ewc, ewc_print = nn.compute_ewc(
-        gradients, variables, lambda_val=lambda_val)
+        gradients, variables, lam=lambda_val)
     ewc_print = tf.print("****************new iteration ****************", ewc_print, output_stream="file://tmp/tensor_" + str(ts) + ".log")
     update_b = optimizer_b.minimize(
         tf.add(nn.loss, ewc))

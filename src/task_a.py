@@ -14,7 +14,7 @@ import logging
 from pprint import pprint
 
 
-def compute_task_a(sess, nn, update, iter_train_a, iter_test_a, training_iters_a, fisher_matrix_gradient_tensors):
+def compute_task_a(sess, nn, update, iter_train_a, iter_test_a, training_iters_a, fisher_matrix_gradient_tensors, gradients, variables):
     """ TRAINING """
     logging.info("************")
     logging.info("* TRAINING *")
@@ -55,8 +55,8 @@ def compute_task_a(sess, nn, update, iter_train_a, iter_test_a, training_iters_a
     # init iterator
     sess.run(iter_test_a)
 
-    gradients = {}
-    variables = {}
+    gradients_np = {}
+    variables_np = {}
 
     iterations = 0
     try:
@@ -71,23 +71,24 @@ def compute_task_a(sess, nn, update, iter_train_a, iter_test_a, training_iters_a
 
                 gradient_power = np.power(gradient, 2)
 
-                if gard_name in gradients:
-                    gradients[gard_name] = np.add(
-                        gradients[gard_name], gradient_power)
+                if gard_name in gradients_np:
+                    gradients_np[gard_name] = np.add(
+                        gradients_np[gard_name], gradient_power)
                 else:
-                    gradients[gard_name] = gradient_power
+                    gradients_np[gard_name] = gradient_power
 
-                if gard_name not in variables:
-                    variables[gard_name] = result[1]
+                if gard_name not in variables_np:
+                    variables_np[gard_name] = result[1]
 
     except tf.errors.OutOfRangeError:
 
         logging.debug("*************")
-        logging.debug("* GRADIENTS *")
-        for key, gradient in gradients.items():
+        logging.debug("* gradients_np *")
+        for key, gradient in gradients_np.items():
             gradient = np.true_divide(gradient, iterations)
-            gradients[key] = tf.Variable(gradient, name="gradient_" + key)
+            gradients[key] = gradients[key].assign(gradient.astype(np.float32))
             logging.debug("key: " + key)
+            logging.debug("gradient: " + str(gradient))
             logging.debug("shape: " + str(gradient.shape))
             logging.debug("min: " + str(gradient.min()))
             logging.debug("max: " + str(gradient.max()))
@@ -95,10 +96,13 @@ def compute_task_a(sess, nn, update, iter_train_a, iter_test_a, training_iters_a
 
         logging.debug("*************")
         logging.debug("* VARIABLES *")
-        for key, variable in variables.items():
-            variables[key] = tf.Variable(variable, name="variable_" + key)
+        for key, variable in variables_np.items():
+            variables[key] = variables[key].assign(variable.astype(np.float32))
             logging.debug("key: " + key)
+            logging.debug("variable: " + str(variable))
             logging.debug("shape: " + str(variable.shape))
             logging.debug("min: " + str(variable.min()))
             logging.debug("max: " + str(variable.max()))
             logging.debug("---")
+
+    return gradients, variables

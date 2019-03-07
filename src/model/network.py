@@ -60,7 +60,7 @@ class Network():
             tf.argmax(self.logits, 1), tf.argmax(y, 1))
         self.accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
-    def compute_ewc(self, gradients, variables, lambda_val):
+    def compute_ewc(self, gradients, variables, lam):
         
         logging.debug("************")
         logging.debug("* CALC EWC *")
@@ -78,9 +78,8 @@ class Network():
             
             # calc EWC appendix
             subAB = tf.subtract(varsB, variables[key])
-            powAB = tf.pow(subAB, 2)
+            powAB = tf.square(subAB)
             multiplyF = tf.multiply(powAB, gradient)
-            lambda_multiply = tf.multiply(multiplyF, lambda_val)
 
             prints.append("------------------")
             prints.append(key)
@@ -98,10 +97,9 @@ class Network():
             prints.append("----")
 
             if ewc is 0:
-                ewc = tf.reduce_sum(lambda_multiply)
-                pprint(tf.reduce_sum(lambda_multiply))
+                ewc = (lam/2) * tf.reduce_sum(multiplyF)
             else:
-                ewc += tf.reduce_sum(lambda_multiply)
+                ewc += (lam/2) * tf.reduce_sum(multiplyF)
             
             prints.append("CURRENT EWC: ")
             prints.append(ewc)
