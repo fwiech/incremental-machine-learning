@@ -205,7 +205,7 @@ class Network():
 
         prints = []
 
-        ewc = 0
+        ewc_loss = self.loss
         for key, gradient in self.training_gradients.items():
             
             # calc EWC appendix
@@ -215,8 +215,10 @@ class Network():
 
             prints.append("------------------")
             prints.append(key)
+            prints.append("subAB")
             prints.append(subAB)
             prints.append("----")
+            prints.append("powAB")
             prints.append(powAB)
             prints.append("----")
             prints.append("GRADIENT")
@@ -227,20 +229,26 @@ class Network():
             prints.append("complete")
             prints.append(gradient)
             prints.append("----")
+            prints.append("multiplyF")
             prints.append(multiplyF)
             prints.append("----")
+            prints.append("reduce_sum with lambda")
             prints.append((lam/2) * tf.reduce_sum(multiplyF))
             prints.append("----")
+            prints.append("loss without ewc")
+            prints.append(self.loss)
 
-            if ewc is 0:
-                ewc = (lam/2) * tf.reduce_sum(multiplyF)
-            else:
-                ewc += (lam/2) * tf.reduce_sum(multiplyF)
-            
-            prints.append("CURRENT EWC: ")
-            prints.append(ewc)
+            ewc_loss += (lam/2) * tf.reduce_sum(multiplyF)
 
-        return ewc, prints
+            prints.append("----")
+            prints.append("ewc_loss")
+            prints.append(ewc_loss)
+        
+        prints.append("----------------------------------")
+        prints.append("ITERATION LOSS")
+        prints.append(ewc_loss)
+
+        return ewc_loss, prints
 
     def train(self, sess, update, training_iters, iter_init, run=[]):
         # init iterator

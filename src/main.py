@@ -46,7 +46,7 @@ if __name__ == '__main__':
     training_iters_b = 50
     batch_size_b = 128
 
-    lambda_val = 1# (1./learning_rate_b)
+    lambda_val = 15# (1./learning_rate_b)
 
 
     # get MNIST data
@@ -104,8 +104,7 @@ if __name__ == '__main__':
     ewc, ewc_print = nn.compute_ewc(lam=lambda_val)
     ewc_print = tf.print("****************new iteration ****************",
                          ewc_print, output_stream="file://tmp/tensor_" + str(ts) + ".log")
-    update_b = optimizer_b.minimize(
-        tf.add(nn.loss, ewc))
+    update_b = optimizer_b.minimize(ewc)
 
 
     """ TF SESSION """
@@ -193,16 +192,14 @@ if __name__ == '__main__':
 
 
     logging.info("* TRAINING B *")
-    # nn.train(sess, update_b, training_iters_b, iter_train_b, [ewc_print])
 
     # init iterator
     sess.run(iter_train_b)
 
     for i in range(training_iters_b):
-        l, _, acc, ewc_print_result = sess.run([nn.loss, update_b, nn.accuracy, ewc_print])
+        l, _, acc, ewc_print_result = sess.run([ewc, update_b, nn.accuracy, ewc_print])
         logging.info(
             "Step: {}, loss: {:.3f}, training accuracy: {:.2f}%".format(i, l, acc * 100))
-
 
 
 
