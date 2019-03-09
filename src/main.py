@@ -24,8 +24,8 @@ if __name__ == '__main__':
         os.makedirs("tmp/")
     # init logging
     logging.basicConfig(
-        # filename="tmp/logs_" + str(ts) + ".log",
-        # filemode='w',
+        filename="tmp/logs_" + str(ts) + ".log",
+        filemode='w',
         level=logging.DEBUG,
         format="%(asctime)s:%(levelname)s:%(message)s"
     )
@@ -43,8 +43,9 @@ if __name__ == '__main__':
     batch_size_fisher_matrix = 1
 
     learning_rate_b = 0.01
-    training_iters_b = 30
+    training_iters_b = 50
     batch_size_b = 128
+
     lambda_val = 1# (1./learning_rate_b)
 
 
@@ -72,7 +73,7 @@ if __name__ == '__main__':
 
     """ FISHER MATRIX DATASET """
     # create train datasets
-    trainAFM = tf.data.Dataset.from_tensor_slices((mnistA[0][0][:500], mnistA[0][1][:500])).batch(batch_size_fisher_matrix, False)
+    trainAFM = tf.data.Dataset.from_tensor_slices((mnistA[0][0], mnistA[0][1])).batch(batch_size_fisher_matrix, False)
 
     """ ITERATORS """
     # create general iterator
@@ -97,6 +98,15 @@ if __name__ == '__main__':
     optimizer_a = tf.train.GradientDescentOptimizer(learning_rate=learning_rate_a)
     update_a = optimizer_a.minimize(nn.loss)
     
+    # optimizer B
+    optimizer_b = tf.train.GradientDescentOptimizer(
+        learning_rate=learning_rate_b)
+    ewc, ewc_print = nn.compute_ewc(lam=lambda_val)
+    ewc_print = tf.print("****************new iteration ****************",
+                         ewc_print, output_stream="file://tmp/tensor_" + str(ts) + ".log")
+    update_b = optimizer_b.minimize(
+        tf.add(nn.loss, ewc))
+
 
     """ TF SESSION """
     # Initialize the variables (i.e. assign their default value)
@@ -122,15 +132,8 @@ if __name__ == '__main__':
     else:
 
         logging.info("* TRAINING A *")
+        nn.train(sess, update_a, training_iters_a, iter_train_a)
 
-        # init iterator
-        sess.run(iter_train_a)
-
-        for i in range(training_iters_a):
-            l, _, acc = sess.run([nn.loss, update_a, nn.accuracy])
-            if i % 100 == 0:
-                logging.info(
-                    "Step: {}, loss: {:.3f}, training accuracy: {:.2f}%".format(i, l, acc * 100))
 
         # save session
         os.makedirs(checkpoint_training_a_dir_name)
@@ -160,23 +163,24 @@ if __name__ == '__main__':
         save_path = nn.saver.save(
             sess, checkpoint_training_a_fisher_dir_name + checkpoint_name)
         
-        # logging
-        logging.info("* GRADIENTS & VARIABLES after function *")
-        for key, gradient in nn.training_gradients.items():
-            gradient_np = sess.run(gradient)
-            logging.debug(key)
-            logging.debug(gradient_np)
-            logging.debug("min: " + str(gradient_np.min()))
-            logging.debug("max: " + str(gradient_np.max()))
-            logging.debug("-----")
-
-        for key, variable in nn.training_variables.items():
-            variable_np = sess.run(variable)
-            logging.debug(key)
-            logging.debug(variable_np)
-            logging.debug("min: " + str(variable_np.min()))
-            logging.debug("max: " + str(variable_np.max()))
-            logging.debug("---")
+    # logging
+    logging.info("* GRADIENTS & VARIABLES *")
+    logging.info("* gradients *")
+    for key, gradient in nn.training_gradients.items():
+        gradient_np = sess.run(gradient)
+        logging.debug(key)
+        logging.debug(gradient_np)
+        logging.debug("min: " + str(gradient_np.min()))
+        logging.debug("max: " + str(gradient_np.max()))
+        logging.debug("-----")
+    logging.info("* variables *")
+    for key, variable in nn.training_variables.items():
+        variable_np = sess.run(variable)
+        logging.debug(key)
+        logging.debug(variable_np)
+        logging.debug("min: " + str(variable_np.min()))
+        logging.debug("max: " + str(variable_np.max()))
+        logging.debug("---")
 
     # logging.info("fisher done")
     # exit()
@@ -187,18 +191,9 @@ if __name__ == '__main__':
     logging.info("* TASK B *")
     logging.info("**********")
 
-    # optimizer B
-    optimizer_b = tf.train.GradientDescentOptimizer(
-        learning_rate=learning_rate_b)
-    ewc, ewc_print = nn.compute_ewc(lam=lambda_val)
-    ewc_print = tf.print("****************new iteration ****************", ewc_print, output_stream="file://tmp/tensor_" + str(ts) + ".log")
-    update_b = optimizer_b.minimize(
-        tf.add(nn.loss, ewc))
 
-    """ TRAINING """
-    logging.info("**************")
     logging.info("* TRAINING B *")
-    logging.info("**************")
+    # nn.train(sess, update_b, training_iters_b, iter_train_b, [ewc_print])
 
     # init iterator
     sess.run(iter_train_b)

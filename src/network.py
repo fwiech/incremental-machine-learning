@@ -110,7 +110,7 @@ class Network():
         class_ind = tf.to_int32(tf.multinomial(tf.log(probs), 1)[0][0])
         """
         
-        pprint(fisher_matrix_gradient_tensors)
+        logging.debug(fisher_matrix_gradient_tensors)
 
         # init iterator
         sess.run(iterator_initializer)
@@ -160,17 +160,17 @@ class Network():
                     ])
 
                     # debug logs
-                    logging.debug("---------------")
-                    logging.debug("gradient")
-                    logging.debug(grad_name)
-                    logging.debug(gr)
-                    logging.debug(gr.min())
-                    logging.debug(gr.max())
+                    # logging.debug("---------------")
+                    # logging.debug("gradient")
+                    # logging.debug(grad_name)
+                    # logging.debug(gr)
+                    # logging.debug(gr.min())
+                    # logging.debug(gr.max())
 
-                    logging.debug("variable")
-                    logging.debug(vr)
-                    logging.debug(vr.min())
-                    logging.debug(vr.max())
+                    # logging.debug("variable")
+                    # logging.debug(vr)
+                    # logging.debug(vr.min())
+                    # logging.debug(vr.max())
                     
                 iterations += 1
         except tf.errors.OutOfRangeError:
@@ -182,28 +182,26 @@ class Network():
                     grad, tf.cast(iterations, tf.float32)))
                 self.training_gradients[key] = self.training_gradients[key].assign(div)
 
-                logging.debug("key: " + key)
-                logging.debug("gradient: " + str(div))
-                logging.debug("shape: " + str(div.shape))
-                logging.debug("min: " + str(div.min()))
-                logging.debug("max: " + str(div.max()))
-                logging.debug("-----")
+                # logging.debug("key: " + key)
+                # logging.debug("gradient: " + str(div))
+                # logging.debug("shape: " + str(div.shape))
+                # logging.debug("min: " + str(div.min()))
+                # logging.debug("max: " + str(div.max()))
+                # logging.debug("-----")
             
-            for key, variable in self.training_variables.items():
-                variable = sess.run(variable)
-                logging.debug("key: " + key)
-                logging.debug("variable: " + str(variable))
-                logging.debug("shape: " + str(variable.shape))
-                logging.debug("min: " + str(variable.min()))
-                logging.debug("max: " + str(variable.max()))
-                logging.debug("---")
+            # for key, variable in self.training_variables.items():
+            #     variable = sess.run(variable)
+            #     logging.debug("key: " + key)
+            #     logging.debug("variable: " + str(variable))
+            #     logging.debug("shape: " + str(variable.shape))
+            #     logging.debug("min: " + str(variable.min()))
+            #     logging.debug("max: " + str(variable.max()))
+            #     logging.debug("---")
 
 
     def compute_ewc(self, lam):
         
-        logging.debug("************")
         logging.debug("* CALC EWC *")
-        logging.debug("************")
 
         prints = []
 
@@ -244,6 +242,15 @@ class Network():
 
         return ewc, prints
 
+    def train(self, sess, update, training_iters, iter_init, run=[]):
+        # init iterator
+        sess.run(iter_init)
+
+        for i in range(training_iters):
+            l, _, acc = sess.run([self.loss, update, self.accuracy] + run)
+            if i % 100 == 0:
+                logging.info(
+                    "Step: {}, loss: {:.3f}, training accuracy: {:.2f}%".format(i, l, acc * 100))
 
     def test(self, sess, iter_init):
         # init iterator
