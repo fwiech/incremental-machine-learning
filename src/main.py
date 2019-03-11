@@ -42,11 +42,11 @@ if __name__ == '__main__':
     batch_size_a = 128
     batch_size_fisher_matrix = 1
 
-    learning_rate_b = 0.01
+    learning_rate_b = 0.00001
     training_iters_b = 50
     batch_size_b = 128
 
-    lambda_val = 15# (1./learning_rate_b)
+    lambda_val = 1200#(1./learning_rate_b)
 
 
     # get MNIST data
@@ -92,20 +92,13 @@ if __name__ == '__main__':
     """ MODEL """
     # Construct model
     nn = Network(next_feature, next_label)
-    fisher_matrix_gradient_tensors = nn.init_fisher_gradients()
 
     # optimizer A
     optimizer_a = tf.train.GradientDescentOptimizer(learning_rate=learning_rate_a)
     update_a = optimizer_a.minimize(nn.loss)
-    
-    # optimizer B
-    optimizer_b = tf.train.GradientDescentOptimizer(
-        learning_rate=learning_rate_b)
-    ewc, ewc_print = nn.compute_ewc(lam=lambda_val)
-    ewc_print = tf.print("****************new iteration ****************",
-                         ewc_print, output_stream="file://tmp/tensor_" + str(ts) + ".log")
-    update_b = optimizer_b.minimize(ewc)
 
+    fisher_matrix_gradient_tensors = nn.init_fisher_gradients()
+    
 
     """ TF SESSION """
     # Initialize the variables (i.e. assign their default value)
@@ -157,10 +150,10 @@ if __name__ == '__main__':
 
         nn.compute_fisher(sess, iter_test_a, fisher_matrix_gradient_tensors)
         
-        # save session
-        os.makedirs(checkpoint_training_a_fisher_dir_name)
-        save_path = nn.saver.save(
-            sess, checkpoint_training_a_fisher_dir_name + checkpoint_name)
+        # # save session
+        # os.makedirs(checkpoint_training_a_fisher_dir_name)
+        # save_path = nn.saver.save(
+        #     sess, checkpoint_training_a_fisher_dir_name + checkpoint_name)
         
     # logging
     logging.info("* GRADIENTS & VARIABLES *")
@@ -191,6 +184,15 @@ if __name__ == '__main__':
     logging.info("**********")
 
 
+    # optimizer B
+    optimizer_b = tf.train.GradientDescentOptimizer(
+        learning_rate=learning_rate_b)
+    ewc, ewc_print = nn.compute_ewc(lam=lambda_val)
+    ewc_print = tf.print("****************new iteration ****************",
+                         ewc_print, output_stream="file://tmp/tensor_" + str(ts) + ".log")
+    update_b = optimizer_b.minimize(ewc)
+
+
     logging.info("* TRAINING B *")
 
     # init iterator
@@ -207,7 +209,7 @@ if __name__ == '__main__':
     logging.info("* TESTING *")
     logging.info("***********")
 
-    logging.info("* TESTING A *")
+    logging.info("* TESTING B *")
     nn.test(sess, iter_test_b)
 
     logging.info("* TESTING A *")

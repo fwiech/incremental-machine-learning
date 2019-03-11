@@ -21,6 +21,9 @@ class Network():
     training_gradients = {}
     training_variables = {}
 
+    gradient = tf.placeholder(tf.float32)
+    variable = tf.placeholder(tf.float32)
+
     saver = None
 
     def __init__(self, x, y):
@@ -74,29 +77,29 @@ class Network():
         fisher_matrix_gradient_tensors = fisher_matrix_optimizer.compute_gradients(
             self.loss)
 
-        with tf.variable_scope("training"):
-            with tf.variable_scope("gradients"):
-                self.training_gradients = {
-                    'wh1': tf.Variable(tf.random_normal([self.n_input, self.n_hidden_1]), name='wh1'),
-                    'wh2': tf.Variable(tf.random_normal([self.n_hidden_1, self.n_hidden_2]), name='wh2'),
-                    'wh3': tf.Variable(tf.random_normal([self.n_hidden_2, self.n_hidden_3]), name='wh3'),
-                    'wo': tf.Variable(tf.random_normal([self.n_hidden_3, self.n_classes]), name='wo'),
-                    'bh1': tf.Variable(tf.random_normal([self.n_hidden_1]), name='bh1'),
-                    'bh2': tf.Variable(tf.random_normal([self.n_hidden_2]), name='bh2'),
-                    'bh3': tf.Variable(tf.random_normal([self.n_hidden_3]), name='bh3'),
-                    'bo': tf.Variable(tf.random_normal([self.n_classes]), name='bo')
-                }
-            with tf.variable_scope("variables"):
-                self.training_variables = {
-                    'wh1': tf.Variable(tf.random_normal([self.n_input, self.n_hidden_1]), name='wh1'),
-                    'wh2': tf.Variable(tf.random_normal([self.n_hidden_1, self.n_hidden_2]), name='wh2'),
-                    'wh3': tf.Variable(tf.random_normal([self.n_hidden_2, self.n_hidden_3]), name='wh3'),
-                    'wo': tf.Variable(tf.random_normal([self.n_hidden_3, self.n_classes]), name='wo'),
-                    'bh1': tf.Variable(tf.random_normal([self.n_hidden_1]), name='bh1'),
-                    'bh2': tf.Variable(tf.random_normal([self.n_hidden_2]), name='bh2'),
-                    'bh3': tf.Variable(tf.random_normal([self.n_hidden_3]), name='bh3'),
-                    'bo': tf.Variable(tf.random_normal([self.n_classes]), name='bo')
-                }
+        # with tf.variable_scope("training"):
+        #     with tf.variable_scope("gradients"):
+        #         self.training_gradients = {
+        #             'wh1': tf.Variable(tf.random_normal([self.n_input, self.n_hidden_1]), name='wh1'),
+        #             'wh2': tf.Variable(tf.random_normal([self.n_hidden_1, self.n_hidden_2]), name='wh2'),
+        #             'wh3': tf.Variable(tf.random_normal([self.n_hidden_2, self.n_hidden_3]), name='wh3'),
+        #             'wo': tf.Variable(tf.random_normal([self.n_hidden_3, self.n_classes]), name='wo'),
+        #             'bh1': tf.Variable(tf.random_normal([self.n_hidden_1]), name='bh1'),
+        #             'bh2': tf.Variable(tf.random_normal([self.n_hidden_2]), name='bh2'),
+        #             'bh3': tf.Variable(tf.random_normal([self.n_hidden_3]), name='bh3'),
+        #             'bo': tf.Variable(tf.random_normal([self.n_classes]), name='bo')
+        #         }
+        #     with tf.variable_scope("variables"):
+        #         self.training_variables = {
+        #             'wh1': tf.Variable(tf.random_normal([self.n_input, self.n_hidden_1]), name='wh1'),
+        #             'wh2': tf.Variable(tf.random_normal([self.n_hidden_1, self.n_hidden_2]), name='wh2'),
+        #             'wh3': tf.Variable(tf.random_normal([self.n_hidden_2, self.n_hidden_3]), name='wh3'),
+        #             'wo': tf.Variable(tf.random_normal([self.n_hidden_3, self.n_classes]), name='wo'),
+        #             'bh1': tf.Variable(tf.random_normal([self.n_hidden_1]), name='bh1'),
+        #             'bh2': tf.Variable(tf.random_normal([self.n_hidden_2]), name='bh2'),
+        #             'bh3': tf.Variable(tf.random_normal([self.n_hidden_3]), name='bh3'),
+        #             'bo': tf.Variable(tf.random_normal([self.n_classes]), name='bo')
+        #         }
 
         pprint(fisher_matrix_gradient_tensors)
         
@@ -124,6 +127,7 @@ class Network():
                     # compute first-order derivatives
                     grad = sess.run(tf.square(tf.gradients(
                         tf.log(probs[0, class_ind]), value)))
+                    # tf.gradients(loss, value)
 
                     result = sess.run(fisher_matrix_gradient_tensors)
 
@@ -152,12 +156,12 @@ class Network():
                         continue
                     if grad[0] is None:
                         continue
+                    
+                    grad = sess.run(grad)
 
-                    # calc gradients
-                    gr, vr = sess.run([
-                        tf.assign(self.training_gradients[grad_name], tf.square(grad[0])),
-                        tf.assign(self.training_variables[grad_name], grad[1])
-                    ])
+                    # calc gradients & apply variables
+                    self.training_gradients[grad_name] = np.square(grad[0])
+                    self.training_variables[grad_name] = grad[1]
 
                     # debug logs
                     # logging.debug("---------------")
@@ -177,10 +181,12 @@ class Network():
 
             logging.info("* GRADIENTS & VARIABLES iteration over *")
 
-            for key, grad in self.training_gradients.items():
-                div = sess.run(tf.truediv(
-                    grad, tf.cast(iterations, tf.float32)))
-                self.training_gradients[key] = self.training_gradients[key].assign(div)
+            with tf.variable_scope("gradients"):
+                for key, grad in self.training_gradients.items():
+                    self.training_gradients[key] = np.true_divide(
+                        grad, float(iterations))
+                    self.training_gradients[key] = tf.constant(
+                        grad, name=key)
 
                 # logging.debug("key: " + key)
                 # logging.debug("gradient: " + str(div))
@@ -189,7 +195,10 @@ class Network():
                 # logging.debug("max: " + str(div.max()))
                 # logging.debug("-----")
             
-            # for key, variable in self.training_variables.items():
+            with tf.variable_scope("variables"):
+                for key, variable in self.training_variables.items():
+                    self.training_variables[key] = tf.constant(
+                        variable, name=key)
             #     variable = sess.run(variable)
             #     logging.debug("key: " + key)
             #     logging.debug("variable: " + str(variable))
@@ -200,6 +209,18 @@ class Network():
 
 
     def compute_ewc(self, lam):
+
+        # self.training_gradient_constants = {}
+        # self.training_variable_constants = {}
+
+        # # create tf constants
+        # with tf.variable_scope("training"):
+        #     with tf.variable_scope("gradients"):
+        #         for key, grad in self.training_gradients.items():
+        #             self.training_gradient_constants[key] = tf.constant(grad, name=key)
+        #     with tf.variable_scope("variables"):
+        #         for key, variable in self.training_variables.items():
+        #             self.training_variable_constants[key] = tf.constant(variable, name=key)
         
         logging.debug("* CALC EWC *")
 
@@ -209,9 +230,10 @@ class Network():
         for key, gradient in self.training_gradients.items():
             
             # calc EWC appendix
-            subAB = tf.subtract(self.theta[key], self.training_variables[key])
+            subAB = tf.subtract(
+                self.theta[key], self.training_variables[key])
             powAB = tf.square(subAB)
-            multiplyF = tf.multiply(powAB, gradient)
+            multiplyF = tf.multiply(powAB, self.training_gradients[key])
 
             prints.append("------------------")
             prints.append(key)
@@ -223,11 +245,11 @@ class Network():
             prints.append("----")
             prints.append("GRADIENT")
             prints.append("min: ")
-            prints.append(tf.reduce_max(gradient))
+            prints.append(tf.reduce_max(self.training_gradients[key]))
             prints.append("max: ")
-            prints.append(tf.reduce_min(gradient))
+            prints.append(tf.reduce_min(self.training_gradients[key]))
             prints.append("complete")
-            prints.append(gradient)
+            prints.append(self.training_gradients[key])
             prints.append("----")
             prints.append("multiplyF")
             prints.append(multiplyF)
