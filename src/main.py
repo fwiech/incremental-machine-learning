@@ -187,6 +187,10 @@ if __name__ == '__main__':
     logging.info("* TASK B *")
     logging.info("**********")
 
+    logging.info("* Parameters *")
+    logging.info("learning_rate_b: " + str(learning_rate_b))
+    logging.info("training_iters_b: " + str(training_iters_b))
+    logging.info("lambda_val: " + str(lambda_val))
 
     # optimizer B
     optimizer_b = tf.train.GradientDescentOptimizer(
