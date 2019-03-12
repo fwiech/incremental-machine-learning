@@ -16,38 +16,48 @@ import logging
 from pprint import pprint
 
 if __name__ == '__main__':
-
     # get timestamp
     ts = calendar.timegm(time.gmtime())
 
-    if not os.path.exists("tmp/"):
-        os.makedirs("tmp/")
+    os.makedirs("tmp/", exist_ok=True)
+    os.makedirs("tmp/logs/", exist_ok=True)
+    os.makedirs("tmp/models/", exist_ok=True)
     # init logging
     logging.basicConfig(
-        filename="tmp/logs_" + str(ts) + ".log",
+        filename="tmp/logs/logs_" + str(ts) + ".log",
         filemode='w',
         level=logging.DEBUG,
         format="%(asctime)s:%(levelname)s:%(message)s"
     )
 
+    """
+        PARAMETERS
+    """
+
+    # tf checkpoints with tf.train.Saver
     checkpoint_name = "checkpoint.ckpt"
-    checkpoint_training_a_dir_name = "models/train_a/"
-    checkpoint_training_a_fisher_dir_name = "models/train_a_fisher/"
+    checkpoint_training_a_dir_name = "tmp/models/train_a/"
+    checkpoint_training_a_fisher_dir_name = "tmp/models/train_a_fisher/"
 
     # Parameters
     batch_size = 128
 
+    # Task A
     learning_rate_a = 0.001
     training_iters_a = 20000
     batch_size_a = 128
     batch_size_fisher_matrix = 1
 
+    # Task B
     learning_rate_b = 0.00001
     training_iters_b = 50
     batch_size_b = 128
-
+    # EWC B
     lambda_val = 1200#(1./learning_rate_b)
 
+    """
+        NETWORK
+    """
 
     # get MNIST data
     mnist = load_mnist('dataset/mnist.pkl.gz')
