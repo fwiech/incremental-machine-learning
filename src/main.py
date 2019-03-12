@@ -95,10 +95,7 @@ if __name__ == '__main__':
 
     # optimizer A
     optimizer_a = tf.train.GradientDescentOptimizer(learning_rate=learning_rate_a)
-    update_a = optimizer_a.minimize(nn.loss)
-
-    fisher_matrix_gradient_tensors = nn.init_fisher_gradients()
-    
+    update_a = optimizer_a.minimize(nn.loss)    
 
     """ TF SESSION """
     # Initialize the variables (i.e. assign their default value)
@@ -158,7 +155,7 @@ if __name__ == '__main__':
     # logging
     logging.info("* GRADIENTS & VARIABLES *")
     logging.info("* gradients *")
-    for key, gradient in nn.training_gradients.items():
+    for key, gradient in nn.gradients.items():
         gradient_np = sess.run(gradient)
         logging.debug(key)
         logging.debug(gradient_np)
@@ -166,16 +163,13 @@ if __name__ == '__main__':
         logging.debug("max: " + str(gradient_np.max()))
         logging.debug("-----")
     logging.info("* variables *")
-    for key, variable in nn.training_variables.items():
+    for key, variable in nn.variables.items():
         variable_np = sess.run(variable)
         logging.debug(key)
         logging.debug(variable_np)
         logging.debug("min: " + str(variable_np.min()))
         logging.debug("max: " + str(variable_np.max()))
         logging.debug("---")
-
-    # logging.info("fisher done")
-    # exit()
 
 
 
