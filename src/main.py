@@ -147,10 +147,10 @@ if __name__ == '__main__':
 
         nn.compute_fisher(sess, iter_test_a, fisher_matrix_gradient_tensors)
         
-        # # save session
-        # os.makedirs(checkpoint_training_a_fisher_dir_name)
-        # save_path = nn.saver.save(
-        #     sess, checkpoint_training_a_fisher_dir_name + checkpoint_name)
+        # save session
+        os.makedirs(checkpoint_training_a_fisher_dir_name)
+        save_path = nn.saver.save(
+            sess, checkpoint_training_a_fisher_dir_name + checkpoint_name)
         
     # logging
     logging.info("* GRADIENTS & VARIABLES *")
