@@ -46,6 +46,8 @@ def task(**kwargs):
     batch_size = kwargs.get('batch')
     lam = kwargs.get('lambda', 1.)
 
+    display_steps_train = kwargs.get('display', 100)
+
     # get mnist
     mnist = load_mnist('dataset/mnist.pkl.gz')
     mnist_task = load_mnist('dataset/mnist.pkl.gz', classes)
@@ -112,7 +114,7 @@ def task(**kwargs):
             logging.debug("---")
 
     logging.info("* TRAINING CLASSES *")
-    nn.train(sess, update, iter_train_task, training_iterations)
+    nn.train(sess, update, iter_train_task, training_iterations, display_steps=display_steps_train)
 
     logging.info("* CALC FISHER *")
     nn.compute_fisher(sess, iter_test_task)
@@ -180,10 +182,10 @@ if __name__ == '__main__':
     parser.add_argument('lambda', type=float, help='ewc lambda value: importance of the old task')
 
     # optional arguments
-    # parser.add_argument('-p', '--previous', nargs='?', type=str,
-    #                     help='checkpoint name of previos task')
     parser.add_argument('-s', '--save', nargs='?', type=str,
                         help='checkpoint name for saving new model')
+    parser.add_argument('-d', '--display', nargs='?', type=int,
+                        help='print every x steps training results')
 
     args = parser.parse_args()
     pprint(args)

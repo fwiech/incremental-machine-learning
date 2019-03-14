@@ -134,13 +134,13 @@ class Network():
 
             self.loss += (lam/2) * tf.reduce_sum(multiplyF)
 
-    def train(self, sess:tf.Session, update, iter_init, training_iters:int, dispplay_steps=100, *args):
+    def train(self, sess:tf.Session, update, iter_init, training_iters:int, display_steps=100, *args):
         # init iterator
         sess.run(iter_init)
 
         for i in range(training_iters):
             l, _, acc, _ = sess.run([self.loss, update, self.accuracy, args])
-            if i % dispplay_steps == 0:
+            if i % display_steps == 0:
                 logging.info(
                     "Step: {}, loss: {:.3f}, training accuracy: {:.2f}%".format(i, l, acc * 100.))
 
