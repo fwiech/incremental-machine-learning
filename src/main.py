@@ -116,8 +116,10 @@ def task(**kwargs):
     logging.info("* TRAINING CLASSES *")
     nn.train(sess, update, iter_train_task, training_iterations, display_steps=display_steps_train)
 
-    logging.info("* CALC FISHER *")
-    nn.compute_fisher(sess, iter_test_task)
+    # if model is not saved, fisher claculation unnecessary
+    if save is not '' and save is not None:
+        logging.info("* CALC FISHER *")
+        nn.compute_fisher(sess, iter_test_task)
 
     logging.info("* TESTING CLASSES *")
     test_classes_result = nn.test(sess, iter_test_task)
