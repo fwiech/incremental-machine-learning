@@ -129,7 +129,7 @@ def task(**kwargs):
         'timestamp': str(ts),
         'time': str(round((time.time() - start_ts), 2)) + ' sec.',
         'classes': classes,
-        'learn_rate': learn_rate,
+        'learnrate': learn_rate,
         'training_iterations': training_iterations,
         'batch_size': batch_size,
         'lambda': lam,

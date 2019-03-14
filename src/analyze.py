@@ -48,7 +48,7 @@ def analyze(**kwargs):
 
     with open('analyze.csv', 'a') as csvFile:
         writer = csv.writer(csvFile)
-        # writer.writerow()
+        writer.writerow(['timestamp', 'duration', 'classes', 'learnrate', 'iterations', 'batch_size', 'lambda', 'test classes', 'test complete'])
 
         for rate in learnrates:
             for lam in range(lam_min, lam_max, lam_steps):
@@ -62,8 +62,9 @@ def analyze(**kwargs):
                     result = task(**data)
 
                     # modify result for stats table
-                    result['test_classes'] = result['test']['classes']
-                    result['test_complete'] = result['test']['complete']
+                    result['test_classes'] = str(round(result['test']['classes'], 2)) + "%"
+                    result['test_complete'] = str(round(result['test']['complete'], 2)) + "%"
+                    result['learnrate'] = str(result['learnrate'])
                     result.pop('test', None)
 
                     # print stats to table
