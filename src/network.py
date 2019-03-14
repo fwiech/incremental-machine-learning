@@ -111,15 +111,8 @@ class Network():
                     start_index = grad_name.rfind('/') + 1
                     end_index = grad_name.rfind(':')
                     grad_name = grad_name[start_index:end_index]
-
-                    if grad[1].name[:start_index] == "":
-                        continue
-                    if grad[1].name[:start_index] != "network/":
-                        continue
-                    if grad[0] is None:
-                        continue
                     
-                    gr, vr = sess.run([
+                    sess.run([
                         tf.assign(self.gradients[grad_name], tf.square(grad[0])),
                         tf.assign(self.variables[grad_name], grad[1])
                     ])
@@ -132,66 +125,24 @@ class Network():
                     sess.run(tf.assign(self.gradients[key], tf.truediv(grad, tf.cast(iterations, tf.float32))))
 
     def compute_ewc(self, lam):
-        
-        logging.debug("* CALC EWC *")
-
-        prints = []
-
-        ewc_loss = self.loss
         for key, _ in self.gradients.items():
-            
             # calc EWC appendix
             subAB = tf.subtract(
                 self.theta[key], self.variables[key])
             powAB = tf.square(subAB)
             multiplyF = tf.multiply(powAB, self.gradients[key])
 
-            prints.append("------------------")
-            prints.append(key)
-            prints.append("subAB")
-            prints.append(subAB)
-            prints.append("----")
-            prints.append("powAB")
-            prints.append(powAB)
-            prints.append("----")
-            prints.append("GRADIENT")
-            prints.append("min: ")
-            prints.append(tf.reduce_max(self.gradients[key]))
-            prints.append("max: ")
-            prints.append(tf.reduce_min(self.gradients[key]))
-            prints.append("complete")
-            prints.append(self.gradients[key])
-            prints.append("----")
-            prints.append("multiplyF")
-            prints.append(multiplyF)
-            prints.append("----")
-            prints.append("reduce_sum with lambda")
-            prints.append((lam/2) * tf.reduce_sum(multiplyF))
-            prints.append("----")
-            prints.append("loss without ewc")
-            prints.append(self.loss)
+            self.loss += (lam/2) * tf.reduce_sum(multiplyF)
 
-            ewc_loss += (lam/2) * tf.reduce_sum(multiplyF)
-
-            prints.append("----")
-            prints.append("ewc_loss")
-            prints.append(ewc_loss)
-        
-        prints.append("----------------------------------")
-        prints.append("ITERATION LOSS")
-        prints.append(ewc_loss)
-
-        return ewc_loss, prints
-
-    def train(self, sess, update, training_iters, iter_init, run=[]):
+    def train(self, sess:tf.Session, update, iter_init, training_iters:int, dispplay_steps=100, *args):
         # init iterator
         sess.run(iter_init)
 
         for i in range(training_iters):
-            l, _, acc = sess.run([self.loss, update, self.accuracy] + run)
-            if i % 100 == 0:
+            l, _, acc, _ = sess.run([self.loss, update, self.accuracy, args])
+            if i % dispplay_steps == 0:
                 logging.info(
-                    "Step: {}, loss: {:.3f}, training accuracy: {:.2f}%".format(i, l, acc * 100))
+                    "Step: {}, loss: {:.3f}, training accuracy: {:.2f}%".format(i, l, acc * 100.))
 
     def test(self, sess, iter_init):
         # init iterator
@@ -205,7 +156,7 @@ class Network():
                 avg_acc += acc[0]
                 iterations += 1
         except tf.errors.OutOfRangeError:
-            logging.info("Average validation set accuracy over {} iterations is {:.2f}%".format(
-                iterations, (avg_acc / iterations) * 100))
+            avg_acc = ((avg_acc / float(iterations)) * 100.)
+            logging.info("Average validation set accuracy over {} iterations is {:.2f}%".format(iterations, avg_acc))
         
-        return (iterations, (avg_acc / iterations) * 100)
+        return avg_acc
