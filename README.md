@@ -8,11 +8,11 @@ This is an implementation of "Overcoming catastrophic forgetting in neural netwo
 
 ### Show Commands
 
-`python3 task.py -h`
+`python3 main.py -h`
 
 ### Examples
 
 | Example | First Task | Second Task |
 | ------------- | ------------- | ------------- |
-| 9 / 1 | `python3 task.py 0 1 2 3 4 5 6 7 8 0.001 20000 128 '' 1 -s 'a'` | `python3 task.py 9 0.00001 50 128 'a' 1200`
-| 5 / 5 | `python3 task.py 0 1 2 3 4 0.001 20000 128 '' 1 -s 'a'` | `python3 task.py 5 6 7 8 9 0.00001 50 128 'a' 1200`
+| 9 / 1 | `python3 main.py 0 1 2 3 4 5 6 7 8 0.001 20000 128 '' 1 -s 'a'` | `python3 main.py 9 0.00001 50 128 'a' 1200`
+| 5 / 5 | `python3 main.py 0 1 2 3 4 0.001 20000 128 '' 1 -s 'a'` | `python3 main.py 5 6 7 8 9 0.00001 50 128 'a' 1200`
