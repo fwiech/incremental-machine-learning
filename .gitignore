@@ -1,3 +1,11 @@
+
+# python
 __pycache__/
+
+# datasets
 mnist.pkl.gz
-tmp/
+
+# tmp files
+checkpoints/
+analyze.csv
+analyze.json
