@@ -35,7 +35,7 @@ def task(**kwargs):
     tf.reset_default_graph()
 
     # Config
-    checkpoint_dir = "checkpoints/"
+    checkpoint_dir = "checkpoints"
     previous = kwargs.get('previous', '')
     save = kwargs.get('save', '')
 
@@ -49,8 +49,8 @@ def task(**kwargs):
     display_steps_train = kwargs.get('display', 100)
 
     # get mnist
-    mnist = load_mnist('dataset/mnist.pkl.gz')
-    mnist_task = load_mnist('dataset/mnist.pkl.gz', classes)
+    mnist = load_mnist('mnist.pkl.gz')
+    mnist_task = load_mnist('mnist.pkl.gz', classes)
 
     # create train datasets
     train_task = tf.data.Dataset.from_tensor_slices(
@@ -93,7 +93,7 @@ def task(**kwargs):
     if previous is not '':
         logging.info("* LOAD SESSION *")
         # load checkpoint
-        nn.saver.restore(sess, checkpoint_dir + previous + "/checkpoint.ckpt")
+        nn.saver.restore(sess, os.path.join(checkpoint_dir, previous, "checkpoint.ckpt"))
 
         logging.debug("* GRADIENTS & VARIABLES *")
         logging.debug("* gradients *")
@@ -145,7 +145,7 @@ def task(**kwargs):
         os.makedirs(checkpoint_dir, exist_ok=True)
         os.makedirs(checkpoint_dir + save, exist_ok=True)
         # save session
-        nn.saver.save(sess, checkpoint_dir + save + "/checkpoint.ckpt")
+        nn.saver.save(sess, os.path.join(checkpoint_dir, save, "checkpoint.ckpt"))
         # save stats
         stats['gradients'] = {}
         stats['variables'] = {}
