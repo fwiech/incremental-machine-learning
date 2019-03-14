@@ -118,7 +118,7 @@ def task(**kwargs):
     nn.compute_fisher(sess, iter_test_task)
 
     logging.info("* TESTING CLASSES *")
-    test_classes_result = nn.test(sess, iter_test_task, fisher=True)
+    test_classes_result = nn.test(sess, iter_test_task)
 
     logging.info("* TESTING COMPLETE *")
     test_result = nn.test(sess, iter_test)
