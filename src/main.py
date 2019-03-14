@@ -123,6 +123,20 @@ def task(**kwargs):
     logging.info("* TESTING COMPLETE *")
     test_result = nn.test(sess, iter_test)
 
+    stats = {
+        'timestamp': str(ts),
+        'time': str(round((time.time() - start_ts), 2)) + ' sec.',
+        'classes': classes,
+        'learn_rate': learn_rate,
+        'training_iterations': training_iterations,
+        'batch_size': batch_size,
+        'lambda': lam,
+        'test': {
+            'classes': test_classes_result,
+            'complete': test_result
+        }
+    }
+
     if save is not '' and save is not None:
         logging.info("* SAVE SESSION *")
         # create checkpoint
@@ -131,35 +145,25 @@ def task(**kwargs):
         # save session
         nn.saver.save(sess, checkpoint_dir + save + "/checkpoint.ckpt")
         # save stats
-        data = {
-            'timestamp': str(ts),
-            'time': str(round((time.time() - start_ts), 2)) + ' sec.',
-            'classes': classes,
-            'learn_rate': learn_rate,
-            'training_iterations': training_iterations,
-            'batch_size': batch_size,
-            'lambda': lam,
-            'test': {
-                'classes': test_classes_result,
-                'complete': test_result
-            },
-            'gradients': {},
-            'variables': {}
-        }
+        stats['gradients'] = {}
+        stats['variables'] = {}
         for key, gradient in nn.gradients.items():
             gradient = sess.run(gradient)
-            data['gradients'][key] = {}
-            # data['gradients'][key]['gradient'] = gradient
-            data['gradients'][key]['min'] = float(gradient.min())
-            data['gradients'][key]['max'] = float(gradient.max())
+            stats['gradients'][key] = {}
+            # stats['gradients'][key]['gradient'] = gradient
+            stats['gradients'][key]['min'] = float(gradient.min())
+            stats['gradients'][key]['max'] = float(gradient.max())
         for key, variable in nn.variables.items():
             variable = sess.run(variable)
-            data['variables'][key] = {}
-            # data['variables'][key]['variable'] = variable
-            data['variables'][key]['min'] = float(variable.min())
-            data['variables'][key]['max'] = float(variable.max())
+            stats['variables'][key] = {}
+            # stats['variables'][key]['variable'] = variable
+            stats['variables'][key]['min'] = float(variable.min())
+            stats['variables'][key]['max'] = float(variable.max())
         with open(checkpoint_dir + save + "/stats.json", 'w') as fp:
-            json.dump(data, fp)
+            json.dump(stats, fp)
+    
+    return stats
+    
 
 
 if __name__ == '__main__':
