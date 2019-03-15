@@ -192,7 +192,7 @@ if __name__ == '__main__':
     parser.add_argument('--iterations', type=int, required=True, help='training iterations')
 
     parser.add_argument('--batch', type=int, required=True, help='batch size for training & testing')
-    parser.add_argument('--batch_fisher', type=int, required=True, help='batch size for fisher calculation')
+    parser.add_argument('--batch_fisher', type=int, required=False, help='batch size for fisher calculation')
 
     # optional arguments
     parser.add_argument('--previous', type=str, required=False,
