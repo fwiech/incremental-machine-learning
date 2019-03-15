@@ -44,7 +44,10 @@ def task(**kwargs):
     learn_rate = kwargs.get('learnrate')
     training_iterations = kwargs.get('iterations')
     batch_size = kwargs.get('batch')
-    lam = kwargs.get('lambda', 1.)
+    lam = (1./learn_rate)
+
+    if save is not '' and save is not None:
+        batch_fisher = kwargs.get('batch_fisher')
 
     display_steps_train = kwargs.get('display', 100)
 
@@ -55,6 +58,10 @@ def task(**kwargs):
     # create train datasets
     train_task = tf.data.Dataset.from_tensor_slices(
         mnist_task[0]).batch(batch_size, False).repeat()
+
+    if save is not '' and save is not None:
+        fisher_task = tf.data.Dataset.from_tensor_slices(
+            mnist_task[0]).batch(batch_fisher, False)
 
     # create test datasets
     test = tf.data.Dataset.from_tensor_slices(
@@ -71,6 +78,9 @@ def task(**kwargs):
     iter_test = iterator.make_initializer(test)
     iter_train_task = iterator.make_initializer(train_task)
     iter_test_task = iterator.make_initializer(test_task)
+
+    if save is not '' and save is not None:
+        iter_fisher = iterator.make_initializer(fisher_task)
 
     # Construct model
     nn = Network(next_feature, next_label)
@@ -119,7 +129,7 @@ def task(**kwargs):
     # if model is not saved, fisher claculation unnecessary
     if save is not '' and save is not None:
         logging.info("* CALC FISHER *")
-        nn.compute_fisher(sess, iter_test_task)
+        nn.compute_fisher(sess, iter_fisher)
 
     logging.info("* TESTING CLASSES *")
     test_classes_result = nn.test(sess, iter_test_task)
@@ -147,7 +157,8 @@ def task(**kwargs):
         os.makedirs(checkpoint_dir, exist_ok=True)
         os.makedirs(checkpoint_dir + save, exist_ok=True)
         # save session
-        nn.saver.save(sess, os.path.join(checkpoint_dir, save, "checkpoint.ckpt"))
+        save_path = nn.saver.save(sess, os.path.join(checkpoint_dir, save, "checkpoint.ckpt"))
+        logging.info(save_path)
         # save stats
         stats['gradients'] = {}
         stats['variables'] = {}
@@ -175,19 +186,21 @@ if __name__ == '__main__':
     # argparse
     parser = argparse.ArgumentParser(description='train ewc task')
 
-    # positional arguments
-    parser.add_argument('classes', nargs='*', type=int, help='available classes: 0 - 9')
-    parser.add_argument('learnrate', type=float, help='optimizer learning rate')
-    parser.add_argument('iterations', type=int, help='training iterations')
-    parser.add_argument('batch', type=int, help='batch size of datasets')
-    parser.add_argument('previous', type=str, help='checkpoint name of previos task')
-    parser.add_argument('lambda', type=float, help='ewc lambda value: importance of the old task')
+    # required arguments
+    parser.add_argument('--classes', nargs='*', type=int, required=True, help='available classes: 0 - 9')
+    parser.add_argument('--learnrate', type=float, required=True, help='optimizer learning rate')
+    parser.add_argument('--iterations', type=int, required=True, help='training iterations')
+
+    parser.add_argument('--batch', type=int, required=True, help='batch size for training & testing')
+    parser.add_argument('--batch_fisher', type=int, required=True, help='batch size for fisher calculation')
 
     # optional arguments
-    parser.add_argument('-s', '--save', nargs='?', type=str,
-                        help='checkpoint name for saving new model')
-    parser.add_argument('-d', '--display', nargs='?', type=int,
-                        help='print every x steps training results')
+    parser.add_argument('--previous', type=str, required=False,
+                        default='', help='checkpoint name of previos task')
+    parser.add_argument('-s', '--save', nargs='?', type=str, required=False,
+                        default='', help='checkpoint name for saving new model')
+    parser.add_argument('-d', '--display', nargs='?', type=int, required=False,
+                        default=100, help='print every x steps training results')
 
     args = parser.parse_args()
     pprint(args)
