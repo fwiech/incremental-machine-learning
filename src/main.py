@@ -61,7 +61,7 @@ def task(**kwargs):
 
     if save is not '' and save is not None:
         fisher_task = tf.data.Dataset.from_tensor_slices(
-            mnist_task[0]).batch(batch_fisher, False)
+            mnist_task[1]).batch(batch_fisher, False)
 
     # create test datasets
     test = tf.data.Dataset.from_tensor_slices(
