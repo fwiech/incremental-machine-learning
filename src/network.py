@@ -105,6 +105,7 @@ class Network():
         iterations = 0
         try:
             while True:
+                operations = []
                 for grad in fisher_matrix_gradient_tensors:
 
                     grad_name = grad[1].name
@@ -112,11 +113,22 @@ class Network():
                     end_index = grad_name.rfind(':')
                     grad_name = grad_name[start_index:end_index]
                     
-                    sess.run([
-                        tf.assign(self.gradients[grad_name], tf.square(grad[0])),
-                        tf.assign(self.variables[grad_name], grad[1])
-                    ])
-                    
+                    gradient, variable = sess.run(grad)
+
+                    if iterations is 0:
+                        operations.append(
+                            tf.assign(self.gradients[grad_name], tf.square(gradient))
+                        )
+                        operations.append(
+                            tf.assign(self.variables[grad_name], variable)
+                        )
+                    else:
+                        operations.append(
+                            tf.assign_add(
+                                self.gradients[grad_name], tf.square(gradient))
+                        )
+                
+                sess.run(operations)
                 iterations += 1
         except tf.errors.OutOfRangeError:
 
