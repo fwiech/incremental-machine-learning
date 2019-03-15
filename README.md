@@ -6,13 +6,28 @@ This is an implementation of "Overcoming catastrophic forgetting in neural netwo
 
 ## Running Code
 
-### Show Commands
+### Show Help
 
 `python3 main.py -h`
 
 ### Examples
 
-| Example | First Task | Second Task |
-| ------------- | ------------- | ------------- |
-| 9 / 1 | `python3 main.py 0 1 2 3 4 5 6 7 8 0.001 20000 128 '' 1 -s 'a'` | `python3 main.py 9 0.00001 50 128 'a' 1200`
-| 5 / 5 | `python3 main.py 0 1 2 3 4 0.001 20000 128 '' 1 -s 'a'` | `python3 main.py 5 6 7 8 9 0.00001 50 128 'a' 1200`
+#### Task 0-8 & 9
+
+```bash
+python3 main.py \
+--classes 0 1 2 3 4 5 6 7 8 \
+--learnrate 0.001 \
+--iterations 20000 \
+--batch 128 \
+--batch_fisher 1000 \
+--save 'a'
+```
+```bash
+python3 main.py \
+--classes 9 \
+--learnrate 0.00001 \
+--iterations 70 \
+--batch 128 \
+--previous 'a'
+```
