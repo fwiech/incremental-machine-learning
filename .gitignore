@@ -7,5 +7,3 @@ mnist.pkl.gz
 
 # tmp files
 checkpoints/
-analyze.csv
-analyze.json
