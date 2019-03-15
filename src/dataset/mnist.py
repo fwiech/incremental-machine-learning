@@ -7,12 +7,7 @@ from functools import reduce
 import os
 
 def load_mnist(filename='mnist.pkl.gz', classes=[], reshape=False):
-    current_dir = os.path.dirname(os.path.abspath(filename))
-    filepath = os.path.join(current_dir, filename)
-
-    print(filepath)
-
-    with gzip.open(filepath, 'rb') as f:
+    with gzip.open(filename, 'rb') as f:
         ((traind, trainl), (vald, vall), (testd, testl)
             ) = pickle.load(f, encoding='bytes')
         traind = traind.astype("float32")# .reshape(-1, 28, 28)
