@@ -10,7 +10,7 @@ This is an implementation of "Overcoming catastrophic forgetting in neural netwo
 
 `python3 main.py -h`
 
-### Examples
+### Example
 
 #### Task 0-8 & 9
 
@@ -20,7 +20,7 @@ python3 main.py \
 --learnrate 0.001 \
 --iterations 20000 \
 --batch 128 \
---batch_fisher 1000 \
+--batch_fisher 100 \
 --save 'a'
 ```
 ```bash
