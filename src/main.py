@@ -52,8 +52,8 @@ def task(**kwargs):
     display_steps_train = kwargs.get('display', 100)
 
     # get mnist
-    mnist = load_mnist('dataset/mnist.pkl.gz')
-    mnist_task = load_mnist('dataset/mnist.pkl.gz', classes)
+    mnist = load_mnist()
+    mnist_task = load_mnist(classes)
 
     # create train datasets
     train_task = tf.data.Dataset.from_tensor_slices(
@@ -110,7 +110,6 @@ def task(**kwargs):
         for key, gradient in nn.gradients.items():
             gradient = sess.run(gradient)
             logging.debug(key)
-            # logging.debug(gradient)
             logging.debug("min: " + str(gradient.min()))
             logging.debug("max: " + str(gradient.max()))
             logging.debug("-----")
@@ -118,7 +117,6 @@ def task(**kwargs):
         for key, variable in nn.variables.items():
             variable = sess.run(variable)
             logging.debug(key)
-            # logging.debug(variable)
             logging.debug("min: " + str(variable.min()))
             logging.debug("max: " + str(variable.max()))
             logging.debug("---")
