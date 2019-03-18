@@ -113,19 +113,18 @@ class Network():
                     end_index = grad_name.rfind(':')
                     grad_name = grad_name[start_index:end_index]
                     
-                    gradient, variable = sess.run(grad)
-
                     if iterations is 0:
                         operations.append(
-                            tf.assign(self.gradients[grad_name], tf.square(gradient))
+                            tf.assign(
+                                self.gradients[grad_name], tf.square(grad[0]))
                         )
                         operations.append(
-                            tf.assign(self.variables[grad_name], variable)
+                            tf.assign(self.variables[grad_name], grad[1])
                         )
                     else:
                         operations.append(
                             tf.assign_add(
-                                self.gradients[grad_name], tf.square(gradient))
+                                self.gradients[grad_name], tf.square(grad[0]))
                         )
                 
                 sess.run(operations)
