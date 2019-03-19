@@ -24,14 +24,14 @@ class Network():
 
         with tf.variable_scope("network"):
             self.theta = {
-                'wh1':  tf.Variable(tf.random_normal([self.n_input, self.n_hidden_1]), name='wh1'),
-                'wh2':  tf.Variable(tf.random_normal([self.n_hidden_1, self.n_hidden_2]), name='wh2'),
-                'wh3':  tf.Variable(tf.random_normal([self.n_hidden_2, self.n_hidden_3]), name='wh3'),
-                'wo':   tf.Variable(tf.random_normal([self.n_hidden_3, self.n_classes]), name='wo'),
-                'bh1':  tf.Variable(tf.random_normal([self.n_hidden_1]), name='bh1'),
-                'bh2':  tf.Variable(tf.random_normal([self.n_hidden_2]), name='bh2'),
-                'bh3':  tf.Variable(tf.random_normal([self.n_hidden_3]), name='bh3'),
-                'bo':   tf.Variable(tf.random_normal([self.n_classes]), name='bo')
+                'wh1':  tf.Variable(tf.truncated_normal([self.n_input, self.n_hidden_1], stddev=0.1), name='wh1'),
+                'wh2':  tf.Variable(tf.truncated_normal([self.n_hidden_1, self.n_hidden_2], stddev=0.1), name='wh2'),
+                'wh3':  tf.Variable(tf.truncated_normal([self.n_hidden_2, self.n_hidden_3], stddev=0.1), name='wh3'),
+                'wo':   tf.Variable(tf.truncated_normal([self.n_hidden_3, self.n_classes], stddev=0.1), name='wo'),
+                'bh1':  tf.Variable(tf.ones([self.n_hidden_1])*0.1, name='bh1'),
+                'bh2':  tf.Variable(tf.ones([self.n_hidden_2])*0.1, name='bh2'),
+                'bh3':  tf.Variable(tf.ones([self.n_hidden_3])*0.1, name='bh3'),
+                'bo':   tf.Variable(tf.ones([self.n_classes])*0.1, name='bo')
             }
 
         with tf.variable_scope("ewc"):
@@ -76,9 +76,12 @@ class Network():
         # Construct model
         self.logits = out_layer
 
-        # Define loss and optimizer
-        self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(
+        # Define loss and optimizer V2??
+        self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
             logits=self.logits, labels=y))
+        print("DTYPES",y,self.logits)
+
+        self.fisherLoss = - tf.reduce_sum(tf.cast(y,tf.float32) * tf.nn.log_softmax(self.logits)) ;
 
         # Evaluate model
         correct_pred = tf.equal(
@@ -91,10 +94,16 @@ class Network():
     def compute_fisher(self, sess, iterator_initializer):
 
         # fisher matrix opimizer
+        '''
         fisher_matrix_optimizer = tf.train.GradientDescentOptimizer(
             learning_rate=0)
         fisher_matrix_gradient_tensors = fisher_matrix_optimizer.compute_gradients(
             self.loss)
+        '''
+        _vars = [v for v in self.theta.values()] ;
+        fisher_matrix_gradient_tensors = [(g,v) for (v,g) in zip (_vars, tf.gradients(self.fisherLoss, _vars))] ;
+
+
 
         # log gradient tensor list
         logging.debug(fisher_matrix_gradient_tensors)
@@ -129,8 +138,8 @@ class Network():
 
                 sess.run(operations)
                 iterations += 1
+                print(iterations);
         except tf.errors.OutOfRangeError:
-
             with tf.variable_scope("gradients"):
                 for key, grad in self.gradients.items():
                     sess.run(tf.assign(self.gradients[key], tf.truediv(grad, tf.cast(iterations, tf.float32))))

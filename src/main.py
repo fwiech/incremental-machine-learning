@@ -61,7 +61,7 @@ def task(**kwargs):
 
     if save is not '' and save is not None:
         fisher_task = tf.data.Dataset.from_tensor_slices(
-            mnist_task[1]).batch(batch_fisher, False)
+            mnist_task[0]).batch(batch_fisher, False)
 
     # create test datasets
     test = tf.data.Dataset.from_tensor_slices(
@@ -86,11 +86,14 @@ def task(**kwargs):
     nn = Network(next_feature, next_label)
 
     # optimizer
-    optimizer = tf.train.GradientDescentOptimizer(
+    optimizer = tf.train.AdamOptimizer(
         learning_rate=learn_rate)
     if previous is not '':
-        nn.compute_ewc(lam=lam)
-    update = optimizer.minimize(nn.loss+lam/2. * nn.ewc) ;
+        logging.info("* adding EWC penalty term *")
+        nn.compute_ewc()
+        update = optimizer.minimize(nn.loss + lam/2. * nn.ewc) ;
+    else:
+        update = optimizer.minimize(nn.loss) ;
 
     # tf Session
     # Initialize the variables (i.e. assign their default value)
@@ -125,14 +128,15 @@ def task(**kwargs):
     nn.train(sess, update, iter_train_task, training_iterations, display_steps=display_steps_train)
 
     # if model is not saved, fisher claculation unnecessary
-    if save is not '' and save is not None:
+    # of model is loaded, fisher comes from checkpoint so no comp necessary either
+    if save is not '' and save is not None and previous is '':
         logging.info("* CALC FISHER *")
         nn.compute_fisher(sess, iter_fisher)
 
-    logging.info("* TESTING CLASSES *")
+    logging.info("* TESTING ON TRAINED CLASSES *")
     test_classes_result = nn.test(sess, iter_test_task)
 
-    logging.info("* TESTING COMPLETE *")
+    logging.info("* TESTING ON ALL CLASSES *")
     test_result = nn.test(sess, iter_test)
 
     stats = {
