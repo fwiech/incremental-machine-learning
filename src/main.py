@@ -90,7 +90,7 @@ def task(**kwargs):
         learning_rate=learn_rate)
     if previous is not '':
         nn.compute_ewc(lam=lam)
-    update = optimizer.minimize(nn.loss)
+    update = optimizer.minimize(nn.loss+lam/2. * nn.ewc) ;
 
     # tf Session
     # Initialize the variables (i.e. assign their default value)
@@ -174,9 +174,9 @@ def task(**kwargs):
             stats['variables'][key]['max'] = float(variable.max())
         with open(checkpoint_dir + save + "/stats.json", 'w') as fp:
             json.dump(stats, fp)
-    
+
     return stats
-    
+
 
 
 if __name__ == '__main__':

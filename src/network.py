@@ -33,7 +33,7 @@ class Network():
                 'bh3':  tf.Variable(tf.random_normal([self.n_hidden_3]), name='bh3'),
                 'bo':   tf.Variable(tf.random_normal([self.n_classes]), name='bo')
             }
-        
+
         with tf.variable_scope("ewc"):
             with tf.variable_scope("gradients"):
                 self.gradients = {
@@ -89,7 +89,7 @@ class Network():
         self.saver = tf.train.Saver()
 
     def compute_fisher(self, sess, iterator_initializer):
-        
+
         # fisher matrix opimizer
         fisher_matrix_optimizer = tf.train.GradientDescentOptimizer(
             learning_rate=0)
@@ -112,7 +112,7 @@ class Network():
                     start_index = grad_name.rfind('/') + 1
                     end_index = grad_name.rfind(':')
                     grad_name = grad_name[start_index:end_index]
-                    
+
                     if iterations is 0:
                         operations.append(
                             tf.assign(
@@ -126,16 +126,18 @@ class Network():
                             tf.assign_add(
                                 self.gradients[grad_name], tf.square(grad[0]))
                         )
-                
+
                 sess.run(operations)
                 iterations += 1
         except tf.errors.OutOfRangeError:
 
             with tf.variable_scope("gradients"):
-                for key, grad in self.gradients.items(): 
+                for key, grad in self.gradients.items():
                     sess.run(tf.assign(self.gradients[key], tf.truediv(grad, tf.cast(iterations, tf.float32))))
 
-    def compute_ewc(self, lam):
+    def compute_ewc(self):
+        self.ewc = 0.;
+        # loop over pairs of (key,fmat_tf_variable)
         for key, _ in self.gradients.items():
             # calc EWC appendix
             subAB = tf.subtract(
@@ -143,7 +145,7 @@ class Network():
             powAB = tf.square(subAB)
             multiplyF = tf.multiply(powAB, self.gradients[key])
 
-            self.loss += (lam/2) * tf.reduce_sum(multiplyF)
+            self.ewc +=  tf.reduce_sum(multiplyF)
 
     def train(self, sess:tf.Session, update, iter_init, training_iters:int, display_steps=100, *args):
         # init iterator
@@ -169,5 +171,5 @@ class Network():
         except tf.errors.OutOfRangeError:
             avg_acc = ((avg_acc / float(iterations)) * 100.)
             logging.info("Average validation set accuracy over {} iterations is {:.2f}%".format(iterations, avg_acc))
-        
+
         return avg_acc
