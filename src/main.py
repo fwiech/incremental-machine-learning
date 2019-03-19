@@ -44,7 +44,12 @@ def task(**kwargs):
     learn_rate = kwargs.get('learnrate')
     training_iterations = kwargs.get('iterations')
     batch_size = kwargs.get('batch')
-    lam = (1./learn_rate)
+    lam = kwargs.get('lambda');
+    print("set lambda tp", lam, type(lam))
+    if lam < 0:
+      lam = (1./learn_rate)
+    print("adapted lambda tp", lam, type(lam))
+    permute = kwargs.get('permute', False) ;
 
     if save is not '' and save is not None:
         batch_fisher = kwargs.get('batch_fisher')
@@ -54,6 +59,20 @@ def task(**kwargs):
     # get mnist
     mnist = load_mnist()
     mnist_task = load_mnist(classes)
+
+    if permute:
+      perm = np.arange(0,mnist[0][0].shape[1]) ;
+      np.random.shuffle(perm) ;
+      mnist_task[0][0][:,:] = mnist_task[0][0][:,perm] ;
+      mnist_task[1][0][:,:] = mnist_task[1][0][:,perm] ;
+
+    """
+    # mnist debug
+    trl =mnist_task[0][1] ;
+    print(trl[0:10], trl[40000:40100]);
+    print (trl.sum(axis=0));
+    print ("MNIST",mnist_task[0][0].min(), mnist_task[0][0].max());
+    """
 
     # create train datasets
     train_task = tf.data.Dataset.from_tensor_slices(
@@ -86,10 +105,10 @@ def task(**kwargs):
     nn = Network(next_feature, next_label)
 
     # optimizer
-    optimizer = tf.train.AdamOptimizer(
+    optimizer = tf.train.GradientDescentOptimizer(
         learning_rate=learn_rate)
     if previous is not '':
-        logging.info("* adding EWC penalty term *")
+        logging.info("* adding EWC penalty term * %f"% (lam,))
         nn.compute_ewc()
         update = optimizer.minimize(nn.loss + lam/2. * nn.ewc) ;
     else:
@@ -203,6 +222,8 @@ if __name__ == '__main__':
                         default='', help='checkpoint name for saving new model')
     parser.add_argument('-d', '--display', nargs='?', type=int, required=False,
                         default=100, help='print every x steps training results')
+    parser.add_argument('--lambda', type=float, required=False, default=-1., help='optimizer learning rate')
+    parser.add_argument('--permute', default = False, action="store_true", help='permute dataset?')
 
     args = parser.parse_args()
     pprint(args)

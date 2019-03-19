@@ -58,6 +58,9 @@ class Network():
                     'bo':   tf.Variable(tf.zeros([self.n_classes]), name='bo', trainable=False)
                 }
 
+        self.var_list = [v for v in self.theta.values()] ;
+        self.fisher_var_list = [v for v in self.gradients.values()] ;
+
         self.__neural_network__(x, y, self.theta)
 
     def __neural_network__(self, x, y, t: list):
@@ -89,24 +92,16 @@ class Network():
         self.accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
         # tensorflow saver
-        self.saver = tf.train.Saver()
+        self.saver = tf.train.Saver(var_list = self.var_list + self.fisher_var_list) ;
 
     def compute_fisher(self, sess, iterator_initializer):
 
         # fisher matrix opimizer
-        '''
-        fisher_matrix_optimizer = tf.train.GradientDescentOptimizer(
-            learning_rate=0)
-        fisher_matrix_gradient_tensors = fisher_matrix_optimizer.compute_gradients(
-            self.loss)
-        '''
-        _vars = [v for v in self.theta.values()] ;
-        fisher_matrix_gradient_tensors = [(g,v) for (v,g) in zip (_vars, tf.gradients(self.fisherLoss, _vars))] ;
-
-
+        fisher_matrix_gradients = [(tf.square(g)) for (g) in tf.gradients(self.fisherLoss, self.var_list)] ;
+        acc_np = [np.zeros(v.get_shape().as_list()) for v in fisher_matrix_gradients] ;
 
         # log gradient tensor list
-        logging.debug(fisher_matrix_gradient_tensors)
+        logging.debug(fisher_matrix_gradients)
 
         # init iterator
         sess.run(iterator_initializer)
@@ -114,35 +109,19 @@ class Network():
         iterations = 0
         try:
             while True:
-                operations = []
-                for grad in fisher_matrix_gradient_tensors:
+              # advance iterator! Compute squared grads and download them to np
+              fisher_matrix_gradients_np = sess.run( fisher_matrix_gradients ) ;
 
-                    grad_name = grad[1].name
-                    start_index = grad_name.rfind('/') + 1
-                    end_index = grad_name.rfind(':')
-                    grad_name = grad_name[start_index:end_index]
+              # accumulate them in np arrays
+              for (src,dest) in zip(acc_np,fisher_matrix_gradients_np):
+                src[:] += dest ;
 
-                    if iterations is 0:
-                        operations.append(
-                            tf.assign(
-                                self.gradients[grad_name], tf.square(grad[0]))
-                        )
-                        operations.append(
-                            tf.assign(self.variables[grad_name], grad[1])
-                        )
-                    else:
-                        operations.append(
-                            tf.assign_add(
-                                self.gradients[grad_name], tf.square(grad[0]))
-                        )
-
-                sess.run(operations)
-                iterations += 1
-                print(iterations);
+              iterations += 1
+              #print(iterations);
         except tf.errors.OutOfRangeError:
-            with tf.variable_scope("gradients"):
-                for key, grad in self.gradients.items():
-                    sess.run(tf.assign(self.gradients[key], tf.truediv(grad, tf.cast(iterations, tf.float32))))
+          # when iterator is through, normalize by nr of iterations
+          for var, acc in zip(self.gradients.values(), acc_np):
+              sess.run(tf.assign(var, acc/float(iterations))) ;
 
     def compute_ewc(self):
         self.ewc = 0.;
