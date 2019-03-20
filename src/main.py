@@ -116,12 +116,12 @@ def task(**kwargs):
     nn = Network(next_feature, next_label)
 
     # optimizer
-    optimizer = tf.train.GradientDescentOptimizer(
+    optimizer = tf.train.AdamOptimizer(
         learning_rate=learn_rate)
     if previous is not '':
         logging.info("* adding EWC penalty term * %f"% (lam,))
         nn.compute_ewc()
-        update = optimizer.minimize(nn.loss - lam/2. * nn.ewc) ;
+        update = optimizer.minimize(nn.loss + lam/2. * nn.ewc, var_list = nn.var_list) ;
     else:
         update = optimizer.minimize(nn.loss) ;
 
@@ -155,7 +155,8 @@ def task(**kwargs):
             logging.debug("---")
 
     logging.info("* TRAINING CLASSES *")
-    nn.train(sess, update, iter_train_task, training_iterations, display_steps=display_steps_train)
+    nn.train(sess, update, iter_train_task, training_iterations,display_steps_train,
+             tf.reduce_min(nn.gradients["wh3"]), tf.reduce_max(nn.gradients["wh3"]))
 
     # if model is not saved, fisher claculation unnecessary
     # of model is loaded, fisher comes from checkpoint so no comp necessary either

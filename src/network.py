@@ -24,38 +24,38 @@ class Network():
 
         with tf.variable_scope("network"):
             self.theta = {
-                'wh1':  tf.Variable(tf.truncated_normal([self.n_input, self.n_hidden_1], stddev=0.1), name='wh1'),
-                'wh2':  tf.Variable(tf.truncated_normal([self.n_hidden_1, self.n_hidden_2], stddev=0.1), name='wh2'),
-                'wh3':  tf.Variable(tf.truncated_normal([self.n_hidden_2, self.n_hidden_3], stddev=0.1), name='wh3'),
-                'wo':   tf.Variable(tf.truncated_normal([self.n_hidden_3, self.n_classes], stddev=0.1), name='wo'),
-                'bh1':  tf.Variable(tf.ones([self.n_hidden_1])*0.1, name='bh1'),
-                'bh2':  tf.Variable(tf.ones([self.n_hidden_2])*0.1, name='bh2'),
-                'bh3':  tf.Variable(tf.ones([self.n_hidden_3])*0.1, name='bh3'),
-                'bo':   tf.Variable(tf.ones([self.n_classes])*0.1, name='bo')
+                'wh1':  tf.Variable(tf.truncated_normal([self.n_input, self.n_hidden_1], stddev=0.1,dtype=tf.float32), name='wh1'),
+                'wh2':  tf.Variable(tf.truncated_normal([self.n_hidden_1, self.n_hidden_2], stddev=0.1,dtype=tf.float32), name='wh2'),
+                'wh3':  tf.Variable(tf.truncated_normal([self.n_hidden_2, self.n_hidden_3], stddev=0.1,dtype=tf.float32), name='wh3'),
+                'wo':   tf.Variable(tf.truncated_normal([self.n_hidden_3, self.n_classes], stddev=0.1,dtype=tf.float32), name='wo'),
+                'bh1':  tf.Variable(tf.ones([self.n_hidden_1],dtype=tf.float32)*0.1, name='bh1'),
+                'bh2':  tf.Variable(tf.ones([self.n_hidden_2],dtype=tf.float32)*0.1, name='bh2'),
+                'bh3':  tf.Variable(tf.ones([self.n_hidden_3],dtype=tf.float32)*0.1, name='bh3'),
+                'bo':   tf.Variable(tf.ones([self.n_classes],dtype=tf.float32)*0.1, name='bo')
             }
 
         with tf.variable_scope("ewc"):
             with tf.variable_scope("gradients"):
                 self.gradients = {
-                    'wh1':  tf.Variable(tf.zeros([self.n_input, self.n_hidden_1]), name='wh1', trainable=False),
-                    'wh2':  tf.Variable(tf.zeros([self.n_hidden_1, self.n_hidden_2]), name='wh2', trainable=False),
-                    'wh3':  tf.Variable(tf.zeros([self.n_hidden_2, self.n_hidden_3]), name='wh3', trainable=False),
-                    'wo':   tf.Variable(tf.zeros([self.n_hidden_3, self.n_classes]), name='wo', trainable=False),
-                    'bh1':  tf.Variable(tf.zeros([self.n_hidden_1]), name='bh1', trainable=False),
-                    'bh2':  tf.Variable(tf.zeros([self.n_hidden_2]), name='bh2', trainable=False),
-                    'bh3':  tf.Variable(tf.zeros([self.n_hidden_3]), name='bh3', trainable=False),
-                    'bo':   tf.Variable(tf.zeros([self.n_classes]), name='bo', trainable=False)
+                    'wh1':  tf.Variable(tf.zeros([self.n_input, self.n_hidden_1],dtype=tf.float32), name='wh1', trainable=False),
+                    'wh2':  tf.Variable(tf.zeros([self.n_hidden_1, self.n_hidden_2],dtype=tf.float32), name='wh2', trainable=False),
+                    'wh3':  tf.Variable(tf.zeros([self.n_hidden_2, self.n_hidden_3],dtype=tf.float32), name='wh3', trainable=False),
+                    'wo':   tf.Variable(tf.zeros([self.n_hidden_3, self.n_classes],dtype=tf.float32), name='wo', trainable=False),
+                    'bh1':  tf.Variable(tf.zeros([self.n_hidden_1],dtype=tf.float32), name='bh1', trainable=False),
+                    'bh2':  tf.Variable(tf.zeros([self.n_hidden_2],dtype=tf.float32), name='bh2', trainable=False),
+                    'bh3':  tf.Variable(tf.zeros([self.n_hidden_3],dtype=tf.float32), name='bh3', trainable=False),
+                    'bo':   tf.Variable(tf.zeros([self.n_classes],dtype=tf.float32), name='bo', trainable=False)
                 }
             with tf.variable_scope("variables"):
                 self.variables = {
-                    'wh1':  tf.Variable(tf.zeros([self.n_input, self.n_hidden_1]), name='wh1', trainable=False),
-                    'wh2':  tf.Variable(tf.zeros([self.n_hidden_1, self.n_hidden_2]), name='wh2', trainable=False),
-                    'wh3':  tf.Variable(tf.zeros([self.n_hidden_2, self.n_hidden_3]), name='wh3', trainable=False),
-                    'wo':   tf.Variable(tf.zeros([self.n_hidden_3, self.n_classes]), name='wo', trainable=False),
-                    'bh1':  tf.Variable(tf.zeros([self.n_hidden_1]), name='bh1', trainable=False),
-                    'bh2':  tf.Variable(tf.zeros([self.n_hidden_2]), name='bh2', trainable=False),
-                    'bh3':  tf.Variable(tf.zeros([self.n_hidden_3]), name='bh3', trainable=False),
-                    'bo':   tf.Variable(tf.zeros([self.n_classes]), name='bo', trainable=False)
+                    'wh1':  tf.Variable(tf.zeros([self.n_input, self.n_hidden_1],dtype=tf.float32), name='wh1', trainable=False),
+                    'wh2':  tf.Variable(tf.zeros([self.n_hidden_1, self.n_hidden_2],dtype=tf.float32), name='wh2', trainable=False),
+                    'wh3':  tf.Variable(tf.zeros([self.n_hidden_2, self.n_hidden_3],dtype=tf.float32), name='wh3', trainable=False),
+                    'wo':   tf.Variable(tf.zeros([self.n_hidden_3, self.n_classes],dtype=tf.float32), name='wo', trainable=False),
+                    'bh1':  tf.Variable(tf.zeros([self.n_hidden_1],dtype=tf.float32), name='bh1', trainable=False),
+                    'bh2':  tf.Variable(tf.zeros([self.n_hidden_2],dtype=tf.float32), name='bh2', trainable=False),
+                    'bh3':  tf.Variable(tf.zeros([self.n_hidden_3],dtype=tf.float32), name='bh3', trainable=False),
+                    'bo':   tf.Variable(tf.zeros([self.n_classes],dtype=tf.float32), name='bo', trainable=False)
                 }
 
         self.keys = self.theta.keys()  ;
@@ -67,7 +67,7 @@ class Network():
 
     def __neural_network__(self, x, y, t: list):
         # Hidden fully connected layer with 200 neurons
-        layer_1 = tf.nn.relu(tf.add(tf.matmul(x, t['wh1']), t['bh1']))
+        layer_1 = tf.nn.relu(tf.add(tf.matmul(tf.cast(x,tf.float32), t['wh1']), t['bh1']))
 
         # Hidden fully connected layer with 200 neurons
         layer_2 = tf.nn.relu(tf.add(tf.matmul(layer_1, t['wh2']), t['bh2']))
@@ -86,7 +86,8 @@ class Network():
             logits=self.logits, labels=y))
         print("DTYPES",y,self.logits)
 
-        self.fisherLoss = - tf.reduce_mean(tf.cast(y,tf.float32) * tf.nn.log_softmax(self.logits)) ;
+        self.fisherLoss = - tf.reduce_sum(tf.cast(y,tf.float32) * tf.nn.log_softmax(self.logits)) ;
+        self.ewc = tf.constant(0.) ;
 
         # Evaluate model
         correct_pred = tf.equal(
@@ -119,11 +120,17 @@ class Network():
                 acc_np[key][:] += fisher_matrix_gradients_np[key] ;
 
               iterations += 1
-              #print(iterations);
+              print(iterations);
         except tf.errors.OutOfRangeError:
           # when iterator is through, normalize by nr of iterations
+          mx = -1 ;
           for key in self.keys:
-              acc_np[key] /= float(iterations) ;
+              acc_np[key] /= (float(iterations)*1000.) ;
+              _mx = acc_np[key].max() ;
+              if _mx > mx:
+                mx = _mx ;
+          for key in self.keys:
+              #acc_np[key] /= mx ;
               sess.run(tf.assign(self.gradients[key], acc_np[key])) ;
               print ("FM key=", key, acc_np[key].min(), acc_np[key].max() ) ;
           for key in self.keys:
@@ -146,10 +153,11 @@ class Network():
         sess.run(iter_init)
 
         for i in range(training_iters):
-            l, _, acc, _ = sess.run([self.loss, update, self.accuracy, args])
+            l, e, _, acc, args_np = sess.run([self.loss, self.ewc, update, self.accuracy, args])
             if i % display_steps == 0:
                 logging.info(
-                    "Step: {}, loss: {:.3f}, training accuracy: {:.2f}%".format(i, l, acc * 100.))
+                    "Step: {}, loss: {:.3f}, ewc:{:.3f}, training accuracy: {:.2f}, mm = {:.5f}/{:.5f}".format(
+                      i, l, e, acc * 100., args_np[0],args_np[1]))
 
     def test(self, sess, iter_init):
         # init iterator
