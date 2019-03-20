@@ -28,7 +28,8 @@ def task(**kwargs):
     logging.basicConfig(
         # filename="tmp/logs/logs_" + str(ts) + ".log",
         # filemode='w',
-        level=logging.INFO,
+        #filename="log.log",
+        level=logging.DEBUG,
         format="%(asctime)s:%(levelname)s:%(message)s"
     )
     # reset graph
@@ -49,7 +50,7 @@ def task(**kwargs):
     if lam < 0:
       lam = (1./learn_rate)
     print("adapted lambda tp", lam, type(lam))
-    permute = kwargs.get('permute', False) ;
+    permute = kwargs.get('permute', -1) ;
 
     if save is not '' and save is not None:
         batch_fisher = kwargs.get('batch_fisher')
@@ -60,11 +61,21 @@ def task(**kwargs):
     mnist = load_mnist()
     mnist_task = load_mnist(classes)
 
-    if permute:
+    # if permutation, mnist_task and mnist consist of the same classes
+    # but mnist is a concatedntion of permuted and unpermuted data
+    if permute != -1:
       perm = np.arange(0,mnist[0][0].shape[1]) ;
+      print (mnist) ;
+      np.random.seed(permute) ;
       np.random.shuffle(perm) ;
       mnist_task[0][0][:,:] = mnist_task[0][0][:,perm] ;
       mnist_task[1][0][:,:] = mnist_task[1][0][:,perm] ;
+
+      mnist = [[mnist[0][0], mnist[0][1]],[mnist[1][0], mnist[1][1]]] ;
+      for ds,dsc in zip(mnist,mnist_task):
+        ds[0]=np.append(ds[0],dsc[0],axis=0) ;
+        ds[1]=np.append(ds[1],dsc[1],axis=0) ;
+      mnist = [(mnist[0][0], mnist[0][1]),(mnist[1][0], mnist[1][1])] ;
 
     """
     # mnist debug
@@ -110,7 +121,7 @@ def task(**kwargs):
     if previous is not '':
         logging.info("* adding EWC penalty term * %f"% (lam,))
         nn.compute_ewc()
-        update = optimizer.minimize(nn.loss + lam/2. * nn.ewc) ;
+        update = optimizer.minimize(nn.loss - lam/2. * nn.ewc) ;
     else:
         update = optimizer.minimize(nn.loss) ;
 
@@ -129,15 +140,15 @@ def task(**kwargs):
 
         logging.debug("* GRADIENTS & VARIABLES *")
         logging.debug("* gradients *")
-        for key, gradient in nn.gradients.items():
-            gradient = sess.run(gradient)
+        for key in nn.keys:
+            gradient = sess.run(nn.gradients[key])
             logging.debug(key)
             logging.debug("min: " + str(gradient.min()))
             logging.debug("max: " + str(gradient.max()))
             logging.debug("-----")
         logging.info("* variables *")
-        for key, variable in nn.variables.items():
-            variable = sess.run(variable)
+        for key in nn.keys:
+            variable = sess.run(nn.variables[key])
             logging.debug(key)
             logging.debug("min: " + str(variable.min()))
             logging.debug("max: " + str(variable.max()))
@@ -223,7 +234,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--display', nargs='?', type=int, required=False,
                         default=100, help='print every x steps training results')
     parser.add_argument('--lambda', type=float, required=False, default=-1., help='optimizer learning rate')
-    parser.add_argument('--permute', default = False, action="store_true", help='permute dataset?')
+    parser.add_argument('--permute', type=int, default = -1, required=False, help='permute dataset? If -1: no permutation, if >= 0: random seed for permutation')
 
     args = parser.parse_args()
     pprint(args)

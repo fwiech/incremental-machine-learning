@@ -58,8 +58,10 @@ class Network():
                     'bo':   tf.Variable(tf.zeros([self.n_classes]), name='bo', trainable=False)
                 }
 
-        self.var_list = [v for v in self.theta.values()] ;
-        self.fisher_var_list = [v for v in self.gradients.values()] ;
+        self.keys = self.theta.keys()  ;
+        self.var_list = [self.theta[key] for key in self.keys] ;
+        self.fisher_var_list = [self.variables[key] for key in self.keys] ;
+        self.fisher_gradvar_list = [self.gradients[key] for key in self.keys] ;
 
         self.__neural_network__(x, y, self.theta)
 
@@ -84,7 +86,7 @@ class Network():
             logits=self.logits, labels=y))
         print("DTYPES",y,self.logits)
 
-        self.fisherLoss = - tf.reduce_sum(tf.cast(y,tf.float32) * tf.nn.log_softmax(self.logits)) ;
+        self.fisherLoss = - tf.reduce_mean(tf.cast(y,tf.float32) * tf.nn.log_softmax(self.logits)) ;
 
         # Evaluate model
         correct_pred = tf.equal(
@@ -92,13 +94,13 @@ class Network():
         self.accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
         # tensorflow saver
-        self.saver = tf.train.Saver(var_list = self.var_list + self.fisher_var_list) ;
+        self.saver = tf.train.Saver(var_list = self.var_list + self.fisher_var_list + self.fisher_gradvar_list) ;
 
     def compute_fisher(self, sess, iterator_initializer):
 
         # fisher matrix opimizer
-        fisher_matrix_gradients = [(tf.square(g)) for (g) in tf.gradients(self.fisherLoss, self.var_list)] ;
-        acc_np = [np.zeros(v.get_shape().as_list()) for v in fisher_matrix_gradients] ;
+        fisher_matrix_gradients = { key: tf.square(tf.gradients(self.fisherLoss,self.theta[key])[0]) for key in self.keys} ;
+        acc_np = {key: np.zeros(fisher_matrix_gradients[key].get_shape().as_list()) for key in self.keys} ;
 
         # log gradient tensor list
         logging.debug(fisher_matrix_gradients)
@@ -113,20 +115,24 @@ class Network():
               fisher_matrix_gradients_np = sess.run( fisher_matrix_gradients ) ;
 
               # accumulate them in np arrays
-              for (src,dest) in zip(acc_np,fisher_matrix_gradients_np):
-                src[:] += dest ;
+              for key in self.keys:
+                acc_np[key][:] += fisher_matrix_gradients_np[key] ;
 
               iterations += 1
               #print(iterations);
         except tf.errors.OutOfRangeError:
           # when iterator is through, normalize by nr of iterations
-          for var, acc in zip(self.gradients.values(), acc_np):
-              sess.run(tf.assign(var, acc/float(iterations))) ;
+          for key in self.keys:
+              acc_np[key] /= float(iterations) ;
+              sess.run(tf.assign(self.gradients[key], acc_np[key])) ;
+              print ("FM key=", key, acc_np[key].min(), acc_np[key].max() ) ;
+          for key in self.keys:
+              sess.run(tf.assign(self.variables[key], self.theta[key])) ;
 
     def compute_ewc(self):
         self.ewc = 0.;
         # loop over pairs of (key,fmat_tf_variable)
-        for key, _ in self.gradients.items():
+        for key in self.keys:
             # calc EWC appendix
             subAB = tf.subtract(
                 self.theta[key], self.variables[key])
