@@ -59,8 +59,7 @@ def task(**kwargs):
     display_steps_train = kwargs.get('display', 100)
 
     # get mnist
-    mnist = load_mnist(permute_seed=permute)
-    mnist_task = load_mnist(classes, permute_seed=permute)
+    mnist, mnist_task, mnist_task_inverted = load_mnist(classes, permute_seed=permute)
 
     # create train datasets
     train_task = tf.data.Dataset.from_tensor_slices(

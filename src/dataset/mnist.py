@@ -7,6 +7,8 @@ import pickle
 from functools import reduce
 import os
 
+possible_classes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
 def load_mnist(classes=[], permute_seed=None, reshape=False):
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
@@ -38,14 +40,26 @@ def load_mnist(classes=[], permute_seed=None, reshape=False):
 
     # get partials
     if len(classes) != 0:
+        invert_classes = [x for x in possible_classes if x not in classes]
+
         train = get_partial(x_train, y_train, classes)
         test = get_partial(x_test, y_test, classes)
-        return train, test
 
-    if permute_seed is not None:
-        x_train, x_test = permute(permute_seed, x_train, x_test)
+        invert_train = get_partial(x_train, y_train, invert_classes)
+        invert_test = get_partial(x_test, y_test, invert_classes)
 
-    return (x_train, y_train), (x_test, y_test)
+        if permute_seed is not None:
+            x_train, x_test, train, test, invert_train, invert_test = permute(
+                permute_seed, x_train, x_test, train, test, invert_train, invert_test
+            )
+
+        mnist = ((x_train, y_train), (x_test, y_test))
+        return mnist, (train, test), (invert_train, invert_test)
+    else:
+        if permute_seed is not None:
+            x_train, x_test = permute(permute_seed, x_train, x_test)
+
+        return (x_train, y_train), (x_test, y_test)
 
 def get_partial(features, labels, classes=[]):
     if len(classes) == 0:
