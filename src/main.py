@@ -103,7 +103,9 @@ def task(**kwargs):
     # check if it is a continual task
     if previous is not '':
         logging.info("* adding EWC penalty term * %f"% (lam,))
-        update = optimizer.minimize(nn.ewc_loss, var_list=nn.var_list)
+        update = optimizer.minimize(
+            nn.ewc_loss, var_list=list(nn.theta.values())
+        )
     else:
         update = optimizer.minimize(nn.loss)
 
