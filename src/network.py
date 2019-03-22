@@ -19,6 +19,8 @@ class Network():
 
     logits = None
     loss = None
+    ewc_loss = None
+    ewc_appendix = None
     accuracy = None
 
     saver = None
@@ -67,6 +69,9 @@ class Network():
         self.keys = self.theta.keys()
 
         self.__neural_network__(self.theta)
+
+        if lam is not None:
+            self.compute_ewc(lam)
 
     def __neural_network__(self, t: list):
         # Hidden fully connected layer with 200 neurons
@@ -155,7 +160,10 @@ class Network():
             powAB = tf.square(subAB)
             multiplyF = tf.multiply(powAB, self.gradients[key])
 
-            self.ewc +=  tf.reduce_sum(multiplyF)
+            self.ewc_appendix += tf.reduce_sum(multiplyF)
+        
+        self.ewc_appendix *= (lam/2.)
+        self.ewc_loss = self.loss + self.ewc_appendix
 
     def train(self, sess:tf.Session, update, iter_init, training_iters:int, display_steps=100, *args):
         # init iterator

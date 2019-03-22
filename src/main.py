@@ -42,11 +42,15 @@ def task(**kwargs):
     learn_rate = kwargs.get('learnrate')
     training_iterations = kwargs.get('iterations')
     batch_size = kwargs.get('batch')
-    lam = kwargs.get('lambda');
-    print("set lambda tp", lam, type(lam))
-    if lam < 0:
-      lam = (1./learn_rate)
-    print("adapted lambda tp", lam, type(lam))
+
+    lam = kwargs.get('lambda', None)
+    # check if it is a continual task
+    if previous is not '':
+        print("set lambda tp", lam, type(lam))
+        if lam is None:
+            lam = (1./learn_rate)
+        print("adapted lambda tp", lam, type(lam))
+    
     permute = kwargs.get('permute', None)
 
     if save is not '' and save is not None:
@@ -90,15 +94,16 @@ def task(**kwargs):
         iter_fisher = iterator.make_initializer(fisher_task)
 
     # Construct model
-    nn = Network(next_feature, next_label)
+    nn = Network(next_feature, next_label, lam)
 
     # optimizer
     optimizer = tf.train.AdamOptimizer(
-        learning_rate=learn_rate)
+        learning_rate=learn_rate
+    )
+    # check if it is a continual task
     if previous is not '':
         logging.info("* adding EWC penalty term * %f"% (lam,))
-        nn.compute_ewc()
-        update = optimizer.minimize(nn.loss + lam/2. * nn.ewc, var_list = nn.var_list) ;
+        update = optimizer.minimize(nn.ewc_loss, var_list=nn.var_list)
     else:
         update = optimizer.minimize(nn.loss)
 
@@ -216,7 +221,7 @@ if __name__ == '__main__':
                         default='', help='checkpoint name for saving new model')
     parser.add_argument('-d', '--display', nargs='?', type=int, required=False,
                         default=100, help='print every x steps training results')
-    parser.add_argument('--lambda', type=float, required=False, default=-1., help='optimizer learning rate')
+    parser.add_argument('--lambda', type=float, required=False, help='optimizer learning rate')
     parser.add_argument('--permute', type=int, required=False, help='permute dataset? If -1: no permutation, if >= 0: random seed for permutation')
 
     args = parser.parse_args()
