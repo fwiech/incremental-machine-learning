@@ -107,15 +107,19 @@ class Network():
             var_list = list(self.theta.values()) + list(self.variables.values()) + list(self.gradients.values())
         )
 
-    def compute_fisher(self, sess, iterator_initializer):
+    def compute_fisher(self, sess, iterator_initializer, batch:int):
 
-        # fisher matrix opimizer
-        fisher_matrix_gradients = { key: tf.square(tf.gradients(self.fisherLoss,self.theta[key])[0]) for key in self.keys} ;
-        acc_np = {key: np.zeros(fisher_matrix_gradients[key].get_shape().as_list()) for key in self.keys} ;
         fisher_loss = - tf.reduce_sum(
             tf.cast(self.Y,tf.float32) * tf.nn.log_softmax(self.logits)
         )
 
+        # fisher matrix gradients
+        fisher_matrix_gradients = {
+            key: tf.square(tf.gradients(fisher_loss, self.theta[key])[0]) for key in self.keys
+        }
+        acc_np = {
+            key: np.zeros(fisher_matrix_gradients[key].get_shape().as_list()) for key in self.keys
+        }
 
         # log gradient tensor list
         logging.debug(fisher_matrix_gradients)
@@ -137,21 +141,15 @@ class Network():
                 logging.debug(str(iterations))
         except tf.errors.OutOfRangeError:
           # when iterator is through, normalize by nr of iterations
-          mx = -1 ;
-          for key in self.keys:
-              acc_np[key] /= (float(iterations)*1000.) ;
-              _mx = acc_np[key].max() ;
-              if _mx > mx:
-                mx = _mx ;
-          for key in self.keys:
-              #acc_np[key] /= mx ;
-              sess.run(tf.assign(self.gradients[key], acc_np[key])) ;
-              print ("FM key=", key, acc_np[key].min(), acc_np[key].max() ) ;
-          for key in self.keys:
-              sess.run(tf.assign(self.variables[key], self.theta[key])) ;
+            for key in self.keys:
+                acc_np[key] /= (float(iterations)*float(batch))
+            for key in self.keys:
+                sess.run(tf.assign(self.gradients[key], acc_np[key]))
+                logging.debug("FM key=" + str(key) + str(acc_np[key].min()) + str(acc_np[key].max()))
+                sess.run(tf.assign(self.variables[key], self.theta[key]))
 
-    def compute_ewc(self):
-        self.ewc = 0.;
+    def compute_ewc(self, lam):
+        self.ewc_appendix = 0.
         # loop over pairs of (key,fmat_tf_variable)
         for key in self.keys:
             # calc EWC appendix

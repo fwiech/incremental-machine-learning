@@ -149,7 +149,7 @@ def task(**kwargs):
     # of model is loaded, fisher comes from checkpoint so no comp necessary either
     if save is not '' and save is not None and previous is '':
         logging.info("* CALC FISHER *")
-        nn.compute_fisher(sess, iter_fisher) ;
+        nn.compute_fisher(sess, iter_fisher, batch_fisher)
 
     logging.info("* TESTING ON TRAINED CLASSES *")
     test_classes_result = nn.test(sess, iter_test_task)
