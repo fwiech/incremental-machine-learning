@@ -139,11 +139,15 @@ def task(**kwargs):
 
     logging.info("* TRAINING CLASSES *")
     nn.train(
-        sess = sess,
-        update = update,
-        iter_init = iter_train_task,
-        training_iters = training_iterations,
-        display_steps = display_steps_train
+        sess,
+        update,
+        iter_train_task,
+        training_iterations,
+        display_steps_train,
+        {
+            "Task": iter_test_task,
+            "Complete": iter_test
+        }
     )
 
     # if model is not saved, fisher claculation unnecessary

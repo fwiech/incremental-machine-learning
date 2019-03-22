@@ -2,6 +2,8 @@
 
 import tensorflow as tf
 import numpy as np
+import matplotlib.pyplot as plt
+
 import logging
 
 
@@ -166,18 +168,44 @@ class Network():
         self.ewc_appendix *= (lam/2.)
         self.ewc_loss = self.loss + self.ewc_appendix
 
-    def train(self, sess:tf.Session, update, iter_init, training_iters:int, display_steps=100, *args):
+    def train(self, sess: tf.Session, update, train_iter_init, training_iters: int, display_steps=100, test_iter_inits={}, *args):
         # init iterator
-        sess.run(iter_init)
+        sess.run(train_iter_init)
+
+        # timeline plot
+        if bool(test_iter_inits):
+            iters = []
+            plots = {}
+            for label, item in test_iter_inits.items():
+                plots[label] = []
 
         for step in range(training_iters):
             l, e, _, acc, resargs = sess.run(
                 [self.loss, self.ewc_appendix, update, self.accuracy, args])
+            
+            # logging
             if step % display_steps == 0:
                 logging.info(
                     "Step: {}, loss: {:.3f}, ewc:{:.3f}, training accuracy: {:.2f}".format(
                         step, l, e, acc * 100.,) + "; args: " + str(resargs[:])
                 )
+            
+                # timeline plot
+                if bool(test_iter_inits):
+                    iters.append(step)
+                    for label, item in test_iter_inits.items():
+                        plots[label].append(self.test(sess,item))
+                    sess.run(train_iter_init)
+        
+        # timeline plot
+        if bool(test_iter_inits):
+            for label, item in plots.items():
+                plt.plot(iters, item, label=label)
+            
+            plt.xlabel("Iterations")
+            plt.ylabel("Accuracy")
+            plt.legend()
+            plt.show()
 
     def test(self, sess, iter_init):
         # init iterator
