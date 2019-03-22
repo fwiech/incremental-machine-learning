@@ -14,13 +14,19 @@ class Network():
     n_hidden_3 = 800  # 3st layer number of neurons
     n_classes = 10  # MNIST total classes (0-9 digits)
 
+    X = None
+    Y = None
+
     logits = None
     loss = None
     accuracy = None
 
     saver = None
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, lam=None):
+
+        self.X = x
+        self.Y = y
 
         with tf.variable_scope("network"):
             self.theta = {
@@ -63,11 +69,11 @@ class Network():
         self.fisher_var_list = [self.variables[key] for key in self.keys] ;
         self.fisher_gradvar_list = [self.gradients[key] for key in self.keys] ;
 
-        self.__neural_network__(x, y, self.theta)
+        self.__neural_network__(self.theta)
 
-    def __neural_network__(self, x, y, t: list):
+    def __neural_network__(self, t: list):
         # Hidden fully connected layer with 200 neurons
-        layer_1 = tf.nn.relu(tf.add(tf.matmul(tf.cast(x,tf.float32), t['wh1']), t['bh1']))
+        layer_1 = tf.nn.relu(tf.add(tf.matmul(tf.cast(self.X,tf.float32), t['wh1']), t['bh1']))
 
         # Hidden fully connected layer with 200 neurons
         layer_2 = tf.nn.relu(tf.add(tf.matmul(layer_1, t['wh2']), t['bh2']))
@@ -83,15 +89,15 @@ class Network():
 
         # Define loss and optimizer V2??
         self.loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
-            logits=self.logits, labels=y))
-        print("DTYPES",y,self.logits)
-
-        self.fisherLoss = - tf.reduce_sum(tf.cast(y,tf.float32) * tf.nn.log_softmax(self.logits)) ;
-        self.ewc = tf.constant(0.) ;
+            logits=self.logits, labels=self.Y)
+        )
+        
+        logging.debug("DTYPES" + str(self.Y) + str(self.logits))
 
         # Evaluate model
         correct_pred = tf.equal(
-            tf.argmax(self.logits, 1), tf.argmax(y, 1))
+            tf.argmax(self.logits, 1), tf.argmax(self.Y, 1)
+        )
         self.accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
         # tensorflow saver
@@ -102,6 +108,10 @@ class Network():
         # fisher matrix opimizer
         fisher_matrix_gradients = { key: tf.square(tf.gradients(self.fisherLoss,self.theta[key])[0]) for key in self.keys} ;
         acc_np = {key: np.zeros(fisher_matrix_gradients[key].get_shape().as_list()) for key in self.keys} ;
+        fisher_loss = - tf.reduce_sum(
+            tf.cast(self.Y,tf.float32) * tf.nn.log_softmax(self.logits)
+        )
+
 
         # log gradient tensor list
         logging.debug(fisher_matrix_gradients)

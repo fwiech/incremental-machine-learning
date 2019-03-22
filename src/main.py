@@ -77,6 +77,10 @@ def task(**kwargs):
                                                train_task.output_shapes)
     next_feature, next_label = iterator.get_next()
 
+    logging.debug("Iterator:")
+    logging.debug(next_feature)
+    logging.debug(next_label)
+
     # make datasets that we can initialize separately, but using the same structure via the common iterator
     iter_test = iterator.make_initializer(test)
     iter_train_task = iterator.make_initializer(train_task)
