@@ -7,7 +7,7 @@ import pickle
 from functools import reduce
 import os
 
-def load_mnist(classes=[], reshape=False):
+def load_mnist(classes=[], permute_seed=None, reshape=False):
     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
 
     # Making sure that the values are float so that we can get decimal points after division
@@ -42,6 +42,9 @@ def load_mnist(classes=[], reshape=False):
         test = get_partial(x_test, y_test, classes)
         return train, test
 
+    if permute_seed is not None:
+        x_train, x_test = permute(permute_seed, x_train, x_test)
+
     return (x_train, y_train), (x_test, y_test)
 
 def get_partial(features, labels, classes=[]):
@@ -62,3 +65,13 @@ def get_partial(features, labels, classes=[]):
     labels_partial = labels[classMask]
 
     return (features_partial, labels_partial)
+
+def permute(seed=None, *args):
+    perm = np.arange(0, args[0].shape[1])
+    np.random.seed(seed)
+    np.random.shuffle(perm)
+
+    for arg in args:
+        arg[:, :] = arg[:, perm]
+
+    return args
