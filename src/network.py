@@ -94,6 +94,10 @@ class Network():
             logits=self.logits, labels=self.Y)
         )
         
+        # random init just for training of the first task
+        self.ewc_loss = tf.constant(0.)
+        self.ewc_appendix = tf.constant(0.)
+
         logging.debug("DTYPES" + str(self.Y) + str(self.logits))
 
         # Evaluate model
@@ -168,7 +172,8 @@ class Network():
         sess.run(iter_init)
 
         for step in range(training_iters):
-            l, e, _, acc, resargs = sess.run([self.loss, self.ewc_appendix, update, self.accuracy, args])
+            l, e, _, acc, resargs = sess.run(
+                [self.loss, self.ewc_appendix, update, self.accuracy, args])
             if step % display_steps == 0:
                 logging.info(
                     "Step: {}, loss: {:.3f}, ewc:{:.3f}, training accuracy: {:.2f}".format(
