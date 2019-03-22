@@ -152,12 +152,13 @@ class Network():
         # init iterator
         sess.run(iter_init)
 
-        for i in range(training_iters):
-            l, e, _, acc, args_np = sess.run([self.loss, self.ewc, update, self.accuracy, args])
-            if i % display_steps == 0:
+        for step in range(training_iters):
+            l, e, _, acc, resargs = sess.run([self.loss, self.ewc_appendix, update, self.accuracy, args])
+            if step % display_steps == 0:
                 logging.info(
-                    "Step: {}, loss: {:.3f}, ewc:{:.3f}, training accuracy: {:.2f}, mm = {:.5f}/{:.5f}".format(
-                      i, l, e, acc * 100., args_np[0],args_np[1]))
+                    "Step: {}, loss: {:.3f}, ewc:{:.3f}, training accuracy: {:.2f}".format(
+                        step, l, e, acc * 100.,) + "; args: " + str(resargs[:])
+                )
 
     def test(self, sess, iter_init):
         # init iterator
