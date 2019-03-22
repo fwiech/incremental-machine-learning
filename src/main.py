@@ -15,11 +15,8 @@ import argparse
 import logging
 import json
 
-from pprint import pprint
-
 
 def task(**kwargs):
-    pprint(kwargs)
     # get timestamp
     ts = calendar.timegm(time.gmtime())
     start_ts = time.time()
@@ -31,6 +28,9 @@ def task(**kwargs):
     )
     # reset graph
     tf.reset_default_graph()
+
+    # log kwargs
+    logging.info(kwargs)
 
     # Config
     checkpoint_dir = "checkpoints/"
@@ -227,6 +227,5 @@ if __name__ == '__main__':
     parser.add_argument('--permute', type=int, required=False, help='permute dataset? If -1: no permutation, if >= 0: random seed for permutation')
 
     args = parser.parse_args()
-    pprint(args)
 
     task(**vars(args))

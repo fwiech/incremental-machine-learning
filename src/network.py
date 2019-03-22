@@ -4,7 +4,6 @@ import tensorflow as tf
 import numpy as np
 import logging
 
-from pprint import pprint
 
 class Network():
 
@@ -149,8 +148,8 @@ class Network():
                 acc_np[key] /= (float(iterations)*float(batch))
             for key in self.keys:
                 sess.run(tf.assign(self.gradients[key], acc_np[key]))
-                logging.debug("FM key=" + str(key) + str(acc_np[key].min()) + str(acc_np[key].max()))
                 sess.run(tf.assign(self.variables[key], self.theta[key]))
+                logging.debug("FM key=" + str(key) + str(acc_np[key].min()) + str(acc_np[key].max()))
 
     def compute_ewc(self, lam):
         self.ewc_appendix = 0.
