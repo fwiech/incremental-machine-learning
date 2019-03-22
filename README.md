@@ -15,19 +15,8 @@ This is an implementation of "Overcoming catastrophic forgetting in neural netwo
 #### Task 0-8 & 9
 
 ```bash
-python3 main.py \
---classes 0 1 2 3 4 5 6 7 8 \
---learnrate 0.001 \
---iterations 20000 \
---batch 128 \
---batch_fisher 100 \
---save 'a'
+python3 src/main.py --classes 0 1 2 3 4 5 6 7 8 --learnrate 0.001 --iterations 2500 --batch 100 --batch_fisher 1 --save FISH09
 ```
 ```bash
-python3 main.py \
---classes 9 \
---learnrate 0.00001 \
---iterations 70 \
---batch 128 \
---previous 'a'
+python3 src/main.py --classes 9 --learnrate 0.00001 --iterations 2500 --batch 100 --previous FISH09
 ```
