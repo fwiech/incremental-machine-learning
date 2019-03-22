@@ -24,38 +24,38 @@ class Network():
 
         with tf.variable_scope("network"):
             self.theta = {
-                'wh1':  tf.Variable(tf.truncated_normal([self.n_input, self.n_hidden_1], stddev=0.1,dtype=tf.float32), name='wh1'),
-                'wh2':  tf.Variable(tf.truncated_normal([self.n_hidden_1, self.n_hidden_2], stddev=0.1,dtype=tf.float32), name='wh2'),
-                'wh3':  tf.Variable(tf.truncated_normal([self.n_hidden_2, self.n_hidden_3], stddev=0.1,dtype=tf.float32), name='wh3'),
-                'wo':   tf.Variable(tf.truncated_normal([self.n_hidden_3, self.n_classes], stddev=0.1,dtype=tf.float32), name='wo'),
-                'bh1':  tf.Variable(tf.ones([self.n_hidden_1],dtype=tf.float32)*0.1, name='bh1'),
-                'bh2':  tf.Variable(tf.ones([self.n_hidden_2],dtype=tf.float32)*0.1, name='bh2'),
-                'bh3':  tf.Variable(tf.ones([self.n_hidden_3],dtype=tf.float32)*0.1, name='bh3'),
-                'bo':   tf.Variable(tf.ones([self.n_classes],dtype=tf.float32)*0.1, name='bo')
+                'wh1':  tf.Variable(tf.truncated_normal([self.n_input, self.n_hidden_1], stddev=0.1, dtype=tf.float32), name='wh1'),
+                'wh2':  tf.Variable(tf.truncated_normal([self.n_hidden_1, self.n_hidden_2], stddev=0.1, dtype=tf.float32), name='wh2'),
+                'wh3':  tf.Variable(tf.truncated_normal([self.n_hidden_2, self.n_hidden_3], stddev=0.1, dtype=tf.float32), name='wh3'),
+                'wo':   tf.Variable(tf.truncated_normal([self.n_hidden_3, self.n_classes], stddev=0.1, dtype=tf.float32), name='wo'),
+                'bh1':  tf.Variable(tf.ones([self.n_hidden_1], dtype=tf.float32)*0.1, name='bh1'),
+                'bh2':  tf.Variable(tf.ones([self.n_hidden_2], dtype=tf.float32)*0.1, name='bh2'),
+                'bh3':  tf.Variable(tf.ones([self.n_hidden_3], dtype=tf.float32)*0.1, name='bh3'),
+                'bo':   tf.Variable(tf.ones([self.n_classes], dtype=tf.float32)*0.1, name='bo')
             }
 
         with tf.variable_scope("ewc"):
             with tf.variable_scope("gradients"):
                 self.gradients = {
-                    'wh1':  tf.Variable(tf.zeros([self.n_input, self.n_hidden_1],dtype=tf.float32), name='wh1', trainable=False),
-                    'wh2':  tf.Variable(tf.zeros([self.n_hidden_1, self.n_hidden_2],dtype=tf.float32), name='wh2', trainable=False),
-                    'wh3':  tf.Variable(tf.zeros([self.n_hidden_2, self.n_hidden_3],dtype=tf.float32), name='wh3', trainable=False),
-                    'wo':   tf.Variable(tf.zeros([self.n_hidden_3, self.n_classes],dtype=tf.float32), name='wo', trainable=False),
-                    'bh1':  tf.Variable(tf.zeros([self.n_hidden_1],dtype=tf.float32), name='bh1', trainable=False),
-                    'bh2':  tf.Variable(tf.zeros([self.n_hidden_2],dtype=tf.float32), name='bh2', trainable=False),
-                    'bh3':  tf.Variable(tf.zeros([self.n_hidden_3],dtype=tf.float32), name='bh3', trainable=False),
-                    'bo':   tf.Variable(tf.zeros([self.n_classes],dtype=tf.float32), name='bo', trainable=False)
+                    'wh1':  tf.Variable(tf.zeros([self.n_input, self.n_hidden_1], dtype=tf.float32), name='wh1', trainable=False),
+                    'wh2':  tf.Variable(tf.zeros([self.n_hidden_1, self.n_hidden_2], dtype=tf.float32), name='wh2', trainable=False),
+                    'wh3':  tf.Variable(tf.zeros([self.n_hidden_2, self.n_hidden_3], dtype=tf.float32), name='wh3', trainable=False),
+                    'wo':   tf.Variable(tf.zeros([self.n_hidden_3, self.n_classes], dtype=tf.float32), name='wo', trainable=False),
+                    'bh1':  tf.Variable(tf.zeros([self.n_hidden_1], dtype=tf.float32), name='bh1', trainable=False),
+                    'bh2':  tf.Variable(tf.zeros([self.n_hidden_2], dtype=tf.float32), name='bh2', trainable=False),
+                    'bh3':  tf.Variable(tf.zeros([self.n_hidden_3], dtype=tf.float32), name='bh3', trainable=False),
+                    'bo':   tf.Variable(tf.zeros([self.n_classes], dtype=tf.float32), name='bo', trainable=False)
                 }
             with tf.variable_scope("variables"):
                 self.variables = {
-                    'wh1':  tf.Variable(tf.zeros([self.n_input, self.n_hidden_1],dtype=tf.float32), name='wh1', trainable=False),
-                    'wh2':  tf.Variable(tf.zeros([self.n_hidden_1, self.n_hidden_2],dtype=tf.float32), name='wh2', trainable=False),
-                    'wh3':  tf.Variable(tf.zeros([self.n_hidden_2, self.n_hidden_3],dtype=tf.float32), name='wh3', trainable=False),
-                    'wo':   tf.Variable(tf.zeros([self.n_hidden_3, self.n_classes],dtype=tf.float32), name='wo', trainable=False),
-                    'bh1':  tf.Variable(tf.zeros([self.n_hidden_1],dtype=tf.float32), name='bh1', trainable=False),
-                    'bh2':  tf.Variable(tf.zeros([self.n_hidden_2],dtype=tf.float32), name='bh2', trainable=False),
-                    'bh3':  tf.Variable(tf.zeros([self.n_hidden_3],dtype=tf.float32), name='bh3', trainable=False),
-                    'bo':   tf.Variable(tf.zeros([self.n_classes],dtype=tf.float32), name='bo', trainable=False)
+                    'wh1':  tf.Variable(tf.zeros([self.n_input, self.n_hidden_1], dtype=tf.float32), name='wh1', trainable=False),
+                    'wh2':  tf.Variable(tf.zeros([self.n_hidden_1, self.n_hidden_2], dtype=tf.float32), name='wh2', trainable=False),
+                    'wh3':  tf.Variable(tf.zeros([self.n_hidden_2, self.n_hidden_3], dtype=tf.float32), name='wh3', trainable=False),
+                    'wo':   tf.Variable(tf.zeros([self.n_hidden_3, self.n_classes], dtype=tf.float32), name='wo', trainable=False),
+                    'bh1':  tf.Variable(tf.zeros([self.n_hidden_1], dtype=tf.float32), name='bh1', trainable=False),
+                    'bh2':  tf.Variable(tf.zeros([self.n_hidden_2], dtype=tf.float32), name='bh2', trainable=False),
+                    'bh3':  tf.Variable(tf.zeros([self.n_hidden_3], dtype=tf.float32), name='bh3', trainable=False),
+                    'bo':   tf.Variable(tf.zeros([self.n_classes], dtype=tf.float32), name='bo', trainable=False)
                 }
 
         self.keys = self.theta.keys()  ;
@@ -112,15 +112,15 @@ class Network():
         iterations = 0
         try:
             while True:
-              # advance iterator! Compute squared grads and download them to np
-              fisher_matrix_gradients_np = sess.run( fisher_matrix_gradients ) ;
+                # advance iterator! Compute squared grads and download them to np
+                fisher_matrix_gradients_np = sess.run(fisher_matrix_gradients)
 
-              # accumulate them in np arrays
-              for key in self.keys:
-                acc_np[key][:] += fisher_matrix_gradients_np[key] ;
+                # accumulate them in np arrays
+                for key in self.keys:
+                    acc_np[key][:] += fisher_matrix_gradients_np[key]
 
-              iterations += 1
-              print(iterations);
+                iterations += 1
+                logging.debug(str(iterations))
         except tf.errors.OutOfRangeError:
           # when iterator is through, normalize by nr of iterations
           mx = -1 ;

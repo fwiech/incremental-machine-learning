@@ -26,9 +26,6 @@ def task(**kwargs):
 
     # init logging
     logging.basicConfig(
-        # filename="tmp/logs/logs_" + str(ts) + ".log",
-        # filemode='w',
-        #filename="log.log",
         level=logging.DEBUG,
         format="%(asctime)s:%(levelname)s:%(message)s"
     )
@@ -123,7 +120,7 @@ def task(**kwargs):
         nn.compute_ewc()
         update = optimizer.minimize(nn.loss + lam/2. * nn.ewc, var_list = nn.var_list) ;
     else:
-        update = optimizer.minimize(nn.loss) ;
+        update = optimizer.minimize(nn.loss)
 
     # tf Session
     # Initialize the variables (i.e. assign their default value)
