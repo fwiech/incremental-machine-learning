@@ -64,10 +64,7 @@ class Network():
                     'bo':   tf.Variable(tf.zeros([self.n_classes], dtype=tf.float32), name='bo', trainable=False)
                 }
 
-        self.keys = self.theta.keys()  ;
-        self.var_list = [self.theta[key] for key in self.keys] ;
-        self.fisher_var_list = [self.variables[key] for key in self.keys] ;
-        self.fisher_gradvar_list = [self.gradients[key] for key in self.keys] ;
+        self.keys = self.theta.keys()
 
         self.__neural_network__(self.theta)
 
@@ -101,7 +98,9 @@ class Network():
         self.accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
         # tensorflow saver
-        self.saver = tf.train.Saver(var_list = self.var_list + self.fisher_var_list + self.fisher_gradvar_list) ;
+        self.saver = tf.train.Saver(
+            var_list = list(self.theta.values()) + list(self.variables.values()) + list(self.gradients.values())
+        )
 
     def compute_fisher(self, sess, iterator_initializer):
 
