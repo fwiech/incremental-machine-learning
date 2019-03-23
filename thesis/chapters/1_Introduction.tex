@@ -42,30 +42,37 @@ The developed techniques could be useful in other problems which involve predict
 These use-cases show great solutions for real-world problems solved with deep learning approaches.
 However, current deep learning solutions are facing two major challenges:
 
-One task is the duty for society is to think about ethics.
-Through all new achievements with deep learning there are manny people concerned about issues in AI Governance.
-Only a few indirect limitations and laws ensure the proper handling.
-First steps towards a solution to ethical questions are high level negotiations and branch or use-case specific regulations. \cite[page 3]{google-ai-governance}
-Additional first steps are made by the economy.
-Some companies like the German Telekom \cite{telekom-ai-guidelines} or Google \cite{google-ai-principles} regulate their actions based on own general principles.
-% TODO deeper, what are the principles?
-Moreover they participate in giving deeper insights to the technology and proposing safety considerations.
-\cite{google-ai-governance}
-% TODO deeper, what are some topic insights
-The responsibility of a principle development lies in the hand of society.
-
-The second obstacle is the ongoing improvement in machine learning: 
+AI is such a powerfull tool that more and more people are concerned about misuses of the technology.
+Many people claim a governance of AI by governments and social guidelines.
+An open letter with the title "Research priorities for robust and beneficial artificial intelligence" is currently signed by over 8,000 artificial intelligence experts, researchers and successful businessmen \cite{futureoflife-ai-open-letter, futureoflife-research-priorities}.
+The letter affirms a great potential of artificial intelligence for society, but calls for concrete research on: "…how to reap its benefits while avoiding potential pitfalls" \cite{futureoflife-ai-open-letter}.
+Another example is a white paper published by Google with the title "Perspectives on Issues in AI Governance".
+Google which provides on of the biggest ecosystems for machine learning as an open source platform shares their point of view in explainability standards, fairness appraisal, safety considerations, human-AI collaboration and liability frameworks with commentaries on the issues and suggestions of actions \cite{google-ai-governance}.
+Moreover they invoke governments and civil society groups to contribute to the AI governance discussion.
+According to Google there are already many regulations and legal codes that are broad enough to apply to AI and currently high level contentions by policymakers \cite[page 3,]{google-ai-governance}.
+Google acknowledges the first steps and hopes to help with their deeper insights for deeper discussions \cite[page 4]{google-ai-governance}.
 \hfill \break
-Deep learning techniques have been proven shining with a large number of labeled datasets.
-With new attention to unsupervised and reinforement learning which are aiming to solve complex tasks without explicit knowledge improves the effort of creating datasets for training models.
-However, most deep learning techniques are solving specific, isolated tasks which are not able to learn new tasks with a given model.
-\cite{continual-ai-blog}
+Besides the white paper they published their principles for using the technology.
+They assess AI applications to be socially beneficial, avoiding unfair bias, built and tested for safety, are accountable to people, include privacy design principles, have high standards of scientific excellence and are made available for uses that concur with these principles.
+In addition to their objectives for AI applications, they list areas where they will not design or deploy applications:
+Technologies that cause harm, facilitate injury to people, violating internationally accepted norms or is against accepted principles of international law and human rights.
+\cite{google-ai-principles}
+\hfill \break
+A similar approach has the German Telekom AG, one of the largest telecommunication providers in europe.
+In november 2018 they shared their guidelines for artificial intelligence in a public blog post.
+They take actions under their guidelines of transparency, security, responsibility and caring for the customer.
+\cite{telekom-ai-guidelines}
+
+The second obstacle is the ongoing improvement in machine learning:
+\hfill \break
+Deep learning techniques have been proven shining with a large number of labeled datasets and outperform many machine learning techniques.
+With new attention to unsupervised and reinforement learning which are aiming to solve complex tasks without explicit knowledge improves the effort of creating datasets for training models \cite{continual-ai-blog, alphastar}.
+However, most deep learning techniques are solving specific, isolated tasks which are not able to learn new tasks with a given model \cite{continual-ai-blog}.
 Many real-world scenarios require the ability of multi-task learning.
-Multi-task learning menas that deep neural networks are able to learn multiple consecutive tasks without forgetting previous tasks.
+Multi-task learning menas that deep neural networks are able to learn multiple consecutive tasks without forgetting previous tasks \cite{elastic-weight-consolidation}.
 This challenge results in the paradigm of "continual learning".
-Other common designations are "incremental learning", "continuous learning" or "lifelong learning".
-The oldest term is "lifelong learning" and was used in areas outside of deep learning.
-\cite{continual-ai-blog}
+Other common designations are "incremental learning", "continuous learning" or "lifelong learning" \cite{lifelong-machine-learning-book, continual-ai-blog}.
+The oldest term is "lifelong learning" and was used in areas outside of deep learning \cite{continual-ai-blog}.
 This is why there were the introduction of modern terms like "continuous" or "continual", which are targeting specifically deep learning algorithms.
 \cite{continual-ai-blog}
 The Oxford Dictionary says that "continuous" is five times more prominent than "continual" and refers to "no interruption". "Continual" on the other hand includes the meaning of "inbetween intervals" or "happening frequently".
