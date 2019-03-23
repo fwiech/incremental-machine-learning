@@ -1,15 +1,67 @@
 \chapter{Introduction}
 
-\section{Motivation}
-
 Deep learning a part of machine learning with the marketing reach of artificial intelligence is more prensent than ever.
+Some people see artificial intelligence as the future, other as science ficting an the third group call it a part of our everyday lives \cite{nvidia-ai-explained}.
+The media use the terms "Artificial Intelligence (AI)", "Machine Learning (ML)" and "Deep Learning (DL)". They are all connected but not the same.
+\hfill \break
+Nvidia, an american technology company, which design graphics processing units visualizes the relationship between these terms as concentric circles.
+At first the largest term artificial intelligence was introduced. After that came machine learning and finally deep learning and deep neural networks which drove major breakthroughs and fits inside both terms.
+\cite{nvidia-ai-explained}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=1.8]{Deep_Learning_Icons_R5_PNG}
+    \caption{\cite[page 5]{nvidia-ai-explained} Relationsship of AI, ML \& DL}
+    \label{fig:ai_ml_dl_termns}
+\end{figure}
+
+Machine learning using algorithms to parse data, learn from it and then make determinations or predictions.
+In practice it is helping software to perform a result without explicit programming or rules.
+To be able to get answers from data using machine learning there are multiple steps involved:
+\cite{nvidia-ai-explained, tensorflow-about}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{how_ml_works_tab2_graphic}
+    \caption{\cite{tf_ml_steps_pipline} Steps to solving an machine learning problem}
+    \label{fig:ml_steps_pipeline}
+\end{figure}
+
+Neural networks are inspired by the biology of a human brain.
+A network consists of an input and output layer with at least one hidden layer.
+Each layer contains a number of nodes / neurons.
+Every neuron on a layer is connected to a number of neurons in the layer before and after.
+These connections are called weights.
+Each weight carries a value, which shows the importance of the neuron value from the input side.
+The neurons on each layer learn abstract representations of the data.
+Figure \ref{fig:tf_dnn_shapes_textures} shows a visual diagram for detecting lines, shapes and textures to make the classification possible:
+\cite{nvidia-ai-explained, tensorflow-about}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{how_ml_works_tab3_graphic}
+    \caption{\cite{tf_dnn_shapes_textures} Anatomy of a neural network}
+    \label{fig:tf_dnn_shapes_textures}
+\end{figure}
+
+To be abe to classify on data, a neural network has to be trained.
+The weights and neurons on each layer begin with random values which are improved over time to make the network more an more accurate.
+In the training process a loss function quantifies how inaccurate the network is and a procedure called backpropagation is used to adjust each weight and neuron for an better accuracy.
+\cite{nvidia-ai-explained, tensorflow-about}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{training-dnn-cat-example}
+    \caption{\cite{tf_dnn_training_cat_example} Training a neural network}
+\end{figure}
+
 The increase of computaional power enabled the integration of deep learning concepts in real-world scenarios.
 Training of large datasets for supervised learning models leads to a lot of problem solvers and automation in business and private areas of society.
 The technology influences a large amount of people every day with rising tendency.
 Well-known uses are algorithms for search, personalized adds, voice assistants, autonomous vehicles, transportation and network security.
 \hfill \break
 Scientist with technical knowledge integrade the concepts of deep learning into nearly every industry and branch.
-Great examples for current real-world easements are in Healthcare, Marketing and agriculture:
+Great examples for current real-world easements are in healthcare, marketing and agriculture:
 
 IBM develops software that supports diagnosing, treating and predicting outcomes in medical situations.
 Their deep learning algorithms have the ability to read and filter unstructured data, find similarities between patients and finding information in medical literature that helps to discover new insights.
@@ -17,8 +69,14 @@ Doctors benefit from personalized patient treatment plans and better analysis by
 Currently the IBM Watson Healthcare software helps more than 230 healthcare organizations worldwide with more than 15,000 clients and partners. Their cognitive offerings have impacted care or social services for more than 295,000 people.
 \cite{ibm-watson-healthcare, ibm-watson-facts}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{airbnb_classification_and_detection}
+    \caption{\cite{airbnb_image_classification, airbnb_object_detection} Airbnb image classification and object detection}
+\end{figure}
+
 Airbnb, a online marketplace for renting homes uses deep neural networks for categorising its listing photos.
-Their customers decision is influenced by a diverse set of images.
+The decision of their customers is influenced by a diverse set of images.
 Many home providers label their images wrong and have not enough variety in their collection.
 Moreover their total amount of photos is nearly half a billion images.
 Deep learning helps them identifying the picture and presenting them on the site properly.
@@ -30,14 +88,16 @@ They discovered that the production of milk is based on the animal’s health.
 With an animal observation and machine learning they are able to diagnose problems early and provide health recommandations to the farmers.
 \cite{tensorflow-stories, connecterra-video, connecterra-web}
 
-The latest outstanding milestone in research: AI had beaten two of the worls's best StarCraft 2 players.
+The latest outstanding milestone in research: An AI algorithm developed by Google DeepMind had beaten two of the worls's best StarCraft 2 players.
 StarCraft, a Real-Time Strategy (RTS) game was called the "grand challenge" for AI because of the game complexity.
 To win in this game the algorithm needs to develop continually new frontiers of strategic knowledge.
 Moreover there are crucial information hidden that must be actively discovered in real-time. On top of it there are a lot of units and buildings that must be controlled at once.
-By winning against two of the world's best players without any game restrictions they were able to master the "grand challenge" for AI research.
+By winning against two of the world's best players without any game restrictions they mastered the biggest challenge in the most played mode.
 It was achieved using a deep neural network that is trained by supervised learning and reinforcement learning.
 The developed techniques could be useful in other problems which involve predictions over very long sequences such as weather predition \& climate modeling.
 \cite{alphastar}
+
+\section{Motivation}
 
 These use-cases show great solutions for real-world problems solved with deep learning approaches.
 However, current deep learning solutions are facing two major challenges:
@@ -96,9 +156,9 @@ One major step towards an artificial general intelligence or machine intelligenc
 % touch the big problem big problem: catastrophic forgetting
 % first solution tries with algorithms
 
-\section{Related Work}
-
 % great use-case that touches both challenges
+
+\section{Related Work}
 
 
 \subsection*{Better Weight Consolidation}
