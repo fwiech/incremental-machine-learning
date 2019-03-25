@@ -158,6 +158,8 @@ AI is such a powerfull tool that more and more people are concerned about misuse
 Many people claim a governance of AI by governments and social guidelines.
 An open letter with the title "Research priorities for robust and beneficial artificial intelligence" by the Future of Life institude is currently signed by over 8,000 artificial intelligence experts, researchers and successful businessmen \cite{futureoflife-ai-open-letter, futureoflife-research-priorities}.
 The letter affirms a great potential of artificial intelligence for society, but calls for concrete research on: "…how to reap its benefits while avoiding potential pitfalls" \cite{futureoflife-ai-open-letter}.
+Furthermore the Future of Life institution presents 23 AI principles in the areas of research issues, ethics and values and longer-term issues. \cite{futureoflife-ai-principles}
+\hfill \break
 Another example is a white paper published by Google with the title "Perspectives on Issues in AI Governance".
 Google which provides on of the biggest ecosystems for machine learning as an open source platform shares their point of view in explainability standards, fairness appraisal, safety considerations, human-AI collaboration and liability frameworks with commentaries on the issues and suggestions of actions \cite{google-ai-governance}.
 Moreover they invoke governments and civil society groups to contribute to the AI governance discussion.
@@ -174,6 +176,8 @@ A similar approach has the German Telekom AG, one of the largest telecommunicati
 In November 2018 they shared their guidelines for artificial intelligence in a public blog post.
 They take actions under their guidelines of transparency, security, responsibility and caring for the customer.
 \cite{telekom-ai-guidelines}
+\hfill \break
+These first discussion on AI ethics begun more frequently by technologists and policymakers, but the public opinion has not shaped much of these conversations \cite{governanceai_public_report}.
 
 The second obstacle is the ongoing improvement in machine learning:
 \hfill \break
@@ -185,34 +189,75 @@ Multi-task learning menas that deep neural networks are able to learn multiple c
 This challenge results in the paradigm of "continual learning".
 Other common designations are "incremental learning", "continuous learning" or "lifelong learning" \cite{lifelong-machine-learning-book, continual-ai-blog}.
 The oldest term is "lifelong learning" and was used in areas outside of deep learning \cite{continual-ai-blog}.
-This is why there were the introduction of modern terms like "continuous" or "continual", which are targeting specifically deep learning algorithms.
-\cite{continual-ai-blog}
-The Oxford Dictionary says that "continuous" is five times more prominent than "continual" and refers to "no interruption". "Continual" on the other hand includes the meaning of "inbetween intervals" or "happening frequently".
-\cite{oxford-continual-continuous}
-The meaning of "Continual" is a closer definition to this article and will be used together with the term of "incremental", which is a more technical term for the domain.
+This is why there were the introduction of modern terms like "continuous" or "continual", which are targeting specifically deep learning algorithms \cite{continual-ai-blog}.
+The Oxford Dictionary says that "continuous" is five times more prominent than "continual" and refers to "no interruption" \cite{oxford-continual-continuous}. "Continual" on the other hand includes the meaning of "inbetween intervals" or "happening frequently" \cite{oxford-continual-continuous}.
+The meaning of "Continual" is a closer definition to this article and will be used together with the term "incremental", which is a more technical for the domain.
 \hfill \break
+The goal of continual learning is such a challenge because of the "Catastrophic Forgetting" problem in deep neural networks.
+Models forget information of previous tasks after being trained on a new task.
+This occurs specifically because the weights in the network that are important for task A are updated to be able to predict task B correctly.
+Current approaches typically ensure that the data from all tasks have to be available during training.
+This means, every training will be a completely new model created, where forgetting does not occur because the optimization is joint by all tasks.
+It is often called as a multitask learning paradigm.
+\cite{incrmental-moment-matching, continual-ai-blog}
 
-% aktueller approach
-% mit bild untermauern
-% auf probleme zu sprechen kommen und wie es aussehen sollte
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{multitask_learning_paradigm}
+    \caption{Multitask learning paradigm}
+\end{figure}
 
-% irgendwie die beiden unteren punte einbauen und auf general intelligence zu sprechen zu kommen
-% what are more achievemnts:
-% scale
-% machine intelligence
-
-% closer: that it is as important as reinforcement learning for a machine general intelligence
-
+But this approach does not solve the problem properly and brings disadvantages along the way.
+Continual learning wants to be adaptable and scalable.
+Szenarios that keep changing over time are not covered by AI yet.
+IT is hard to collect data for a representative dataset in time, even when the semantics keep chaning.
+Current techniques will not be able to survive in these environments.
+This is where continual learning really shines against current techniques.
+Moreover there is the term of scaling intelligence.
+In large scaled models it is not possible to retrain the network for additional tasks because of a computation and time limit.
+Or the integration of deep learning in edge devices limits the model on performenace and memory.
+In these cases it is not possible to store and extend the dataset as well as retraining the model in real-time.
+The main idea behind continual learning is to process data once and than get rid of it.
+This would enable a lightweight model that is able to adapt to any task.
 These ideas of continuously and adaptively learning about new features would enale an autonomous incremental development and the ability of learning more complex skills and knowledge.
 \cite{continual-ai-blog}
 
-One major step towards an artificial general intelligence or machine intelligence is the removing of the barrier which is called "catastrophic forgetting".
-% Um dies zu erreichen muss die techbologie zuerst die große Hürde des catastrophic forgetting beseitigen.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{continual_learning_paradigm}
+    \caption{Continual learning paradigm}
+\end{figure}
 
-% touch the big problem big problem: catastrophic forgetting
-% first solution tries with algorithms
+Anatoly Gorshechnikov, CTO of Neurala Inc. presented great examples of use-cases that touch both challenges at the NVIDIA GTC Conference in 2017.
+Neurala is a software based company which offer consulting services to their clients.
+Practical problems along the way are, that their clients do not like to share data.
+Even when Neurala convinced their clients, that their data is needed to be able to build a meaningful model, the clients expect, that Neurala does not keep their data.
+In the following months their clients approach Neurala again and asks them to integrate the new dataset to the previous that does not exist anymore.
+\hfill \break
+An even more extreme example he shares is a customer who is a toy manufacturer.
+One requirement is that their toy recognizes other toys from the manufacturer.
+The second demand is that the toy recognizes his owner.
+Neurala solved the first requirement rather easy by a factory pretraining.
+To solve the second demand, the model needs to be trained after the toy is sold.
+One approach could be to record a video and transmit it to the cloud and retrain the network.
+But because of ethical reasons there exist privacy laws that do not allow uploading kid's images, even related information to kids to the cloud.
+So Neurala faced the challenge to add data on top of new data, without forgetting old data and without powerful servers and cloud access.
+Moreover the identifying of the kid has to be done in seconds.
+No one would use this feature, if they had to look at the toy for a long time.
+\hfill \break
+A great example, where current deep neural networks are not able to perform and the new paradigm of continual learning is needed.
+\cite{neurala_video}
 
-% great use-case that touches both challenges
+Moreover continual learning is a key hurde to be able to develop an artificial general intelligence.
+This term thinks of a machine intelligence that is able to perform any intellectual task that a human being is able to.
+For this scientific topic exist multiple non-profit organisations and companies like OpenAI, Google DeepMind and the AGI Society, who delve this topic.
+Here is continual learning a major part, that a model does not rely on a permanent existing dataset.
+
+As the time of writing exist mutiple approaches to overcome the problem of catastrophic forgetting.
+Several articles used these approaches and tested them on different models and multiple datasets with different circumstances.
+They investigated if these solve catastrophic forgetting and can be deployed in in real-world scenarios.
+Their outlines are that none of the approaches solve the problem completely.
+\cite{measuring_cf_in_nns, cf_with_hard_attention, cf_application_oriented_study}
 
 \section{Related Work}
 
@@ -227,7 +272,7 @@ https://arxiv.org/pdf/1802.02950.pdf
 \section{Project Introduction}
 
 … % TODO
-% the first dolution tries use all one fisher matrix
+% the first solution tries use all one fisher matrix
 % calculation takes a lot of time
 % idea of optimizing the algorithms with a adjustment of the matrix
 
