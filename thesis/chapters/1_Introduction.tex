@@ -328,12 +328,11 @@ https://arxiv.org/abs/1806.05421
 In contrast to parameter importance like EWC, they use a neuron importance by the focus on enforcing sparsity of neural activities by lateral interactions within a layer \cite{cf_application_oriented_study}.
 
 
-\section{Project Introduction}
+\section{Project}
 
-In this research was the Elastic Weight consolidation reimplemented.
-But since there is no assumption by the authors, why they use the Fisher Information Matrix, this article testes a alternative of calculating the EWC loss  function.
+This article deals with specific parts by previous works to overcoming catastrophic forgetting.
+One of the algorithms is the Elastic Weight Consolidation.
+In the paper is no assumption, why they use the Fisher Information Matrix, in fact just the diagonal of this matrix.
+So this article takes a closer look to an alternative way of calculating the loss function.
 
-This article demonstrates that the EWC works just well or better with the alternative solution to the Fisher Information Matrix.
-The are multiple benchmarks used based on the mnist dataset.
-These benchmarks are segmented into szenarios.
-We tested the szenarios of 9 base classes and the appendix of one, a base of 5 classes and appending 5 classes and the permutation of the mnist dataset.
+The goal is besides reimplementing this algorithm, to try the alternative in some scenrios in supervised learning with the MNIST dataset.
