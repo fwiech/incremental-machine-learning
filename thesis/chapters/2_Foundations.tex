@@ -78,24 +78,16 @@ It is a great resource for testing new deep learning algorithms with supervised 
 
 \section{Deep Neural Network}
 
-Neural networks and deep learning currently provide the best solutions to many problems in image recognition, speech recognition, and natural language processing.
-\cite{nielsen-book}
-They are loosly patterned after the brain structure.
-The network uses connected layers of neurons and "teaches" itself how to understand data by classifying records or making predictions.
-\cite{ibm-watson-healthcare}
+The Introduction gave a basic overview of the understanding and behind the scenes of a neural network.
+This section shows the construct and math of the network used for the elastic weight consolidation implementation and scenario testing.
 
-…
-
-Weights are the connections between neurons.
-Each weights carries a value, which shows the importance of the neuron value from the inout side.
-Each weights of a neuron shape a vector.
-All weights vectors from all neurons on a layer create a matrix format.
-
-Every neuron which is not on the input layer has a bias attached.
-A bias carries like every weight a value.
-All bias from neurons on one layer forge a vector.
-
-Each neuron on the hidden layers feature a activation function.
+As described, a neural network is a collection of neurons connected with weights and paired together in layers.
+Each neuron receives values from all neurons on the layer before.
+Each connection holds a value which represents the importance.
+Therefore this connected value is called weight.
+The neuron computes all the input values (x) with the weights (w) and applies a bias (b) to predict the result (y).
+Figure \ref{fig:dnn_node_procedure} shows the computation structure of each neuron in the network.
+\cite{math_nn_skalski}
 
 \begin{figure}[H]
     \centering
@@ -145,16 +137,79 @@ Each neuron on the hidden layers feature a activation function.
         
         \draw[decorate,decoration={brace,mirror}] (x1.north west) -- node[left=10pt] {Inputs} (x3.south west);
     \end{tikzpicture}
-    \caption{\cite{dnn_neuron_basic_overview} Neuron structure}
+    \caption{\cite{dnn_neuron_basic_overview} Neuron computation structure}
     \label{fig:dnn_node_procedure}
 \end{figure}
 
-Each node on the hidden layers have a weight and bias stored. The node gets a input vector from the layer before.
+The value of each output neuron can be calculated as the following \cite{medium_nn_from_scratch}:
 
-\subsection*{Mathematics}
+$$y = b + \sum_{i} x_i w_i$$
 
-A deep neural network for classifying the mnist dataset, it uses $28*28=784$ input parameters.
-The output would be for each digit (0-9) a class, which results in 10 classes.
+To be able to ensure the quickest calculation possible, vectorisation and matrixes are used.
+All Weights on a layer get stacked to a matrix W together.
+The same process is applied to the biases on each layer.
+This results in the following calculation
+\cite{medium_nn_from_scratch}:
+
+$$ X = [ x_1 \dots x_i ]; \space W = 
+\begin{bmatrix}
+    x_{11} & \dots  & x_{1j} \\
+    \vdots & \ddots & \vdots \\
+    x_{i1} & \dots  & x_{ij}
+\end{bmatrix}; \space
+B = [ b_1 \dots b_j ] $$
+
+\begin{equation}
+    Y = X * W + B
+\end{equation}
+
+Finally the result of this calculation is passed through an activation function.
+This activation function is the key element of a neural network.
+Without it, a neural network would just be a combination of linear functions, which can be combined into on linear function.
+The activation function modifies the result in a probabilistic way.
+Important to mention is, that the activation function has a significant impact on the speed of learning.
+The network in this article uses the ReLU as an activation function for the hidden layers \cite{math_nn_skalski,relu}:
+$$ReLU(x) = max(0,x)$$
+
+The output of the last layer will be computed as logits:
+$$logits = (x*w)+b$$
+
+On the output layer it uses the softmax function, which realtes the output classes in a probabilistic way:
+$$ Softmax : \mathbb{R}^K \to \mathbb{R}^K $$
+$$ Softmax(x)_i : \frac{e^{k_i}}{\sum_{k=1}^K e^{x_k}}
+\space ; i = 1, …, K
+$$
+$$probabilities = Softmax(logits)$$
+
+After a prediction by the calculation of all neurons and layers the network needs source of information on the progress of the learning process.
+This is where the loss function is introduced.
+It is designed to show how bad the classification to the right solution is.
+In this article the crossentropy loss function is used.
+\cite{math_nn_skalski, medium_nn_from_scratch}
+
+$$CrossEntropy(p,y) = -\sum_{i=1}^K y_i \log(p_i)$$
+$$loss = CrossEntropy(probs, y)$$
+
+This process of calculating a result of the network is called forward propagation.
+It puts an input into the network and it calculates based on the parameters and functions an output.
+On this output the learning process gets applied.
+This shows the accuracy of the network.
+\cite{math_nn_skalski, medium_nn_from_scratch}
+
+The learning process is about adapting the weights and biases to
+optimise the accuracy.
+This is done by minimising the loss function.
+This process of the update of weights and biases is called Backpropagation.
+It is an algorithm which calculates error gradients with respect to each network variable.
+Those gradients are later used in an optimization algorithm called Gradient Descent.
+This method is used to find a function minimum.
+After the minimum is found, it would be applied to all parameters in the network.
+By adjusting the learning rate of backpropagation, the developer has the control over the value adjustment.
+He defines how detailed each learning step should be.
+\cite{math_nn_andrey}
+
+Running the Gradient Descent algorithm multiple times on different examples eventually result in a properly trained neural network.
+
 \section{Catastrophic Forgetting}
 
 Catastrophic forgetting was first discovered in 1989 in the article "Catastrophic Intereference" by McCloskey and Cohen.
