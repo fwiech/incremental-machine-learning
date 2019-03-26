@@ -261,19 +261,81 @@ Their outlines are that none of the approaches solve the problem completely.
 
 \section{Related Work}
 
+The challenge of continual learning and overcoming of catastrophic forgetting has been addressed in many studies:
+
+\subsection*{Elastic Weight Consolidation}
+This technique tries to encourage all important parameters to stay close to the old task.
+proposes to add a term to the energy function that protects weights that are important for the previous sub-task(s). 
+Importance is determined by approximating the Fisher information matrix of the DNN \cite{cf_application_oriented_study}.
+\cite{elastic-weight-consolidation}
 
 \subsection*{Better Weight Consolidation}
-
-This paper proposes an improvement of the Elastic Weiht Consolidation. They specifically address the diagonal assumption made by the EWC algorithm.
-
 https://arxiv.org/pdf/1802.02950.pdf
+
+This paper proposes an improvement of the Elastic Weiht Consolidation.
+They specifically address the diagonal assumption made by the EWC algorithm.
+
+\subsection*{Incremental Moment Matching}
+https://arxiv.org/abs/1703.08475
+
+This is a related approach to Elastic Weight Consolidation.
+This technique trains on the new task and merges them into the parameters of old tasks using the Fisher information matrix.
+
+\subsection*{Learning without Forgetting}
+https://arxiv.org/abs/1606.09282
+
+This article proposes a strategy to learn without forgetting in convolutional neural networks.
+At first they lock the old fully connected layers. They append new fully connected layers to the convolutional layers and train the new task.
+After tat they integrate both knowledges by a joint training.
+
+\subsection*{Continual Lifelong Learning with Neural Networks: A Review}
+https://arxiv.org/pdf/1802.07569.pdf
+
+This article summarises main challenges linked to lifelong learning and compares existing neural network approaches that alleviate catastrophic forgetting to different extends.
+
+\subsection*{Continual Learning Through Synaptic Intelligence}
+https://arxiv.org/pdf/1703.04200.pdf
+
+Similar to EWC they measure the importance of the tasks before.
+Synaptic Intelligence offers a different loss function, that measures the importance in a different way.
+
+\subsection*{iCaRL: Incremental Classifier and Representation Learning}
+https://arxiv.org/abs/1611.07725
+
+…
+
+\subsection*{Lifelong Learning with Dynamically Expandable Networks}
+https://arxiv.org/abs/1708.01547
+
+In this approach the network uses learns a compact overlapping knowledge sharing structures among tasks.
+
+\subsection*{Keep and Learn: Continual Learning by Constraining the Latent Space for Knowledge Preservation in Neural Networks}
+https://arxiv.org/abs/1805.10784
+
+The authors present several baseline models for preserving learned knowledge by modeling the high-level feature space and output space to be mutually informative, and constraining feature vectrs to lie in the modeled space during training.
+In comparison to LwF and EWC, which are proposed for preventing multi-task learning, they focus n multi-center single-task learning.
+This means the model is learned with a different data-chunk of the same task and access to each data-chunk restricted.
+They used it in the area of restricted data, because of privacy issues.
+
+\subsection*{FearNet: Brain-Inspired Model for Incremental Learning}
+https://arxiv.org/abs/1711.10563
+
+FearNet is a brain-inspired dial-memory system.
+Their memory consolidation is inspired by mechanisms occurring during sleep.
+It is tested on images and audio classification.
+
+\subsection*{Selfless Sequential Learning}
+https://arxiv.org/abs/1806.05421
+
+In contrast to parameter importance like EWC, they use a neuron importance by the focus on enforcing sparsity of neural activities by lateral interactions within a layer \cite{cf_application_oriented_study}.
 
 
 \section{Project Introduction}
 
-… % TODO
-% the first solution tries use all one fisher matrix
-% calculation takes a lot of time
-% idea of optimizing the algorithms with a adjustment of the matrix
+In this research was the Elastic Weight consolidation reimplemented.
+But since there is no assumption by the authors, why they use the Fisher Information Matrix, this article testes a alternative of calculating the EWC loss  function.
 
-% the goal to optimize these algorithms that they may be used in real-world scenarios
+This article demonstrates that the EWC works just well or better with the alternative solution to the Fisher Information Matrix.
+The are multiple benchmarks used based on the mnist dataset.
+These benchmarks are segmented into szenarios.
+We tested the szenarios of 9 base classes and the appendix of one, a base of 5 classes and appending 5 classes and the permutation of the mnist dataset.
