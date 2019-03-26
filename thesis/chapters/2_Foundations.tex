@@ -155,11 +155,31 @@ Each node on the hidden layers have a weight and bias stored. The node gets a in
 
 A deep neural network for classifying the mnist dataset, it uses $28*28=784$ input parameters.
 The output would be for each digit (0-9) a class, which results in 10 classes.
-
-
 \section{Catastrophic Forgetting}
 
-…
+Catastrophic forgetting was first discovered in 1989 in the article "Catastrophic Intereference" by McCloskey and Cohen.
+They broke the problem down into a rather simplified version to explain the problem:
+Figure \ref{fig:catastrophic_forgetting_clarification}A shows a reprensentation of a network in a simplified form.
+It has stored the facts $5 + 4 = 9$ and $6 + 4 = 10$.
+\hfill \break
+Now this network wants to learn new facts.
+Figure \ref{fig:catastrophic_forgetting_clarification}B shows the appendix of the new fact $7 + 4 = 11$.
+To be able to learn this fact it is represented seperate to the representation of other facts.
+This storing of facts does not disrupt the representation of presious learned knowledge.
+\hfill \break
+But in a neural network the representation is quite different.
+All weights are involved in responding to many different inputs.
+To be able to predict the additional new desired outcome, it has to adjust the weights.
+This process will alter the network's response to the other input patterns.
+It results in changing weights to encode new information and alters previously learned responses to other inputs.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{McCloskeyCohen1989CatastropicInterference}
+    \caption{\cite[page 148]{psychology_learning_mccloskey_cohen} Catastrophic forgetting clarification}
+    \label{fig:catastrophic_forgetting_clarification}
+\end{figure}
+
 
 \section{Elastic Weight Consolidation}
 
