@@ -24,6 +24,8 @@ It enables scientific computing with N-dimensional array objects and supports ar
 \subsection*{Tensorflow}
 
 Tensorflow is an entire ecosystem for solving problems with machine learning.
+It is developed and maintained by the Google Brain team.
+In 2015 it was released unser the Apache 2.0 open-source license.
 It offers multiple levels of abstraction for building, training and testing models.
 For more flexibility it allows visualisations of the code and intuitive debugging.
 Large machine learning training tasks can be done with distributed training on different hardware configurations without changing the model definition.
@@ -31,31 +33,31 @@ Trained models can be directly put into production.
 Moreover Tensorflow offers support for multiple languages and platforms.
 \cite{tensorflow-about}
 
-\subsubsection*{Tensorflow Architecture}
+\subsubsection*{Core Concepts}
+
+Tensorflow consists of a server client architecture.
+The core is located on the server side and developed in C++.
+Developers use client liberaries in different languages to interact with the core.
+The general architecture for developers of Tensorflow is shown in figure \ref{fig:tensorflow_programming_environment_image}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=.5]{tensorflow_layers}
-    \caption{\cite{tensorflow_layers_image} Tensorflow architecture}
-    \label{fig:tensorflow_layers}
+    \includegraphics[width=\textwidth]{tensorflow_programming_environment}
+    \caption{\cite{tensorflow_programming_environment_image} Tensorflow programming environment}
+    \label{fig:tensorflow_programming_environment_image}
 \end{figure}
-The general architecture of Tensorflow is shown in figure \ref{fig:tensorflow_layers}.
-It illustrates the cross-platform library.
-The C API seperates the user level from the core level.
-Besides the Python and C++ clients are clients for Java, JavaScript, Go, Swift, C Sharp, Haskell, Julia, Ruby, Rust and Scala available.
-\cite{tensorflow-architecture}
+
+The most important concept for developers is the dataflow graph functionality.
+All variables, constants and operations form a computation graph.
+Parts of the graph can be started and calculated across a set of local and remote devices.
+Figure \ref{fig:tensorflow_graph_image} shows an example of a computation graph:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{tensorflow_components}
-    \caption{\cite{tensorflow_components_image} Tensorflow Components}
-    \label{fig:tensorflow_components}
+    \includegraphics[scale=.5]{tensors_graph}
+    \caption{\cite{tensorflow_graph_image} Tensorflow graph}
+    \label{fig:tensorflow_graph_image}
 \end{figure}
-
-The Client create a dataflow graph and initiates the execution by calling a session.
-The Master splits the graph into multiple subgraphs and distributes these to all available workers.
-The worker services use the kernel to calculate, send and receive operations from other worker services.
-\cite{tensorflow-architecture}
 
 \section{MNIST Dataset}
 
