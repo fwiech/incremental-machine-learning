@@ -331,9 +331,16 @@ In contrast to parameter importance like EWC, they use a neuron importance by th
 
 \section{Project}
 
-This article deals with specific parts by previous works to overcoming catastrophic forgetting.
+This article deals with specific parts of previous works on overcoming catastrophic forgetting.
+It takes a closer look into simplifying computation and interpretation of the Fisher Information Matrix used in different incremental learning methods with deep neural networks.
 One of the algorithms is the Elastic Weight Consolidation.
-In the paper is no assumption, why they use the Fisher Information Matrix, in fact just the diagonal of this matrix.
-So this article takes a closer look to an alternative way of calculating the loss function.
+As proposed later it uses the Fisher Information Matrix to protect weights of earlier learned tasks \cite{elastic-weight-consolidation}.
+Their paper does not establish why they use the Fisher Information Matrix, in fact just the diagonal of this matrix.
+So this article takes a closer look to an alternative.
+Besides reimplementing the EWC algorithm and the expansion, show the performance of it on several sequential learning tasks (SLTs).
 
-The goal is besides reimplementing this algorithm, to try the alternative in some scenrios in supervised learning with the MNIST dataset.
+For the benchmarks MNIST is split into three types.
+Two types are disjoint from the MNIST set.
+The disjoint can be plit in 5-5, which means 5 classes for each task and 9-1, which means 9 classes for the first task and one class as the second task.
+The third type is a permuted MNIST.
+Each task uses all ten classes, but their values get permuted randomly.
