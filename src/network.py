@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import logging
-
+from pprint import pprint
 
 class Network():
 
@@ -137,6 +137,7 @@ class Network():
             while True:
                 # advance iterator! Compute squared grads and download them to np
                 fisher_matrix_gradients_np = sess.run(fisher_matrix_gradients)
+                pprint(fisher_matrix_gradients_np)
 
                 # accumulate them in np arrays
                 for key in self.keys:
@@ -175,16 +176,19 @@ class Network():
         # timeline plot
         if bool(test_iter_inits):
             iters = []
-            plots = {}
+            plots = {
+                'iters' : [],
+                'plots': {}
+            }
             for label, item in test_iter_inits.items():
-                plots[label] = []
+                plots['plots'][label] = []
 
         for step in range(training_iters):
             l, e, _, acc, resargs = sess.run(
                 [self.loss, self.ewc_appendix, update, self.accuracy, args])
             
             # logging
-            if step % display_steps == 0:
+            if step % display_steps == 0 or step == training_iters or step == 1:
                 logging.info(
                     "Step: {}, loss: {:.3f}, ewc:{:.3f}, training accuracy: {:.2f}".format(
                         step, l, e, acc * 100.,) + "; args: " + str(resargs[:])
@@ -194,18 +198,21 @@ class Network():
                 if bool(test_iter_inits):
                     iters.append(step)
                     for label, item in test_iter_inits.items():
-                        plots[label].append(self.test(sess,item))
+                        plots['plots'][label].append(self.test(sess, item))
                     sess.run(train_iter_init)
         
         # timeline plot
         if bool(test_iter_inits):
-            for label, item in plots.items():
+            for label, item in plots['plots'].items():
                 plt.plot(iters, item, label=label)
             
             plt.xlabel("Iterations")
             plt.ylabel("Accuracy")
             plt.legend()
-            plt.show()
+            # plt.show()
+
+            plots['iters'] = iters
+            return plots
 
     def test(self, sess, iter_init):
         # init iterator

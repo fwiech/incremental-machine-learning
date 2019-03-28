@@ -149,16 +149,21 @@ def task(**kwargs):
             logging.debug("---")
 
     logging.info("* TRAINING CLASSES *")
-    nn.train(
+
+    plots = {
+        "Task": iter_test_task,
+        "Complete": iter_test
+    }
+    if mnist_task_inverse is not None:
+        plots['Inverse_Task'] = iter_test_task_inverse
+    
+    plots = nn.train(
         sess,
         update,
         iter_train_task,
         training_iterations,
         display_steps_train,
-        {
-            "Task": iter_test_task,
-            "Complete": iter_test
-        }
+        plots
     )
 
     # if model is not saved, fisher claculation unnecessary
@@ -177,6 +182,10 @@ def task(**kwargs):
         'timestamp': str(ts),
         'time': str(round((time.time() - start_ts), 2)) + ' sec.',
         'classes': classes,
+        'set_sizes': {
+            'complete': mnist[0][0].shape[0],
+            'task': mnist_task[0][0].shape[0],
+        },
         'learnrate': learn_rate,
         'training_iterations': training_iterations,
         'batch_size': batch_size,
@@ -184,7 +193,8 @@ def task(**kwargs):
         'test': {
             'classes': test_classes_result,
             'complete': test_result
-        }
+        },
+        'plots': plots
     }
     if permute is not None:
         stats['permute'] = permute
