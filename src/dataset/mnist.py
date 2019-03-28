@@ -6,6 +6,7 @@ import gzip
 import pickle
 from functools import reduce
 import os
+from copy import deepcopy
 
 possible_classes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
@@ -38,9 +39,11 @@ def load_mnist(classes=[], permute_seed=None, reshape=False):
         x_train = x_train.reshape(-1, 784)
         x_test = x_test.reshape(-1, 784)
 
+    invert_classes = []
+    invert_classes = [x for x in possible_classes if x not in classes]
+
     # get partials
-    if len(classes) != 0:
-        invert_classes = [x for x in possible_classes if x not in classes]
+    if len(classes) != 0 and len(classes) < 10:
 
         train = get_partial(x_train, y_train, classes)
         test = get_partial(x_test, y_test, classes)
@@ -57,9 +60,15 @@ def load_mnist(classes=[], permute_seed=None, reshape=False):
         return mnist, (train, test), (invert_train, invert_test)
     else:
         if permute_seed is not None:
-            x_train, x_test = permute(permute_seed, x_train, x_test)
+            x_train_perm = deepcopy(x_train)
+            x_test_perm = deepcopy(x_test)
 
-        return (x_train, y_train), (x_test, y_test)
+            x_train_perm, x_test_perm = permute(
+                permute_seed, x_train_perm, x_test_perm)
+
+            return ((x_train + x_train_perm, y_train + y_train), (x_test + x_test_perm, y_test + y_test)), ((x_train_perm, y_train), (x_test_perm, y_test)), ((x_train, y_train), (x_test, y_test))
+
+        return ((x_train, y_train), (x_test, y_test)), ((x_train, y_train), (x_test, y_test)), None
 
 def get_partial(features, labels, classes=[]):
     if len(classes) == 0:

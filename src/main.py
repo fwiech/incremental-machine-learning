@@ -59,7 +59,11 @@ def task(**kwargs):
     display_steps_train = kwargs.get('display', 100)
 
     # get mnist
-    mnist, mnist_task, mnist_task_inverted = load_mnist(classes, permute_seed=permute)
+    mnist, mnist_task, mnist_task_inverse = load_mnist(classes, permute_seed=permute)
+
+    logging.info(mnist[0][0].shape)
+    logging.info(mnist_task[0][0].shape)
+    # logging.info(mnist_task_inverse[0][0].shape)
 
     # create train datasets
     train_task = tf.data.Dataset.from_tensor_slices(
@@ -74,6 +78,10 @@ def task(**kwargs):
         mnist[1]).batch(batch_size, False)
     test_task = tf.data.Dataset.from_tensor_slices(
         mnist_task[1]).batch(batch_size, False)
+    
+    if mnist_task_inverse is not None:
+        test_task_inverse = tf.data.Dataset.from_tensor_slices(
+            mnist_task_inverse[1]).batch(batch_size, False)
 
     # create general iterator
     iterator = tf.data.Iterator.from_structure(train_task.output_types,
@@ -88,6 +96,9 @@ def task(**kwargs):
     iter_test = iterator.make_initializer(test)
     iter_train_task = iterator.make_initializer(train_task)
     iter_test_task = iterator.make_initializer(test_task)
+    
+    if mnist_task_inverse is not None:
+        iter_test_task_inverse = iterator.make_initializer(test_task_inverse)
 
     if save is not '' and save is not None:
         iter_fisher = iterator.make_initializer(fisher_task)
@@ -175,6 +186,8 @@ def task(**kwargs):
             'complete': test_result
         }
     }
+    if permute is not None:
+        stats['permute'] = permute
 
     if save is not '' and save is not None:
         logging.info("* SAVE SESSION *")
