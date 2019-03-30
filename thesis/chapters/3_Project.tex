@@ -2,7 +2,6 @@
 
 \section{Code Concept}
 
-\section{Base}
 In extend to this article is a code base avaiable \footnote{\url{https://www.github.com/florianwiech/incremental-machine-learning}}.
 This code base includes the reimplementation of EWC and the extension of modifying the Fisher Information Matrix.
 The concept documents the code structure and procedure.
@@ -74,6 +73,67 @@ Part 2 (Figure \ref{fig:concept_sequence_diagram_part_2}) shows the execution of
 \end{figure}
 
 \section{Theory}
+\newpage
+\section{Baseline}
+
+Before adapting the EWC algorithm the codebase has to proof, that it delivers the results of the EWC paper.
+The original EWC algorithm was tested in the constructed benchmarks described in Project Goals (Section \ref{project_goals}):
+
+\subsection{Disjoint 5-5 benchmark}
+
+Figure \ref{fig:ewc_d5-5} shows training of a disjoint mnist with a five class split.
+
+The first Task $T_1$ (blue, $\bigtriangleup$) with the classes zero to four, reached an accuracy of 98.57\% after the first training.
+$T_1$ is trained with a learnrate of 0.001, 2500 iterations and a batch size of 100.
+Since there are only five of ten possible classes trained, the accuracy on the complete dataset amounts 50\%.
+
+In the second training phase with task $T_2$ (yellow, $\bullet$), the classes five to nine achieve an accuracy of 83.25\%.
+The learnrate of $T_2$ is 0.00001 and there were again 2500 iterations and a batch size of 100.
+Since it is an ongoing task, the EWC appendix is applied to the loss.
+In this case lambda was set to $\frac{1}{learnrate = 0.00001} = 100,000$.
+
+After the second training had $T_1$ lost 19.62\%, but still shows a quality of 78.94\%.
+The performance of the complete dataset ascended from 50\% to 81.07\%.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{project/baseline/D5-5_BS1}
+    \caption{EWC D5-5}
+    \label{fig:ewc_d5-5}
+\end{figure}
+
+\subsection{Disjoint 9-1 benchmark}
+
+$T_1$ (blue, $\bigtriangleup$) trained with the classes zero to eight and reaches an accuracy of 95.45\% at the end of its training pahse.
+The task was trained with a learnrate of 0.001, 2500 iterations and an batch size of 100.
+In comparison to the complete dataset (green, line), the accuracy is 85.81\%.
+
+$T_2$ (yellow, $\bullet$) trained with the class nine further of $T_1$ uses a learnrate of 0.00001, 2500 iterations and a batch size of 100.
+The lambda value is $\frac{1}{learnrate = 0.00001} = 100,000$.
+It reaches an accuracy of 97.44\%.
+
+At the end of $T_2$ trainng phase designates $T_1$ 80.64\% and the complete dataset 82.41\%.
+The complete dataset reaches a peak of 91.99\% where $T_1$ has 92.81\% precision and $T_2$ 82.23\% precision.
+
+Figure \ref{fig:ewc_d9-1} shows the trainings of both tasks compared to the accuracy of the complete dataset:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{project/baseline/D9-1_BS1}
+    \caption{EWC D9-1}
+    \label{fig:ewc_d9-1}
+\end{figure}
+
+\subsection*{Permuted 10-10 benchmark}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{project/baseline/P10-10_BS1}
+    \caption{EWC P10-10}
+    \label{fig:ewc_p10-10}
+\end{figure}
 
 \section{Experiments}
 
