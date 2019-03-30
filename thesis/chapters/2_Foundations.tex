@@ -190,7 +190,7 @@ In this article the crossentropy loss function is used.
 \cite{math_nn_skalski, medium_nn_from_scratch}
 
 $$CrossEntropy(p,y) = -\sum_{i=1}^K y_i \log(p_i)$$
-$$loss = CrossEntropy(probs, y)$$
+$$loss = CrossEntropy(probabilities, y)$$
 
 This process of calculating a result of the network is called forward propagation.
 It puts an input into the network and it calculates based on the parameters and functions an output.
@@ -253,20 +253,21 @@ The complete set can just predict 50\%.
 \end{figure}
 
 \section{Elastic Weight Consolidation}
+\label{foundation_ewc}
 
 In order to overcome this catastrophic forgetting or at least reduce it published a team of researchers a white paper called "Overcoming catastrophic forgetting" in 2016.
 \cite{elastic-weight-consolidation}
 
 To begin with they analysed the human and other animal brains.
-Here they discovered that the mammalian brain may avoid catastrophic forgetting by protecting previously-acquired knowledge in neocortical circuits.
-They developed an algorithm analogous to synaptic consolidation for deep neural networks, which they call elastic weight consolidation.
-By showing uses in supervised learning and reinforcement learning, could several tasks sequentially trained without forgetting older ones.
+Here they discovered that the mammalian brain may avoid catastrophic forgetting by protecting previously-acquired knowledge.
+They developed an algorithm for deep neural networks, which they call Elastic Weight Consolidation.
+By showing uses in supervised learning and reinforcement learning, several tasks could sequentially trained without forgetting older ones.
 \cite{elastic-weight-consolidation}
 
 According to their paper many configurations of $\theta$ (set of weights and biases) will result in the same performance of the network.
 This is a crucial information for EWC.
-The goal for EWC is it to over-parametersize and find a solution for $\theta$ for the next task.
-This solution needs to be close to the previous solution of $\theta$ the last task.
+The goal for EWC is it to over-parametersize $\theta$ and find a solution for $\theta$ at the next task.
+This solution needs to be close to the previous task solution of $\theta$.
 While learning the next task, EWC wants to protect the performance of the previous task by limiting the parameters.
 They should stay in a given region for a low error of the previous task.
 \cite{elastic-weight-consolidation}
@@ -275,29 +276,30 @@ To determin which values are most important, they see the training from a probab
 Here they discovered, that the catastrophic forgetting does not happen in a fully Bayesian way.
 \cite{elastic-weight-consolidation}
 
-% maybe insert deeper insights?
-
 With the Laplace approximation they approximate the posterior as a Gaussian distribution with mean given by the parameters of the previous task and the diagonal precision by the diagonal of the Fisher information matrix.
 \cite{elastic-weight-consolidation}
 
-Moreover they inform that the Fisher matrix is equivalent to the second derivative of the loss near a minimum and that "…it can be computed from first-order derivatives alone and is thus easy to calculate even for large models…" plus "…it is guaranteed to be positive semi-definite."
+Moreover they inform that the Fisher matrix is equivalent to the second derivative of the loss near a minimum and that "…it can be computed from first-order derivatives alone and is thus easy to calculate even for large models…" \cite{elastic-weight-consolidation} and "…it is guaranteed to be positive semi-definite."
+\cite{elastic-weight-consolidation}.
 \cite{elastic-weight-consolidation}
 
-They propose their function as the following:
+They propose the EWC function as following:
 
-$$L(\theta) = L_{B}(\theta) + \sum_{i} \frac{\lambda}{2} F_{i} (\theta_{i} - \theta_{A,i}^{*})^2 $$
+$$\mathcal{L}(\theta) = \mathcal{L}^{CE}(\theta) + \sum_{i} \frac{\lambda}{2} F_{i} (\theta_{i} - 
+\theta_{A,i}^{*})^2 $$
 
-$L_{B}(\theta)$ is the loss for the next task.
-lambda is a factor that determines how important the old task is compared to the new one \cite{elastic-weight-consolidation}.
-The parameter $i$ is the iterator for each parameter of the matrices.
-The parameter F is the Fisher information matrix, which looks like this \cite{incrmental-moment-matching}:
+The loss $\mathcal{L}(\theta)$ of every task consists of the originial loss $\mathcal{L}^{CE}(\theta)$ and the EWC appendix.
+Lambda in the EWC appendix is a factor that determines how important the old task is compared to the new one \cite{elastic-weight-consolidation}.
+The parameter $i$ is the iterator for each parameter (weights and biases) of the matrices.
+The parameter F is the Fisher Information Matrix, which looks like this \cite{incrmental-moment-matching}:
 
-$$F_k = E \left[ \frac{\partial \mathcal{L}}{\partial \theta_{k}} \cdot \frac{\partial \mathcal{L}}{\partial \theta_{k}} \right]$$
+$$F_{ij} = \frac{1}{N} \sum_{n}^{N} \frac{\partial \mathcal{L}}{\partial \theta_{i}} \cdot \frac{\partial \mathcal{L}}{\partial \theta_{j}}$$
 
-In the paper the authors show some results with their algorithm on three different tasks with supervised learning. In figure \ref{fig:ewc_permuted_example} are three permuted MNIST tasks shown:
+In this function N are all training samples, $\mathcal{L}$ is the loss function and $\theta$ is the set of all weights and biases.
+In the paper the authors show some results with their algorithm on three different tasks with supervised learning. Figure \ref{fig:ewc_permuted_example} shows three permuted MNIST tasks:
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=.4]{ewc_permuted_example}
+    \includegraphics[scale=.6]{ewc_permuted_example}
     \caption{\cite{elastic-weight-consolidation} Original EWC results on permuted MNIST}
     \label{fig:ewc_permuted_example}
 \end{figure}
