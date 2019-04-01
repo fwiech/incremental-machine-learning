@@ -64,9 +64,9 @@ def plotter(taskA, taskB, title):
 
     complete += dataB['plots']['plots']['Complete']
 
-    plt.plot(iters, task, '^', label="Task A", linewidth=4.0, markersize=10)
+    plt.plot(iters, task, '^', label="Task T1", linewidth=4.0, markersize=10)
 
-    plt.plot(inverse_b_iters, task_b, 'o', label="Task B", linewidth=4.0, markersize=10)
+    plt.plot(inverse_b_iters, task_b, 'o', label="Task T2", linewidth=4.0, markersize=10)
 
     plt.plot(iters, complete, '-', label="Complete Dataset", linewidth=4.0, markersize=10)
 
@@ -81,58 +81,46 @@ def plotter(taskA, taskB, title):
 
 if __name__ == '__main__':
 
-    # original EWC
+    # title = "D9-1 FIM"
+    # taskA = "checkpoints91/91_A_FIM/stats.json"
+    # taskB = "checkpoints91/91_B_FIM/stats.json"
+    # plotter(taskA, taskB, title)
 
-    title = "D9-1"
-    taskA = "checkpoints/EWC_91_A/stats.json"
-    taskB = "checkpoints/EWC_91_B/stats.json"
+    # title = "D9-1"
+    # taskA = "checkpoints91/91_A_BS1000/stats.json"
+    # taskB = "checkpoints91/91_B_BS1000/stats.json"
+    # plotter(taskA, taskB, title)
+
+
+
+    # title = "D5-5 FIM"
+    # taskA = "checkpoints55/55_A_FIM/stats.json"
+    # taskB = "checkpoints55/55_B_FIM/stats.json"
+    # plotter(taskA, taskB, title)
+
+    # title = "D5-5"
+    # taskA = "checkpoints55/55_A_BS1000/stats.json"
+    # taskB = "checkpoints55/55_B_BS1000/stats.json"
+    # plotter(taskA, taskB, title)
+
+
+
+    # title = "P10-10 FIM"
+    # taskA = "checkpointsPM/PM_A_FIM/stats.json"
+    # taskB = "checkpointsPM/PM_B_FIM/stats.json"
+    # plotter(taskA, taskB, title)
+
+    # title = "P10-10"
+    # taskA = "checkpointsPM/PM_A_BS1000/stats.json"
+    # taskB = "checkpointsPM/PM_B_BS1000/stats.json"
+    # plotter(taskA, taskB, title)
+
+    title = "P10-10 FIM"
+    taskA = "checkpoints/PM_A_FIM/stats.json"
+    taskB = "checkpoints/PM_B_FIM/stats.json"
     plotter(taskA, taskB, title)
 
-    title = "D5-5"
-    taskA = "checkpoints/EWC_55_A/stats.json"
-    taskB = "checkpoints/EWC_55_B/stats.json"
-    plotter(taskA, taskB, title)
-
-    title = "DP10-10"
-    taskA = "checkpoints/PM_A_BS1/stats.json"
-    taskB = "checkpoints/PM_B_BS1/stats.json"
-    plotter(taskA, taskB, title)
-
-
-    # default
-
-    title = "D9-1"
-    taskA = "checkpoints/91_A/stats.json"
-    taskB = "checkpoints/91_B/stats.json"
-    plotter(taskA, taskB, title)
-
-    title = "D5-5"
-    taskA = "checkpoints/55_A/stats.json"
-    taskB = "checkpoints/55_B/stats.json"
-    plotter(taskA, taskB, title)
-
-    title = "DP10-10"
+    title = "P10-10"
     taskA = "checkpoints/PM_A_BS1000/stats.json"
     taskB = "checkpoints/PM_B_BS1000/stats.json"
     plotter(taskA, taskB, title)
-
-
-    # lambda 1,000,000
-
-    # title = "Szenario 9-1"
-    # taskA = "checkpoints_lambda_1000000/91_A/stats.json"
-    # taskB = "checkpoints_lambda_1000000/91_B/stats.json"
-
-    # plotter(taskA, taskB, title)
-
-    # title = "Szenario 5-5"
-    # taskA = "checkpoints_lambda_1000000/55_A/stats.json"
-    # taskB = "checkpoints_lambda_1000000/55_B/stats.json"
-
-    # plotter(taskA, taskB, title)
-
-    # title = "Szenario Permuted"
-    # taskA = "checkpoints_lambda_1000000/PM_A/stats.json"
-    # taskB = "checkpoints_lambda_1000000/PM_B/stats.json"
-
-    # plotter(taskA, taskB, title)
