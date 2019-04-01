@@ -19,6 +19,10 @@ __*
 *.glo
 *.ist
 *.acn
+*.xmpi
+*.lot
+*.icc
+*.ICC
 
 # dirs
 notes/
