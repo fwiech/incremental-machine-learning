@@ -340,8 +340,35 @@ Their paper does not establish why they use the Fisher Information Matrix, in fa
 So this article takes a closer look to an alternative computation.
 Besides reimplementing the EWC algorithm and the expansion, show the performance of it on several sequential learning tasks (SLTs).
 
+\subsection*{Dataset and construction of sequential learning tasks}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics{mnist_100_digits}
+    \caption{\cite{mnist_examples_image} MNIST dataset}
+    \label{fig:intro_mnist_examples}
+\end{figure}
+
+This article uses the MNIST dataset for training the network and creating multiple tasks.
 For the benchmarks MNIST is split into three types.
+Each task of every type has its own separated train- and testsets.
+All sequential learning tasks of the types used in this article have two subtasks.
+The first task is $T_1$ and the second $T_2$.
+
+\subsubsection*{Disjoint SLTs (D9-1 and D5-5)}
+
 Two types are disjoint from the MNIST set.
-The disjoint can be plit in 5-5, which means 5 classes for each task and 9-1, which means 9 classes for the first task and one class as the second task.
-The third type is a permuted MNIST.
-Each task uses all ten classes, but their values get permuted randomly.
+MNIST is disjoint into each task five classes (D5-5 or nine classes for the first task and one class as second task (D9-1).
+
+\subsubsection*{Permuted SLTs (P10-10)}
+
+The thrid type consists of a permuted MNIST dataset.
+The first task is the original mnist and the following tasks are permuted mnist sets.
+
+% TODO why these benchmarks???
+\iffalse
+
+- since the paper shows poorly benchmarks parameters this article sticks with the best suited network for the mnist dataset
+- moreover is relies on the application-oriented study, where a batch size of 100 with 2500 iteration together with the two disjoint and on permuted type and two tasks where used.
+
+\fi
