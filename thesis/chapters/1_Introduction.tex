@@ -311,7 +311,7 @@ In this approach the network uses learns a compact overlapping knowledge sharing
 \subsection*{Keep and Learn: Continual Learning by Constraining the Latent Space for Knowledge Preservation in Neural Networks}
 https://arxiv.org/abs/1805.10784
 
-The authors present several baseline models for preserving learned knowledge by modeling the high-level feature space and output space to be mutually informative, and constraining feature vectrs to lie in the modeled space during training.
+The authors present several baseline models for preserving learned knowledge by modeling the high-level feature space and output space to be mutually informative, and constraining feature vectors to lie in the modeled space during training.
 In comparison to LwF and EWC, which are proposed for preventing multi-task learning, they focus n multi-center single-task learning.
 This means the model is learned with a different data-chunk of the same task and access to each data-chunk restricted.
 They used it in the area of restricted data, because of privacy issues.
@@ -319,7 +319,7 @@ They used it in the area of restricted data, because of privacy issues.
 \subsection*{FearNet: Brain-Inspired Model for Incremental Learning}
 https://arxiv.org/abs/1711.10563
 
-FearNet is a brain-inspired dial-memory system.
+FearNet is a brain-inspired dual-memory system.
 Their memory consolidation is inspired by mechanisms occurring during sleep.
 It is tested on images and audio classification.
 
@@ -329,14 +329,15 @@ https://arxiv.org/abs/1806.05421
 In contrast to parameter importance like EWC, they use a neuron importance by the focus on enforcing sparsity of neural activities by lateral interactions within a layer \cite{cf_application_oriented_study}.
 
 
-\section{Project}
+\section{Project goals}
+\label{project_goals}
 
 This article deals with specific parts of previous works on overcoming catastrophic forgetting.
 It takes a closer look into simplifying computation and interpretation of the Fisher Information Matrix used in different incremental learning methods with deep neural networks.
 One of the algorithms is the Elastic Weight Consolidation.
 As proposed later it uses the Fisher Information Matrix to protect weights of earlier learned tasks \cite{elastic-weight-consolidation}.
 Their paper does not establish why they use the Fisher Information Matrix, in fact just the diagonal of this matrix.
-So this article takes a closer look to an alternative.
+So this article takes a closer look to an alternative computation.
 Besides reimplementing the EWC algorithm and the expansion, show the performance of it on several sequential learning tasks (SLTs).
 
 For the benchmarks MNIST is split into three types.
