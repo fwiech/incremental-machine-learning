@@ -37,6 +37,9 @@ def task(**kwargs):
     previous = kwargs.get('previous', '')
     save = kwargs.get('save', '')
 
+    train_network = bool(kwargs.get('train', True))
+    logging.info("train network: " + str(train_network))
+
     # Parameters
     classes = kwargs.get('classes')
     learn_rate = kwargs.get('learnrate')
@@ -148,7 +151,6 @@ def task(**kwargs):
             logging.debug("max: " + str(variable.max()))
             logging.debug("---")
 
-    logging.info("* TRAINING CLASSES *")
 
     plots = {
         "Task": iter_test_task,
@@ -157,18 +159,28 @@ def task(**kwargs):
     if mnist_task_inverse is not None:
         plots['Inverse_Task'] = iter_test_task_inverse
     
-    plots = nn.train(
-        sess,
-        update,
-        iter_train_task,
-        training_iterations,
-        display_steps_train,
-        plots
-    )
+    if train_network:
+        logging.info("* TRAINING CLASSES *")
+        plots = nn.train(
+            sess,
+            update,
+            iter_train_task,
+            training_iterations,
+            display_steps_train,
+            plots
+        )
+    else:
+        if previous is not '':
+            with open(os.path.join(checkpoint_dir, previous, "stats.json")) as json_file:
+                data = json.load(json_file)
+            plots = data['plots']
+        else:
+            plots = {}
+    
 
     # if model is not saved, fisher claculation unnecessary
     # of model is loaded, fisher comes from checkpoint so no comp necessary either
-    if save is not '' and save is not None and previous is '':
+    if save is not '' and save is not None:
         logging.info("* CALC FISHER *")
         nn.compute_fisher(sess, iter_fisher, batch_fisher)
 
@@ -251,6 +263,8 @@ if __name__ == '__main__':
                         default=100, help='print every x steps training results')
     parser.add_argument('--lambda', type=float, required=False, help='optimizer learning rate')
     parser.add_argument('--permute', type=int, required=False, help='permute dataset? If -1: no permutation, if >= 0: random seed for permutation')
+
+    parser.add_argument('--notrain', dest='train', action='store_false')
 
     args = parser.parse_args()
 
