@@ -72,7 +72,6 @@ Part 2 (Figure \ref{fig:concept_sequence_diagram_part_2}) shows the execution of
     \label{fig:concept_sequence_diagram_part_2}
 \end{figure}
 
-\section{Theory}
 \newpage
 \section{Baseline}
 
@@ -149,8 +148,52 @@ $T_1$ still performs with 94.78\%.
     \label{fig:ewc_p10-10}
 \end{figure}
 
+\section{Critical review of EWC and improvements}
+\label{project_review_improvements}
 
-Figure \ref{fig:ewc_d9-1} shows the trainings of both tasks compared to the accuracy of the complete dataset:
+As proposed in Elastic Weight Consolidation (Section \ref{foundation_ewc}, \cite{elastic-weight-consolidation}) the authors use the diagonal of Fisher Information Matrix for the loss calculation.
+
+$$F_{ij} = \frac{1}{N} \sum_{n}^{N} \frac{\partial \mathcal{L}}{\partial \theta_{i}} \cdot \frac{\partial \mathcal{L}}{\partial \theta_{j}}$$
+
+$$\vec{F} \equiv diag \left(F_{ij}\right)$$
+
+The reports \cite{better-weight-consolidation,elastic-weight-consolidation} justify that the assumption of the diagonal FIM is common practice \cite{elastic-weight-consolidation,better-weight-consolidation,incremental-moment-matching}.
+It reduces the operations fom $O(N^2)$ to $O(N)$, where $N$ is the number of elements in $\theta$.
+This reulsts in a lot faster calculation even in large models.
+\cite{elastic-weight-consolidation,better-weight-consolidation}
+Moreover, this justification receives rather promising results and holds in some cases.
+\cite{elastic-weight-consolidation,incremental-moment-matching}.
+
+The current reference implementation of EWC uses Tensorflow.
+A problem with calculating the FIM in Tensorflow is that it is neccesary to get the gradients for every sample but Tensorflow does not expose them.
+So this implementation built a complex workaround by hardcoding the gradients directly into the computation graph of Tensorflow.
+This solutions increases the memory consumption by the batch size.
+It results that the developer set the batch size for this computation to the fixed rate of 100, because the computation of a full batch would diretly run out of memory.
+\cite{github_ewc_issue1}
+
+
+% -> break it down that is actualy just approximative calculation by gradients
+
+% show our approach and why this 
+
+The idea is it to narrow down the problem for a much easier calculation that receives the same results.
+The FIM just uses the diagonal.
+This means $\theta_i$ and $\theta_j$ will always be the same weight or bias matrix.
+So we can summarize them to one parameter $\theta_k$.
+This reults in a much simpler formula:
+
+$$diag \left(F_{ij}\right) = F_k = \frac{1}{N} \sum_{n}^{N} \left( \frac{\partial \mathcal{L}}{\partial \theta_{k}} \right)^2$$
+
+This simplification is still  based on a per gradient calculation.
+The further idea is it to take the square of the gradient of a complete mini-batch.
+Since it is common practice to create mini-batches for training a network, this modification of the matrix would solve the problem with Tensorflow and enables a much faster calculation of the matrix.
+The avereged gradients of a mini-batch shouldn't have much of a difference compared to the per sample gradients.
+This modification of the matrix looks like this:
+
+$$diag \left(F_{ij}\right) = F_k = \left( \frac{1}{N} \sum_{n}^{N} \frac{\partial \mathcal{L}}{\partial \theta_{k}} \right)^2$$
+
+An important note is that with an batch size of one, this modification would be the same as the FIM. 
+The following section tests this modification on the D9-1, D5-5 and P10-10 benchmarks.
 
 \begin{figure}[H]
     \centering
