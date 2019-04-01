@@ -220,6 +220,7 @@ def task(**kwargs):
         save_path = nn.saver.save(sess, os.path.join(checkpoint_dir, save, "checkpoint.ckpt"))
         logging.info(save_path)
         # save stats
+        stats['batch_matrix'] = batch_fisher
         stats['gradients'] = {}
         stats['variables'] = {}
         for key, gradient in nn.gradients.items():
