@@ -195,23 +195,216 @@ $$diag \left(F_{ij}\right) = F_k = \left( \frac{1}{N} \sum_{n}^{N} \frac{\partia
 An important note is that with an batch size of one, this modification would be the same as the FIM. 
 The following section tests this modification on the D9-1, D5-5 and P10-10 benchmarks.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{project/baseline/D9-1_BS1}
-    \caption{EWC D9-1}
-    \label{fig:ewc_d9-1}
-\end{figure}
-
-\subsection*{Permuted 10-10 benchmark}
-
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{project/baseline/P10-10_BS1}
-    \caption{EWC P10-10}
-    \label{fig:ewc_p10-10}
-\end{figure}
-
+\newpage
 \section{Experiments}
 
+This sections show the results of EWC with the modified FIM and testing different values for the learningrate and lambda.
+The network features are listed in Section \ref{foundations_deep_neural_network}.
+
+\subsection{Disjoint 9-1}
+
+All experiments with a disjoint nine to one test on MNIST are split in the task $T_1$ with classes zero to eight and task $T_2$ with class nine.
+Task $T_1$ was trained on 54051 samples, split into batches with a size of 100.
+The learnrate amounted 0.001.
+This reults in a performance of 95.72\% on the $T_1$ testset and 86.06\% on the complete set.
+
+Figure \ref{fig:exp_d9-1_bs1k} shows besides the training of $T_1$ the retraining of the network with $T_2$.
+$T_2$ included 5900 samples that were split into 59 batches and tarined in 2500 iterations.
+The learnrate of the optimizer was 0.00001 and $\lambda = \frac{1}{0.00001} = 100,000$.
+$T_2$ achives a performance of 97.72\%.
+At the end of both trainings $T_1$ performs with 83.60\%.
+The complete testset indicates an accuracy of 84.72\%, a minus of 1.34\%.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{project/experiments/D91_BS1k}
+    \caption{Experiment D9-1}
+    \label{fig:exp_d9-1_bs1k}
+\end{figure}
+
+\newpage
+
+Table \ref{table:exp_d9-1} tests multiple learnrates and lambda values with $T_2$ on the complete dataset.
+Every parameter test was done with 2500 iterations and a batch size of 100 and 5900 samples.
+\newline
+The results show that the best performance is with a learnrate of 0.00001 and a lambda value of 1,000,000. With these parameters performs $T_2$ with 87.78\%, $T_1$ has still a performance of 74.12\% and the complete dataset with 90.84\%.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |c|l|l|l|  }
+        \hline
+        \multicolumn{2}{|c|}{parameters} & \multicolumn{2}{c|}{accuracy after $T_2$ training} \\
+        \hline
+        learnrate & lambda & $T_2$ & complete dataset\\
+        \hline
+        \hline
+        \multirow{6}{*}{0.001} & 1,000 & 100\% & 11.20\%\\
+                            & 10,000 & 100\% & 12.78\%\\
+                            & 100,000 & 100\% & 12.93\% \\
+                            & 1,000,000 & 100\% & 15.92\% \\
+                            & 1,010,000 & 100\% & 15.14\% \\
+                            & 1,050,000 & 100\% & 14.65\% \\
+        \hline
+        \multirow{6}{*}{0.0001} & 1,000 & 100\% & 42.22\%\\
+                                & 10,000 & 100\% & 40.47\%\\
+                                & 100,000 & 100\% & 37.86\% \\
+                                & 1,000,000 & 100\% & 41.99\% \\
+                                & 1,010,000 & 100\% & 40.09\% \\
+                                & 1,050,000 & 100\% & 40.11\% \\
+        \hline
+        \multirow{6}{*}{0.00001} & 1,000 & 98.91\% & 82.62\%\\
+                                & 10,000 & 98.82\% & 83.48\%\\
+                                & 100,000 & 97.82\% & 85.41\% \\
+                                & 1,000,000 & 87.78\% & 90.84\% \\
+                                & 1,010,000 & 87.69\% & 90.86\% \\
+                                & 1,050,000 & 87.51\% & 90.87\% \\
+        \hline
+        \multirow{6}{*}{0.000001} & 1,000 & 94.27\% & 90.2\% \\
+                                & 10,000 & 80.34\% & 92.81\% \\
+                                & 100,000 & 3.18\% & 86.4\% \\
+                                & 1,000,000 & 0.0\% & 86.17\% \\
+                                & 1,010,000 & 0.0\% & 86.16\% \\
+                                & 1,050,000 & 0.0\% & 86.16\% \\
+        \hline
+    \end{tabular}
+    \caption{Experiment D9-1}
+    \label{table:exp_d9-1}
+\end{table}
+
+\newpage
+
+\subsection{Disjoint 5-5}
+
+The disjoint 5-5 experiments a split into the classes zero to four and five to nine.
+$T_1$ has 30500 samples split into 305 batches and trained with 2500 batch cycles.
+The learnrate is 0.001,w hich results in a performance of 98.66\% with $T_1$ and 50.70\% on the complete dataset.
+
+Figure \ref{fig:exp_d5-5_bs1k} shiw both tasks $T_1$ and $T_2$.
+In this case $T_2$ was trained with 29400 samples, a batch size of 100 and a learnrate of 0.00001.
+The EWC loss was calculated with $\lambda = \frac{1}{0.00001} = 100,000$.
+The result of $T_2$ training is a performance of 82.30\% on $T_2$, 76.73\% on $T_1$ and an accuracy of 79.33\% on the complete dataset.
+This shows that the network achvieved an increase of 28.63\%.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{project/experiments/D55_BS1k}
+    \caption{Experiment D-5}
+    \label{fig:exp_d5-5_bs1k}
+\end{figure}
+
+\newpage
+
+Table \ref{table:exp_d5-5} lists several parameter test.
+These tests were built on the same parameters for $T_2$ exept the learnrate and lambda was varied.
+The best result is with the learnrate of 0.00001 and a lambda value of 1,000.
+It shows that the complete set has an accuracy of 81.87\%, $T_2$ of 93.64\% and $T_1$ of 71.16\%.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |c|l|l|l|  }
+        \hline
+        \multicolumn{2}{|c|}{parameters} & \multicolumn{2}{c|}{accuracy after $T_2$ training} \\
+        \hline
+        learnrate & lambda & $T_2$ & complete dataset\\
+        \hline
+        \hline
+        \multirow{6}{*}{0.001} & 1,000 & 97.87\% & 48.94\%\\
+                            & 10,000 & 98.13\% & 49.84\%\\
+                            & 100,000 & 97.94\% & 51.04\% \\
+                            & 1,000,000 & 97.5\% & 51.72\% \\
+                            & 1,010,000 & 97.27\% & 51.99\% \\
+                            & 1,050,000 & 97.52\% & 52.75\% \\
+        \hline
+        \multirow{6}{*}{0.0001} & 1,000 & 97.05\% & 63.24\%\\
+                                & 10,000 & 96.65\% & 63.49\%\\
+                                & 100,000 & 96.19\% & 61.74\% \\
+                                & 1,000,000 & 95.65\% & 63.14\% \\
+                                & 1,010,000 & 95.74\% & 63.06\% \\
+                                & 1,050,000 & 95.59\% & 63.03\% \\
+        \hline
+        \multirow{6}{*}{0.00001} & 1,000 & 93.64\% & 81.87\%\\
+                                & 10,000 & 90.45\% & 83.49\%\\
+                                & 100,000 & 82.38\% & 79.86\% \\
+                                & 1,000,000 & 67.84\% & 72.68\% \\
+                                & 1,010,000 & 67.79\% & 72.64\% \\
+                                & 1,050,000 & 67.2\% & 72.42\% \\
+        \hline
+        \multirow{6}{*}{0.000001} & 1,000 & 28.1\% & 63.55\% \\
+                                & 10,000 & 18.9\% & 59.39\% \\
+                                & 100,000 & 0.02\% & 50.6\% \\
+                                & 1,000,000 & 0.0\% & 50.71\% \\
+                                & 1,010,000 & 0.0\% & 50.71\% \\
+                                & 1,050,000 & 0.0\% & 50.71\% \\
+        \hline
+    \end{tabular}
+    \caption{Experiment D5-5}
+    \label{table:exp_d5-5}
+\end{table}
+
+\newpage
+
+\subsection{Permuted 10-10}
+
+This experiment type performs in $T_1$ a training on the complete dataset and in $T_2$ on a permuted dataset with the seed of zero.
+\newline
+$T_1$ properties are: 60,000 samples into 60 batches with a size of 100, a learnrate of 0.001 and 2500 iterations.
+This results in an accuracy of 94.76\%.
+\newline
+As well as the EWC showcase had this $T_2$ be trained with 20,000 iterations.
+With a changed learnrate to 0.00001 and $\lambda = \frac{1}{0.00001} = 100,000$, $T_2$ achives a performance of 91.53\%.
+The complete dataset shows an accuracy of 90.45\% and $T_1$ of still 94.76\%.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{project/experiments/P10-10_BS1k_IT20k}
+    \caption{P10-10}
+    \label{fig:exp_p10-10}
+\end{figure}
+
+\newpage
+
+Table \ref{table:exp_d10-10} shows the results of several experiments with the learnrate an lambda of $T_2$.
+The table shows that there are many good outcomes.
+The best outcomes are with the same learnrate as $T_1$ and rather small lambda value.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |c|l|l|l|  }
+        \hline
+        \multicolumn{2}{|c|}{parameters} & \multicolumn{2}{c|}{accuracy} \\
+        \hline
+        learnrate & lambda & $T_2$ & complete dataset\\
+        \hline
+        \hline
+        \multirow{6}{*}{0.001} & 1,000 & 97.09\% & 93.72\%\\
+                            & 10,000 & 97.66\% & 94.20\%\\
+                            & 100,000 & 97.2\% & 93.05\% \\
+                            & 1,000,000 & 97.3\% & 93.26\% \\
+                            & 1,010,000 & 97.25\% & 92.46\% \\
+                            & 1,050,000 & 96.84\% & 92.29\% \\
+        \hline
+        \multirow{6}{*}{0.0001} & 1,000 & 96.87\% & 91.41\%\\
+                                & 10,000 & 96.51\% & 90.93\%\\
+                                & 100,000 & 96.48\% & 91.45\% \\
+                                & 1,000,000 & 96.45\% & 91.47\% \\
+                                & 1,010,000 & 96.56\% & 91.43\% \\
+                                & 1,050,000 & 96.45\% & 91.38\% \\
+        \hline
+        \multirow{6}{*}{0.00001} & 1,000 & 94.67\% & 90.98\%\\
+                                & 10,000 & 93.04\% & 90.67\%\\
+                                & 100,000 & 91.53\% & 90.46\% \\
+                                & 1,000,000 & 90.29\% & 90.66\% \\
+                                & 1,010,000 & 90.28\% & 90.65\% \\
+                                & 1,050,000 & 90.23\% & 90.66\% \\
+        \hline
+        \multirow{6}{*}{0.000001} & 1,000 & 87.84\% & 89.75\% \\
+                                & 10,000 & 80.58\% & 89.67\% \\
+                                & 100,000 & 68.64\% & 89.17\% \\
+                                & 1,000,000 & 56.66\% & 88.64\% \\
+                                & 1,010,000 & 56.62\% & 88.63\% \\
+                                & 1,050,000 & 56.51\% & 88.62\% \\
+        \hline
+    \end{tabular}
+    \caption{Experiment P10-10}
+    \label{table:exp_d10-10}
+\end{table}
