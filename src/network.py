@@ -137,7 +137,7 @@ class Network():
             while True:
                 # advance iterator! Compute squared grads and download them to np
                 fisher_matrix_gradients_np = sess.run(fisher_matrix_gradients)
-                pprint(fisher_matrix_gradients_np)
+                # pprint(fisher_matrix_gradients_np)
 
                 # accumulate them in np arrays
                 for key in self.keys:
