@@ -169,7 +169,7 @@ A problem with calculating the FIM in Tensorflow is that it is neccesary to get 
 So this implementation built a complex workaround by hardcoding the gradients directly into the computation graph of Tensorflow.
 This solutions increases the memory consumption by the batch size.
 It results that the developer set the batch size for this computation to the fixed rate of 100, because the computation of a full batch would diretly run out of memory.
-\cite{github_ewc_issue1}
+\cite{github_ewc_issue_one}
 
 
 % -> break it down that is actualy just approximative calculation by gradients
