@@ -33,10 +33,10 @@ class Network():
 
         with tf.variable_scope("network"):
             self.theta = {
-                'wh1':  tf.Variable(tf.truncated_normal([self.n_input, self.n_hidden_1], stddev=0.1, dtype=tf.float32), name='wh1'),
-                'wh2':  tf.Variable(tf.truncated_normal([self.n_hidden_1, self.n_hidden_2], stddev=0.1, dtype=tf.float32), name='wh2'),
-                'wh3':  tf.Variable(tf.truncated_normal([self.n_hidden_2, self.n_hidden_3], stddev=0.1, dtype=tf.float32), name='wh3'),
-                'wo':   tf.Variable(tf.truncated_normal([self.n_hidden_3, self.n_classes], stddev=0.1, dtype=tf.float32), name='wo'),
+                'wh1':  tf.Variable(tf.truncated_normal([self.n_input, self.n_hidden_1], stddev=0.1, seed=0, dtype=tf.float32), name='wh1'),
+                'wh2':  tf.Variable(tf.truncated_normal([self.n_hidden_1, self.n_hidden_2], stddev=0.1, seed=0, dtype=tf.float32), name='wh2'),
+                'wh3':  tf.Variable(tf.truncated_normal([self.n_hidden_2, self.n_hidden_3], stddev=0.1, seed=0, dtype=tf.float32), name='wh3'),
+                'wo':   tf.Variable(tf.truncated_normal([self.n_hidden_3, self.n_classes], stddev=0.1, seed=0, dtype=tf.float32), name='wo'),
                 'bh1':  tf.Variable(tf.ones([self.n_hidden_1], dtype=tf.float32)*0.1, name='bh1'),
                 'bh2':  tf.Variable(tf.ones([self.n_hidden_2], dtype=tf.float32)*0.1, name='bh2'),
                 'bh3':  tf.Variable(tf.ones([self.n_hidden_3], dtype=tf.float32)*0.1, name='bh3'),
