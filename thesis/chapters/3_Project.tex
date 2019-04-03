@@ -78,7 +78,7 @@ Part 2 (Figure \ref{fig:concept_sequence_diagram_part_2}) shows the execution of
 Before adapting the EWC algorithm the codebase has to proof, that it delivers the results of the EWC paper.
 The original EWC algorithm was tested in the constructed benchmarks described in Project Goals (Section \ref{project_goals}):
 
-\subsection{Disjoint 9-1 benchmark}
+\subsection{Disjoint 9-1 Benchmark}
 
 $T_1$ (blue, $\bigtriangleup$) trained with the classes zero to eight and reaches an accuracy of 95.72\% at the end of its training pahse.
 The task was trained with a learnrate of 0.001, 2500 iterations and an batch size of 100.
@@ -100,7 +100,7 @@ Figure \ref{fig:ewc_d9-1} shows the trainings of both tasks compared to the accu
     \label{fig:ewc_d9-1}
 \end{figure}
 
-\subsection{Disjoint 5-5 benchmark}
+\subsection{Disjoint 5-5 Benchmark}
 
 Figure \ref{fig:ewc_d5-5} shows training of a disjoint mnist with a five class split.
 
@@ -123,7 +123,7 @@ The performance of the complete dataset ascended from 50.70\% to 79.39\%.
     \label{fig:ewc_d5-5}
 \end{figure}
 
-\subsection*{Permuted 10-10 benchmark}
+\subsection{Permuted 10-10 Benchmark}
 
 EWC performance is shown in Figure \ref{fig:ewc_p10-10}.
 $T_1$ is trained with following parameters:
@@ -196,7 +196,7 @@ An important note is that with an batch size of one, this modification would be 
 The following section tests this modification on the D9-1, D5-5 and P10-10 benchmarks.
 
 \newpage
-\section{Experiments}
+\section{Experimental Results}
 
 This sections show the results of EWC with the modified FIM and testing different values for the learningrate and lambda.
 The network features are listed in Section \ref{foundations_deep_neural_network}.
