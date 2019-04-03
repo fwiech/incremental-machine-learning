@@ -55,44 +55,45 @@ def plotter(fim, bs1k, title):
         bs_grad_min.append(ob['min'])
         bs_grad_max.append(ob['max'])
 
-    pprint(fim_grad_min)
-    pprint(bs_grad_min)
+    # pprint(fim_grad_min)
+    # pprint(bs_grad_min)
 
     bar_width = 0.35
     opacity = 0.8
     
-    plt.subplot(2, 1, 1)
+    # plt.subplot(2, 1, 1)
+    plt.subplot()
 
     plt.bar(key_range, fim_grad_max, bar_width, alpha=opacity,
             color='w', edgecolor='black', hatch='///', label='FIM')
 
     plt.bar(key_range + bar_width, bs_grad_max, bar_width, alpha=opacity,
-            color='w', edgecolor='black', hatch='...', label='BS=100')
+            color='w', edgecolor='black', hatch='...', label='BS=1,000')
 
     plt.xticks(key_range + bar_width, keys)
 
 
     plt.legend(loc=1, prop=legend_font)
-    plt.ylabel('max')
-    # plt.xlabel('Keys')
+    plt.ylabel('Maximum Values')
+    plt.xlabel('Parameters')
     plt.title(title, fontsize=title_font_size)
 
 
 
-    plt.subplot(2, 1, 2)
+    # plt.subplot(2, 1, 2)
 
-    plt.bar(key_range, fim_grad_min, bar_width,
-            alpha=opacity, color='w', edgecolor='black', hatch='///', label='FIM')
+    # plt.bar(key_range, fim_grad_min, bar_width,
+    #         alpha=opacity, color='w', edgecolor='black', hatch='///', label='FIM')
 
-    plt.bar(key_range + bar_width, bs_grad_min, bar_width,
-            alpha=opacity, color='w', edgecolor='black', hatch='...', label='BS=100')
+    # plt.bar(key_range + bar_width, bs_grad_min, bar_width,
+    #         alpha=opacity, color='w', edgecolor='black', hatch='...', label='BS=1,000')
 
-    plt.xticks(key_range + bar_width, keys)
+    # plt.xticks(key_range + bar_width, keys)
 
 
-    plt.legend(loc=1, prop=legend_font)
-    plt.ylabel('min')
-    plt.xlabel('Keys')
+    # plt.legend(loc=1, prop=legend_font)
+    # plt.ylabel('min')
+    # plt.xlabel('Keys')
 
 
     plt.show()
