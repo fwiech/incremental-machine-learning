@@ -291,7 +291,7 @@ $$\mathcal{L}(\theta) = \mathcal{L}^{CE}(\theta) + \sum_{i} \frac{\lambda}{2} F_
 The loss $\mathcal{L}(\theta)$ of every task consists of the originial loss $\mathcal{L}^{CE}(\theta)$ and the EWC appendix.
 Lambda in the EWC appendix is a factor that determines how important the old task is compared to the new one \cite{elastic-weight-consolidation}.
 The parameter $i$ is the iterator for each parameter (weights and biases) of the matrices.
-The parameter F is the Fisher Information Matrix, which looks like this \cite{incrmental-moment-matching}:
+The parameter F is the Fisher Information Matrix, which looks like this \cite{incremental-moment-matching}:
 
 $$F_{ij} = \frac{1}{N} \sum_{n}^{N} \frac{\partial \mathcal{L}}{\partial \theta_{i}} \cdot \frac{\partial \mathcal{L}}{\partial \theta_{j}}$$
 
