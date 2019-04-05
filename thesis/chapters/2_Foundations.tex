@@ -231,6 +231,38 @@ Running the Gradient Descent algorithm multiple times on different examples even
 
 \section{Catastrophic Forgetting}
 
+Catastrophic Forgetting is an affect that happens, when a trained network gets retrained with a new dataset.
+This dataset could include complete new classes (disjoint MNIST) or the same classes with new information (permuted MNIST).
+The effect is that the network completely forgets the information learned in the dataset before.
+\newline
+To show this effect in use, Figure \ref{fig:catastrophic_forgetting_d91_example} and Figure \ref{fig:catastrophic_forgetting_d55_example} present catastrophic forgetting in the two benchmarks D9-1 and D5-5.
+\newline
+The network is built with 784 inputs, 3 hidden layer with 800 neurons and 10 output classes.
+Each task trained with a learning rate of 0.001, 2,500 iterations and an batch size of 100.
+\newline
+Figure \ref{fig:catastrophic_forgetting_d91_example} shows the D9-1 benchmark. After the $T_1$ training, is the accuracy at 95.62\% for $T_1$. In the second task happens the catastrophic fogetting and at the end has $T_1$ 0\% accuracy.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{D91_catastrophic_forgetting}
+    \caption{Catastrophic forgetting D9-1 example}
+    \label{fig:catastrophic_forgetting_d91_example}
+\end{figure}
+
+\newpage
+
+In Figure \ref{fig:catastrophic_forgetting_d55_example} is the MNIST dataset split up into two task with each five classes.
+The graph shows that after the training of task $T_1$, the accuracy of the complete set at 50\%.
+After the training start of task $T_2$, the accuracy of $T_1$ drops to zero.
+The complete set can just predict 50\%.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{D55_catastrophic_forgetting}
+    \caption{Catastrophic forgetting D5-5 example}
+    \label{fig:catastrophic_forgetting_d55_example}
+\end{figure}
+
 Catastrophic forgetting was first discovered in 1989 in the article "Catastrophic Intereference" by McCloskey and Cohen.
 They broke the problem down into a rather simplified version to explain the problem:
 Figure \ref{fig:catastrophic_forgetting_clarification}A shows a reprensentation of a network in a simplified form.
@@ -253,20 +285,6 @@ It results in changing weights to encode new information and alters previously l
     \includegraphics[width=\textwidth]{McCloskeyCohen1989CatastropicInterference}
     \caption{\cite[page 148]{psychology_learning_mccloskey_cohen} Catastrophic forgetting clarification}
     \label{fig:catastrophic_forgetting_clarification}
-\end{figure}
-
-The catastrophic forgetting with the deep neural network described in the section before is shown in Figure \ref{fig:catastrophic_forgetting_example}.
-The used dataset is MNIST.
-It is split up into two task with each five classes.
-The graph shows that after the training of task A, the accuracy of the complete set at 50\%.
-After the training start of task B, the accuracy of A drops to zero.
-The complete set can just predict 50\%.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{catastrophic_forgetting_example}
-    \caption{Catastrophic forgetting example}
-    \label{fig:catastrophic_forgetting_example}
 \end{figure}
 
 \section{Elastic Weight Consolidation}
