@@ -257,78 +257,85 @@ Here is continual learning a major part that a model does not rely on a permanen
 
 \section{Related Work}
 
-As the time of writing are mutiple approaches to overcome the problem of catastrophic forgetting existing.
+As the time of writing exist mutiple approaches to overcome the problem of catastrophic forgetting.
+The white paper "Continual Lifelong Learning with Neural Networks: A Review" \cite{lifelong_learning_review} summarises main challenges linked to lifelong learning and compares existing neural network approaches that alleviate catastrophic forgetting to different extends.
+The book "Lifelong Machine Learning" \cite{lifelong-machine-learning-book} written by Zhiyuan Chen and Bing Liu coveres all of the important work in the field.
+It explains all paradigms and current continual learning methods.
+\newline
+% elastic weight consolidation
+One of the well-known approaches is the Elastic Weight Consolidation \cite{elastic-weight-consolidation}.
+This technique tries to encourage all important parameters to stay close to the old task.
+It proposes to add a term to the loss function that protects weights that are important for the previous sub-task(s) \cite{elastic-weight-consolidation}. 
+Importance is determined by approximating the diagonal Fisher Information Matrix of the DNN \cite{cf_application_oriented_study, elastic-weight-consolidation}.
+% better weight consolidation
+An improvement to this approach shows the Better Weight Consolidation \cite{better-weight-consolidation}.
+They specifically address the diagonal assumption made by the EWC algorithm \cite{better-weight-consolidation}.
+Their presented solution is the computation of a rotation matrix for a more valid diagonal FIM assumption \cite{better-weight-consolidation}.
+\newline
+% Incremental Moment Matching
+Incremental Moment Matching, another approach that trains ongoing sequential tasks on a new network and merges these two networks together by using the diagonal Fisher Information Matrix \cite{incremental-moment-matching}.
+They propose two moment matching algorithms that are tested on various datasets \cite{incremental-moment-matching}.
+\newline
+% Natural Gradient Descent
+The Natural Gradient Descent (NGD) proposes an approximation of the FIM for convolutional neural networks \cite{natural_gradient_descent}.
+It consists of tracking a diagonal variance, not in parameter coordinates, but in a generalisation of the outer product \cite{natural_gradient_descent}.
+They show that their matrix is a better approximation of the Fisher Information Matrix in several neural network architectures \cite{natural_gradient_descent}.
+\newline
+% iCaRL
+iCaRL learns classifiers and a data representation simultaneously \cite{iCARL}.
+It allows only the training data for a small number of classes to be present and new classes can be added progressively \cite{iCARL}.
+The use of a convolutional neural network makes it incompatible with deep neural network architectures \cite{iCARL}.
+The paper show with the experiments on CIFAR-100 and ImageNet ILSVRC 2012 that it can learn many classes incrementally over a long period of time \cite{iCARL}.
+\newline
+% DEN - Dynamically Expandable Networks
+Dynamically Expandable Networks (DEN) propose a deep network architecture that learns a compact overlapping knowledge sharing structures among tasks \cite{DEN}.
+It is done by performing a selective retraining which prevents semantic drift by splitting/duplicating units \cite{DEN}.
+The algorithm was tested on multiple public datasets \cite{DEN}.
+\newline
+% LwF - Learning without Forgetting
+% https://arxiv.org/abs/1606.09282
+Learning without Forgetting (LwF) is a strategy in convolutional neural networks \cite{LwF}.
+At first they lock the old fully connected layers \cite{LwF}.
+They append new fully connected layers to the convolutional layers and train the new task \cite{LwF}.
+After tat they integrate both knowledges by a joint training \cite{LwF}.
+This framework is promising where both trainings are similar to each other \cite{incremental-moment-matching, LwF}.
+\newline
+% Keep and Learn
+The authors of the paper "Keep and Learn: …" \cite{Keep_and_Learn} present several baseline models "…for preserving learned knowledge by modeling the high-level feature space and output space to be mutually informative, and constraining feature vectors to lie in the modeled space during training" \cite{Keep_and_Learn}.
+In comparison to LwF and EWC, which are proposed for preventing multi-task learning, they focus on multi-center single-task learning \cite{Keep_and_Learn}.
+This means the model is learned with a different data-chunk of the same task and access to each data-chunk restricted \cite{Keep_and_Learn}.
+Multi-center single-task learning could be compared to an permuted datasets that are used in several other approaches \cite{Keep_and_Learn}.
+They used it in the area of restricted data, where privacy issues set border to different data junks \cite{Keep_and_Learn}.
+\newline
+% FearNet
+FearNet is a brain-inspired dual-memory system \cite{FearNet}.
+Their memory consolidation is inspired by mechanisms occurring during sleep \cite{FearNet}.
+It has two complementary memory centers, a short-term memory system that immediately learns new information for recent recall and a DNN for the storage of remote memories \cite{FearNet}.
+FearNet also has a separate network that determines which memory center contains the associated memory required for prediction \cite{FearNet}.
+It is tested on images and audio classification \cite{FearNet}.
+\newline
+% Selfless Sequential Learning
+In contrast to parameter importance like EWC, Selfless Sequential Learning proposes a regularizer that encourages representation sparsity by means of neural inhibition \cite{Selfless_Sequential_Learning}.
+This results in few active neurons and leaves free neurons for upcoming tasks \cite{Selfless_Sequential_Learning}.
+Their regularizer only prevents other neurons in a local neighbourhood \cite{Selfless_Sequential_Learning}.
+This method is inspired by the lateral inhibition processes in the brain \cite{Selfless_Sequential_Learning}.
+\newline
+% Synaptic Intelligence
+Similar to EWC Synaptic Intelligence measure the importance of the tasks before \cite{Synaptic_Intelligence}.
+But instead of using the Fisher Information Matrix, they are putting forward a method which computes an importance measure online and along the entire learning trajectory \cite{Synaptic_Intelligence}.
+\newline
+% several test studies
 Several articles used these approaches and tested them on different models and multiple datasets with different circumstances.
 They investigated if these solve catastrophic forgetting and can be deployed in in real-world scenarios.
 Their outlines are that none of the approaches solve the problem completely.
-\cite{measuring_cf_in_nns, cf_with_hard_attention, cf_application_oriented_study}
-
-\subsection*{Elastic Weight Consolidation}
-This technique tries to encourage all important parameters to stay close to the old task.
-proposes to add a term to the energy function that protects weights that are important for the previous sub-task(s). 
-Importance is determined by approximating the Fisher information matrix of the DNN \cite{cf_application_oriented_study}.
-\cite{elastic-weight-consolidation}
-
-\subsection*{Better Weight Consolidation}
-https://arxiv.org/pdf/1802.02950.pdf
-
-This paper proposes an improvement of the Elastic Weiht Consolidation.
-They specifically address the diagonal assumption made by the EWC algorithm.
-
-\subsection*{Incremental Moment Matching}
-https://arxiv.org/abs/1703.08475
-
-This is a related approach to Elastic Weight Consolidation.
-This technique trains on the new task and merges them into the parameters of old tasks using the Fisher information matrix.
-
-\subsection*{Learning without Forgetting}
-https://arxiv.org/abs/1606.09282
-
-This article proposes a strategy to learn without forgetting in convolutional neural networks.
-At first they lock the old fully connected layers. They append new fully connected layers to the convolutional layers and train the new task.
-After tat they integrate both knowledges by a joint training.
-
-\subsection*{Continual Lifelong Learning with Neural Networks: A Review}
-https://arxiv.org/pdf/1802.07569.pdf
-
-This article summarises main challenges linked to lifelong learning and compares existing neural network approaches that alleviate catastrophic forgetting to different extends.
-
-\subsection*{Continual Learning Through Synaptic Intelligence}
-https://arxiv.org/pdf/1703.04200.pdf
-
-Similar to EWC they measure the importance of the tasks before.
-Synaptic Intelligence offers a different loss function, that measures the importance in a different way.
-
-\subsection*{iCaRL: Incremental Classifier and Representation Learning}
-https://arxiv.org/abs/1611.07725
-
-…
-
-\subsection*{Lifelong Learning with Dynamically Expandable Networks}
-https://arxiv.org/abs/1708.01547
-
-In this approach the network uses learns a compact overlapping knowledge sharing structures among tasks.
-
-\subsection*{Keep and Learn: Continual Learning by Constraining the Latent Space for Knowledge Preservation in Neural Networks}
-https://arxiv.org/abs/1805.10784
-
-The authors present several baseline models for preserving learned knowledge by modeling the high-level feature space and output space to be mutually informative, and constraining feature vectors to lie in the modeled space during training.
-In comparison to LwF and EWC, which are proposed for preventing multi-task learning, they focus n multi-center single-task learning.
-This means the model is learned with a different data-chunk of the same task and access to each data-chunk restricted.
-They used it in the area of restricted data, because of privacy issues.
-
-\subsection*{FearNet: Brain-Inspired Model for Incremental Learning}
-https://arxiv.org/abs/1711.10563
-
-FearNet is a brain-inspired dual-memory system.
-Their memory consolidation is inspired by mechanisms occurring during sleep.
-It is tested on images and audio classification.
-
-\subsection*{Selfless Sequential Learning}
-https://arxiv.org/abs/1806.05421
-
-In contrast to parameter importance like EWC, they use a neuron importance by the focus on enforcing sparsity of neural activities by lateral interactions within a layer \cite{cf_application_oriented_study}.
-
+\cite{measuring_cf_in_nns, cf_application_oriented_study}
+\newline
+The paper "Measuring Catastrophic Forgetting in Neural Networks" compares five different mechanisms (regularization, ensembling, rehearsal, dual-memory, and sparse-coding) on real-world images and sounds \cite{measuring_cf_in_nns}.
+Their results are that the mechanism(s) vary on the training paradigm and type of data in the dataset \cite{measuring_cf_in_nns}.
+But they conclude, that the catastrophic forgetting problem has yet to be solved \cite{measuring_cf_in_nns}.
+\newline
+"A comprehensive, application-oriented study of catastrophic forgetting in DNNS" \cite{cf_application_oriented_study} tests multiple methods on the most popular datasets \cite{cf_application_oriented_study}.
+Their results are that there is no method that avoids Catastrophic Forgetting under application conditions \cite{cf_application_oriented_study}.
 
 \section{Project Goals}
 \label{project_goals}
