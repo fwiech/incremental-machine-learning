@@ -145,7 +145,9 @@ Figure \ref{fig:dnn_node_procedure} shows the computation structure of each neur
 
 The value of each output neuron can be calculated as the following \cite{medium_nn_from_scratch}:
 
-$$y = b + \sum_{i} x_i w_i$$
+\begin{equation}
+y = b + \sum_{i} x_i w_i
+\end{equation}
 
 To be able to ensure the quickest calculation possible, vectorisation and matrixes are used.
 All Weights on a layer get stacked to a matrix W together.
@@ -153,13 +155,15 @@ The same process is applied to the biases on each layer.
 This results in the following calculation
 \cite{medium_nn_from_scratch}:
 
-$$ X = [ x_1 \dots x_i ]; \space W = 
+\begin{equation}
+X = [ x_1 \dots x_i ]; \space W = 
 \begin{bmatrix}
     x_{11} & \dots  & x_{1j} \\
     \vdots & \ddots & \vdots \\
     x_{i1} & \dots  & x_{ij}
 \end{bmatrix}; \space
-B = [ b_1 \dots b_j ] $$
+B = [ b_1 \dots b_j ]
+\end{equation}
 
 \begin{equation}
     Y = X * W + B
@@ -171,17 +175,26 @@ Without it, a neural network would just be a combination of linear functions, wh
 The activation function modifies the result in a probabilistic way.
 Important to mention is, that the activation function has a significant impact on the speed of learning.
 The network in this article uses the ReLU as an activation function for the hidden layers \cite{math_nn_skalski,relu}:
-$$ReLU(x) = max(0,x)$$
+
+\begin{equation}
+    ReLU(x) = max(0,x)
+\end{equation}
 
 The output of the last layer will be computed as logits:
 $$logits = (x*w)+b$$
 
 On the output layer it uses the softmax function, which realtes the output classes in a probabilistic way:
-$$ Softmax : \mathbb{R}^K \to \mathbb{R}^K $$
-$$ Softmax(x)_i : \frac{e^{k_i}}{\sum_{k=1}^K e^{x_k}}
+
+\begin{equation}
+    Softmax : \mathbb{R}^K \to \mathbb{R}^K
+\end{equation}
+\begin{equation}
+    Softmax(x)_i : \frac{e^{k_i}}{\sum_{k=1}^K e^{x_k}}
 \space ; i = 1, …, K
-$$
-$$probabilities = Softmax(logits)$$
+\end{equation}
+\begin{equation}
+    probabilities = Softmax(logits)
+\end{equation}
 
 After a prediction by the calculation of all neurons and layers the network needs source of information on the progress of the learning process.
 This is where the loss function is introduced.
@@ -189,17 +202,21 @@ It is designed to show how bad the classification to the right solution is.
 In this article the crossentropy loss function is used.
 \cite{math_nn_skalski, medium_nn_from_scratch}
 
-$$CrossEntropy(p,y) = -\sum_{i=1}^K y_i \log(p_i)$$
-$$loss = CrossEntropy(probabilities, y)$$
+\begin{equation}
+    CrossEntropy(p,y) = -\sum_{i=1}^K y_i \log(p_i)
+\end{equation}
+\begin{equation}
+    loss = CrossEntropy(probabilities, y)
+\end{equation}
 
 This process of calculating a result of the network is called forward propagation.
 It puts an input into the network and it calculates based on the parameters and functions an output.
 On this output the learning process gets applied.
 This shows the accuracy of the network.
 \cite{math_nn_skalski, medium_nn_from_scratch}
-
-The learning process is about adapting the weights and biases to
-optimise the accuracy.
+\newline
+In the learning is the dataset split into multiple batches. These batches include a fixed number of samples from the dataset. The joining of samples enables a much faster learning process.
+The learning process is about adapting the weights and biases to optimise the accuracy.
 This is done by minimising the loss function.
 This process of the update of weights and biases is called Backpropagation.
 It is an algorithm which calculates error gradients with respect to each network variable.
@@ -209,7 +226,7 @@ After the minimum is found, it would be applied to all parameters in the network
 By adjusting the learning rate of backpropagation, the developer has the control over the value adjustment.
 He defines how detailed each learning step should be.
 \cite{math_nn_andrey}
-
+\newline
 Running the Gradient Descent algorithm multiple times on different examples eventually result in a properly trained neural network.
 
 \section{Catastrophic Forgetting}
