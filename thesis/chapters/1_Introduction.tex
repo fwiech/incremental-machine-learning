@@ -256,6 +256,7 @@ For this scientific topic there are multiple non-profit organisations and compan
 Here is continual learning a major part that a model does not rely on a permanent existing dataset.
 
 \section{Related Work}
+\label{intro_related_work}
 
 As the time of writing exist mutiple approaches to overcome the problem of catastrophic forgetting.
 The white paper "Continual Lifelong Learning with Neural Networks: A Review" \cite{lifelong_learning_review} summarises main challenges linked to lifelong learning and compares existing neural network approaches that alleviate catastrophic forgetting to different extends.
@@ -341,12 +342,14 @@ Their results are that there is no method that avoids Catastrophic Forgetting un
 \label{project_goals}
 
 This article deals with specific parts of previous works on overcoming catastrophic forgetting.
-It takes a closer look into simplifying computation and interpretation of the Fisher Information Matrix used in different incremental learning methods with deep neural networks.
-One of the algorithms is the Elastic Weight Consolidation.
-As proposed later it uses the Fisher Information Matrix to protect weights of earlier learned tasks \cite{elastic-weight-consolidation}.
+As proposed in the related works (Section \ref{intro_related_work}) many methods use the Fisher Information Matrix.
+In fact many methods like EWC, BWC or IMM just use diagonal assumption of the FIM.
+So this article takes a closer look into simplifying the computation and interpretation of the Fisher Information Matrix.
+This simplification of the Fisher Information Matrix is tested on a reimplementation of the Elastic Weight Consolidation algorithm.
+As proposed later EWC uses the Fisher Information Matrix to protect weights of earlier learned tasks \cite{elastic-weight-consolidation}.
 Their paper does not establish why they use the Fisher Information Matrix, in fact just the diagonal of this matrix.
-So this article takes a closer look to an alternative computation.
-Besides reimplementing the EWC algorithm and the expansion, show the performance of it on several sequential learning tasks (SLTs).
+So this article tries to come up with a explanation based on mathematical principles.
+To test the alternative together with the EWC algorithm, this article shows the performance on several sequential learning tasks (SLTs).
 
 \subsection*{Dataset and construction of sequential learning tasks}
 
@@ -357,26 +360,28 @@ Besides reimplementing the EWC algorithm and the expansion, show the performance
     \label{fig:intro_mnist_examples}
 \end{figure}
 
-This article uses the MNIST dataset for training the network and creating multiple tasks.
+It uses the MNIST dataset for training the network and creating multiple sequential learning tasks (SLTs).
 For the benchmarks MNIST is split into three types.
-Each task of every type has its own separated train- and testsets.
+Each task of every type has its own separated trainset and testsets.
 All sequential learning tasks of the types used in this article have two subtasks.
 The first task is $T_1$ and the second $T_2$.
 
 \subsubsection*{Disjoint SLTs (D9-1 and D5-5)}
 
 Two types are disjoint from the MNIST set.
-MNIST is disjoint into each task five classes (D5-5 or nine classes for the first task and one class as second task (D9-1).
+MNIST is disjoint into each task five classes (D5-5) or nine classes for the first task and one class as second task (D9-1).
+The layout of the numbers in the split tasks is not given.
+For convenience this article split always the number zero to four in $T_1$ and five to nine in $T_2$ for the D5-5 type.
+The D9-1 type is split into $T_1$ with the number zero to eight and $T_2$ with the number nine.
 
 \subsubsection*{Permuted SLTs (P10-10)}
 
 The thrid type consists of a permuted MNIST dataset.
-The first task is the original mnist and the following tasks are permuted mnist sets.
+The first task is the original MNIST and the following tasks are permuted MNIST sets.
 
-% TODO why these benchmarks???
-\iffalse
-
-- since the paper shows poorly benchmarks parameters this article sticks with the best suited network for the mnist dataset
-- moreover is relies on the application-oriented study, where a batch size of 100 with 2500 iteration together with the two disjoint and on permuted type and two tasks where used.
-
-\fi
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=.8]{mnist_permuted_example}
+    \caption{Permuted MNIST example}
+    \label{fig:intro_mnist_permuted_example}
+\end{figure}
