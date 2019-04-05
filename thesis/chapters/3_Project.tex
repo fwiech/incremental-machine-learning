@@ -4,6 +4,7 @@
 
 In extend to this article is a code base available \footnote{\url{https://www.github.com/florianwiech/incremental-machine-learning}}.
 This code base includes the reimplementation of EWC and the extension of modifying the Fisher Information Matrix.
+It uses Python 3 with the packages NumPy (version 1.16.1) and Tensorflow (version 1.13.0).
 The concept documents the code structure and procedure.
 
 The complete code consists of three files.
@@ -203,9 +204,10 @@ The network features are listed in Section \ref{foundations_deep_neural_network}
 
 \subsection{Disjoint 9-1}
 
-All experiments with a disjoint nine to one test on MNIST are split in the task $T_1$ with classes zero to eight and task $T_2$ with class nine.
-Task $T_1$ was trained on 54051 samples, split into batches with a size of 100.
+All experiments with a disjoint nine to one test on MNIST are split in the task $T_1$ with numbers zero to eight and task $T_2$ with number nine.
+Task $T_1$ was trained on 54,000 samples, split into batches with a size of 100.
 The learnrate amounted 0.001.
+The calculation of the modified FIM was done with a batch size of 1,000.
 This reults in a performance of 95.72\% on the $T_1$ testset and 86.06\% on the complete set.
 
 Figure \ref{fig:exp_d9-1_bs1k} shows besides the training of $T_1$ the retraining of the network with $T_2$.
@@ -275,9 +277,10 @@ The results show that the best performance is with a learnrate of 0.00001 and a 
 
 \subsection{Disjoint 5-5}
 
-The disjoint 5-5 experiments a split into the classes zero to four and five to nine.
-$T_1$ has 30500 samples split into 305 batches and trained with 2500 batch cycles.
-The learnrate is 0.001,w hich results in a performance of 98.66\% with $T_1$ and 50.70\% on the complete dataset.
+The disjoint 5-5 experiments a split into the first class with the numbers zero to four and second class with the numbers five to nine.
+$T_1$ has 30,500 samples split into 305 batches and trained with 2,500 batch cycles.
+The learnrate is 0.001, which results in a $T_1$ performance of 98.66\% and 50.70\% on the complete dataset.
+The matric calculation for the second task was done with an average gradient of 1,000 gradients.
 
 Figure \ref{fig:exp_d5-5_bs1k} show both tasks $T_1$ and $T_2$.
 In this case $T_2$ was trained with 29,400 samples, a batch size of 100 and a learnrate of 0.00001.
