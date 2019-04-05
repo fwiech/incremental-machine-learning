@@ -168,11 +168,7 @@ So multitask learning will be the tool of choice for now.
 
 \section{Outlook}
 
-% test with multiple tasks and check, when the forgetting for the first task increases drastically
-% just tested with fixed 2500 iterations, it should be tested with more and less iterations
-% different batch sizes, because it is not per gradient anymore
-% test with the modification on other datasets
-% test modification on others that use fiher, like IMM or NGD
-% take a closer look to lambda
-%   would be useful to have a fixed lambda term
-%   useless if lambda needs to be calculated for every new task…
+Further investigations should be made by searching a solution for the parameter problem.
+This article presented a modification for the FIM which now should be tested with other popular datasets and continual learning algorithms that use this calculation as well.
+% As discribed in the related work seciton (Section …), the IMM and NGD algorithms use the FIM as well.
+Further tests could be, how much tasks the EWC algorithm can store until catastrophic fogetting occurs drastically.
