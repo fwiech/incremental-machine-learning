@@ -311,30 +311,106 @@ To determin which values are most important, they see the training from a probab
 Here they discovered, that the catastrophic forgetting does not happen in a fully Bayesian way.
 \cite{elastic-weight-consolidation}
 
-With the Laplace approximation they approximate the posterior as a Gaussian distribution with mean given by the parameters of the previous task and the diagonal precision by the diagonal of the Fisher information matrix.
-\cite{elastic-weight-consolidation}
+The Bayes theorem describes the probability of an event, based on prior knowledge of conditions that might be related to the event \cite{Bayes_theorem}. \cite{elastic-weight-consolidation, schaeffer_ewc}
+\newline
+The dataset as $\mathcal{D}$ with included samples is given.
+Now the network has to find the conditional probability for $\theta$, in fact the likelihood of the parameter (weights and biases) in $\theta$ given the data from the dataset.
+This conditional probability $p \left(\theta | \mathcal{D} \right)$ is and calculated using the Bayes' rule: \cite{elastic-weight-consolidation, schaeffer_ewc}
 
-Moreover they inform that the Fisher matrix is equivalent to the second derivative of the loss near a minimum and that "…it can be computed from first-order derivatives alone and is thus easy to calculate even for large models…" \cite{elastic-weight-consolidation} and "…it is guaranteed to be positive semi-definite."
+\begin{equation}
+    p \left( \theta | \mathcal{D} \right) = \frac{p \left(\mathcal{D}|\theta\right) p\left(\theta\right)}{p \left( \mathcal{D} \right)}
+\end{equation}
+
+$p \left( \theta \right)$ and $p \left( \mathcal{D} \right)$ are marginal probabilities. These are the probabilities for each event independently.
+\newline
+If the log-transform gets applied, the equation writes as follows: \cite{elastic-weight-consolidation, schaeffer_ewc}
+
+\begin{equation}
+    \setlength{\jot}{5pt}
+    \begin{split}
+        \log p(\theta | \mathcal{D}) & = \log \left[ 
+                \frac{p \left(\mathcal{D}|\theta\right) p\left(\theta\right)}{p \left( \mathcal{D} \right)} 
+            \right]
+        \\
+        & = \log p(\mathcal{D} | \theta) + \log p(\theta) - \log p(\mathcal{D})
+    \end{split}
+    \label{eq:bayes_applied_log}
+\end{equation}
+
+The paper assumes now that the data is split into two independent parts. $\mathcal{D}_A$ for task A and data $\mathcal{D}_B$ for task B.
+This would work with more than two tasks, but for simplicity are only two used.
+The re-arragne of the equation is: \cite{elastic-weight-consolidation, schaeffer_ewc}
+
+\begin{equation}
+    \setlength{\jot}{5pt}
+    \begin{split}
+        \log p(\theta | \mathcal{D}) 
+        & = \log \big[
+                p(\mathcal{D}_A | \theta) p(\mathcal{D}_B | \theta)
+                \big]
+            + \log p(\theta)
+            - \log \big[
+                p(\mathcal{D}_A) p(\mathcal{D}_B) 
+             \big]
+        \\
+        & = \log p(\mathcal{D}_B | \theta)
+            + \log p(\mathcal{D}_A | \theta)
+            + \log p(\theta)
+            - \log p(\mathcal{D}_A)
+            - \log p(\mathcal{D}_B)
+        \\
+        & = \log p(\mathcal{D}_B | \theta)
+            - \log p(\mathcal{D}_B)
+            + \big[
+                \log p(\mathcal{D}_A | \theta)
+                + \log p(\theta)
+                - \log p(\mathcal{D}_A)
+                \big]
+    \end{split}
+\end{equation}
+
+This last re-arragement looks with the term in the brackets familiar with Formula \eqref{eq:bayes_applied_log}, except $\mathcal{D}$ is replaced by $\mathcal{D}_A$ task A.
+Since they are equivalent to the conditional probability of the network's parameters given taskA's data, the equation can be modified to: \cite{elastic-weight-consolidation, schaeffer_ewc}
+
+\begin{equation}
+    \log p(\theta | \mathcal{D})=
+       \log p(\mathcal{D}_B | \theta)
+     + \log p(\theta | \mathcal{D}_A)
+     - \log p(\mathcal{D}_B)
+    \label{eq:bayesian_modified}
+\end{equation}
+
+Interesting on this formula is, that it still calculates the entire dataset (left side of Formula \eqref{eq:bayesian_modified}). Moreover, the paper descibes, that the right hand side only depends on the loss function for task B $\log p(\mathcal{D}_B | \theta)$. All information about task A is absorbed into the conditional probability $\log p(\theta | \mathcal{D}_A)$, the posterior distribution.
+So the paper follows that this conditional probability contains information about which parameters are important in solving task A.
+\cite{elastic-weight-consolidation, schaeffer_ewc}
+\newline
+They state, that the true posterior distribution is intractable and follow with the Laplace approximation to approximate the posterior as a Gaussian distribution with mean given by the parameters of the previous task A and the diagonal precision by the diagonal of the Fisher information matrix.
+\cite{elastic-weight-consolidation}
+\newline
+Moreover they inform that the Fisher information matrix is equivalent to the second derivative of the loss near a minimum and that "…it can be computed from first-order derivatives alone and is thus easy to calculate even for large models…" \cite{elastic-weight-consolidation} and "…it is guaranteed to be positive semi-definite."
 \cite{elastic-weight-consolidation}.
-\cite{elastic-weight-consolidation}
+\cite{elastic-weight-consolidation, schaeffer_ewc}
+\newline
+As a result they propose the new loss function for the upcoming training of task B:
 
-They propose the EWC function as following:
+\begin{equation}
+    \mathcal{L}(\theta) = \mathcal{L}^{CE}(\theta) + \sum_{i} \frac{\lambda}{2} F_{i} (\theta_{i} - \theta_{A,i}^{*})^2
+\end{equation}
 
-$$\mathcal{L}(\theta) = \mathcal{L}^{CE}(\theta) + \sum_{i} \frac{\lambda}{2} F_{i} (\theta_{i} - 
-\theta_{A,i}^{*})^2 $$
-
-The loss $\mathcal{L}(\theta)$ of every task consists of the originial loss $\mathcal{L}^{CE}(\theta)$ and the EWC appendix.
-Lambda in the EWC appendix is a factor that determines how important the old task is compared to the new one \cite{elastic-weight-consolidation}.
+The loss $\mathcal{L}(\theta)$ for task B consists of the originial loss $\mathcal{L}^{CE}(\theta)$ and the EWC appendix.
+Lambda ($\lambda$) in the EWC appendix is a factor that determines how important the old task is compared to the new one \cite{elastic-weight-consolidation}.
 The parameter $i$ is the iterator for each parameter (weights and biases) of the matrices.
 The parameter F is the Fisher Information Matrix, which looks like this \cite{incremental-moment-matching}:
 
-$$F_{ij} = \frac{1}{N} \sum_{n}^{N} \frac{\partial \mathcal{L}}{\partial \theta_{i}} \cdot \frac{\partial \mathcal{L}}{\partial \theta_{j}}$$
+\begin{equation}
+    F_{ij} = \frac{1}{N} \sum_{n=1}^{N} \frac{\partial \mathcal{L} \left( x_n \right) }{\partial \theta_{i}} \cdot \frac{\partial \mathcal{L} \left( x_n \right) }{\partial \theta_{j}}
+\end{equation}
 
 In this function N are all training samples, $\mathcal{L}$ is the loss function and $\theta$ is the set of all weights and biases.
 In the paper the authors show some results with their algorithm on three different tasks with supervised learning. Figure \ref{fig:ewc_permuted_example} shows three permuted MNIST tasks:
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=.6]{ewc_permuted_example}
+    \includegraphics[scale=.5]{ewc_permuted_example}
     \caption{\cite{elastic-weight-consolidation} Original EWC results on permuted MNIST}
     \label{fig:ewc_permuted_example}
 \end{figure}
