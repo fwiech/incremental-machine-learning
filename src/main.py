@@ -43,20 +43,20 @@ def task(**kwargs):
     classes = kwargs.get('classes')
     learn_rate = kwargs.get('learnrate')
     training_iterations = kwargs.get('iterations')
-    batch_size = kwargs.get('batch')
+    batch_train = kwargs.get('batch_train')
 
     lam = kwargs.get('lambda', None)
     # check if it is a continual task
     if previous is not '':
-        print("set lambda tp", lam, type(lam))
+        logging.debug("set lambda tp: " + str(lam) + "; " + str(type(lam)))
         if lam is None:
             lam = (1./learn_rate)
-        print("adapted lambda tp", lam, type(lam))
+        logging.debug("adapted lambda tp" + str(lam) + "; " + str(type(lam)))
     
     permute = kwargs.get('permute', None)
 
     if save is not '' and save is not None:
-        batch_fisher = kwargs.get('batch_fisher')
+        batch_matrix = kwargs.get('batch_matrix')
 
     display_steps_train = kwargs.get('display', 100)
 
@@ -69,21 +69,21 @@ def task(**kwargs):
 
     # create train datasets
     train_task = tf.data.Dataset.from_tensor_slices(
-        mnist_task[0]).batch(batch_size, False).repeat()
+        mnist_task[0]).batch(batch_train, False).repeat()
 
     if save is not '' and save is not None:
-        fisher_task = tf.data.Dataset.from_tensor_slices(
-            mnist_task[0]).batch(batch_fisher, False)
+        matrix_task = tf.data.Dataset.from_tensor_slices(
+            mnist_task[0]).batch(batch_matrix, False)
 
     # create test datasets
     test = tf.data.Dataset.from_tensor_slices(
-        mnist[1]).batch(batch_size, False)
+        mnist[1]).batch(batch_train, False)
     test_task = tf.data.Dataset.from_tensor_slices(
-        mnist_task[1]).batch(batch_size, False)
+        mnist_task[1]).batch(batch_train, False)
     
     if mnist_task_inverse is not None:
         test_task_inverse = tf.data.Dataset.from_tensor_slices(
-            mnist_task_inverse[1]).batch(batch_size, False)
+            mnist_task_inverse[1]).batch(batch_train, False)
 
     # create general iterator
     iterator = tf.data.Iterator.from_structure(train_task.output_types,
@@ -103,7 +103,7 @@ def task(**kwargs):
         iter_test_task_inverse = iterator.make_initializer(test_task_inverse)
 
     if save is not '' and save is not None:
-        iter_fisher = iterator.make_initializer(fisher_task)
+        iter_matrix = iterator.make_initializer(matrix_task)
 
     # Construct model
     nn = Network(next_feature, next_label, lam)
@@ -177,11 +177,11 @@ def task(**kwargs):
             plots = {}
     
 
-    # if model is not saved, fisher claculation unnecessary
-    # of model is loaded, fisher comes from checkpoint so no comp necessary either
+    # if model is not saved, matrix claculation unnecessary
+    # if model is loaded, matrix comes from checkpoint so no comp necessary either
     if save is not '' and save is not None:
-        logging.info("* CALC FISHER *")
-        nn.compute_fisher(sess, iter_fisher, batch_fisher)
+        logging.info("* CALC MATRIX *")
+        nn.compute_matrix(sess, iter_matrix, batch_matrix)
 
     logging.info("* TESTING ON TRAINED CLASSES *")
     test_classes_result = nn.test(sess, iter_test_task)
@@ -199,7 +199,7 @@ def task(**kwargs):
         },
         'learnrate': learn_rate,
         'training_iterations': training_iterations,
-        'batch_size': batch_size,
+        'batch_train': batch_train,
         'lambda': lam,
         'test': {
             'classes': test_classes_result,
@@ -219,21 +219,21 @@ def task(**kwargs):
         save_path = nn.saver.save(sess, os.path.join(checkpoint_dir, save, "checkpoint.ckpt"))
         logging.info(save_path)
         # save stats
-        stats['batch_matrix'] = batch_fisher
+        stats['batch_matrix'] = batch_matrix
         stats['gradients'] = {}
         stats['variables'] = {}
         for key, gradient in nn.gradients.items():
-            gradient = sess.run(gradient)
-            stats['gradients'][key] = {}
-            # stats['gradients'][key]['gradient'] = gradient
-            stats['gradients'][key]['min'] = float(gradient.min())
-            stats['gradients'][key]['max'] = float(gradient.max())
+            gradient_np = sess.run(gradient)
+            stats['gradients'][key] = {
+                'min': float(gradient_np.min()),
+                'max': float(gradient_np.max())
+            }
         for key, variable in nn.variables.items():
-            variable = sess.run(variable)
-            stats['variables'][key] = {}
-            # stats['variables'][key]['variable'] = variable
-            stats['variables'][key]['min'] = float(variable.min())
-            stats['variables'][key]['max'] = float(variable.max())
+            variable_np = sess.run(variable)
+            stats['variables'][key] = {
+                'min': float(variable_np.min()),
+                'max': float(variable_np.max())
+            }
         with open(checkpoint_dir + save + "/stats.json", 'w') as fp:
             json.dump(stats, fp)
 
@@ -251,8 +251,8 @@ if __name__ == '__main__':
     parser.add_argument('--learnrate', type=float, required=True, help='optimizer learning rate')
     parser.add_argument('--iterations', type=int, required=True, help='training iterations')
 
-    parser.add_argument('--batch', type=int, required=True, help='batch size for training & testing')
-    parser.add_argument('--batch_fisher', type=int, required=False, help='batch size for fisher calculation')
+    parser.add_argument('--batch_train', type=int, required=True, help='batch size for training & testing')
+    parser.add_argument('--batch_matrix', type=int, required=False, help='batch size for matrix calculation (1=FIM, 2<=GM)')
 
     # optional arguments
     parser.add_argument('--previous', type=str, required=False,

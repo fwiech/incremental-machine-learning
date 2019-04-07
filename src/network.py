@@ -111,22 +111,22 @@ class Network():
             var_list = list(self.theta.values()) + list(self.variables.values()) + list(self.gradients.values())
         )
 
-    def compute_fisher(self, sess, iterator_initializer, batch:int):
+    def compute_matrix(self, sess, iterator_initializer, batch:int):
 
-        fisher_loss = - tf.reduce_sum(
+        matrix_loss = - tf.reduce_sum(
             tf.cast(self.Y,tf.float32) * tf.nn.log_softmax(self.logits)
         )
 
-        # fisher matrix gradients
-        fisher_matrix_gradients = {
-            key: tf.square(tf.gradients(fisher_loss, self.theta[key])[0]) for key in self.keys
+        # matrix gradients
+        matrix_gradients = {
+            key: tf.square(tf.gradients(matrix_loss, self.theta[key])[0]) for key in self.keys
         }
         acc_np = {
-            key: np.zeros(fisher_matrix_gradients[key].get_shape().as_list()) for key in self.keys
+            key: np.zeros(matrix_gradients[key].get_shape().as_list()) for key in self.keys
         }
 
         # log gradient tensor list
-        logging.debug(fisher_matrix_gradients)
+        logging.debug(matrix_gradients)
 
         # init iterator
         sess.run(iterator_initializer)
@@ -135,12 +135,12 @@ class Network():
         try:
             while True:
                 # advance iterator! Compute squared grads and download them to np
-                fisher_matrix_gradients_np = sess.run(fisher_matrix_gradients)
-                logging.debug(fisher_matrix_gradients_np)
+                matrix_gradients_np = sess.run(matrix_gradients)
+                # logging.debug(matrix_gradients_np)
 
                 # accumulate them in np arrays
                 for key in self.keys:
-                    acc_np[key][:] += fisher_matrix_gradients_np[key]
+                    acc_np[key][:] += matrix_gradients_np[key]
 
                 iterations += 1
                 logging.debug(str(iterations))
