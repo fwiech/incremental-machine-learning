@@ -2,7 +2,6 @@
 
 import tensorflow as tf
 import numpy as np
-import matplotlib.pyplot as plt
 
 import logging
 from pprint import pprint
@@ -137,7 +136,7 @@ class Network():
             while True:
                 # advance iterator! Compute squared grads and download them to np
                 fisher_matrix_gradients_np = sess.run(fisher_matrix_gradients)
-                # pprint(fisher_matrix_gradients_np)
+                logging.debug(fisher_matrix_gradients_np)
 
                 # accumulate them in np arrays
                 for key in self.keys:
@@ -203,14 +202,6 @@ class Network():
         
         # timeline plot
         if bool(test_iter_inits):
-            for label, item in plots['plots'].items():
-                plt.plot(iters, item, label=label)
-            
-            plt.xlabel("Iterations")
-            plt.ylabel("Accuracy")
-            plt.legend()
-            # plt.show()
-
             plots['iters'] = iters
             return plots
 
