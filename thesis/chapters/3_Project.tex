@@ -149,70 +149,205 @@ $T_1$ still performs with 94.78\%.
     \label{fig:ewc_p10-10}
 \end{figure}
 
+\newpage
+
 \section{Critical review of EWC and improvements}
 \label{project_review_improvements}
 
-As proposed in Elastic Weight Consolidation (Section \ref{foundation_ewc}, \cite{elastic-weight-consolidation}) the authors use the diagonal of Fisher Information Matrix for the loss calculation.
+The EWC loss function uses the original loss function with the EWC appendix:
 
-$$F_{ij} = \frac{1}{N} \sum_{n}^{N} \frac{\partial \mathcal{L}}{\partial \theta_{i}} \cdot \frac{\partial \mathcal{L}}{\partial \theta_{j}}$$
+\begin{equation}
+    \mathcal{L} = 
+    \mathcal{L}^{CE} 
+    + \sum_{i} 
+        \frac{\lambda}{2} 
+        F_{i} 
+        (\theta_{i} - \theta_{T_1,i}^{*})^2
+\end{equation}
 
-$$\vec{F} \equiv diag \left(F_{ij}\right)$$
+For a better understanding can the abstract parameter $\theta$ split into the explicit weight and bias parameters.
+The weights are represented as $W^i$ vectors and the biases as $B^i$ vectors, where the index $i$ is for each layer, $i \in \{ 0, \dots, L-1 \}$.
+The EWC terms has the following notation:
+
+\begin{equation}
+    \begin{split}
+        \mathcal{L} = \mathcal{L}^{CE}
+        & + \frac{\lambda}{2} \sum_{i=0}^{L-1} \sum_{k} F_{k}^{W^i}\left(W^i_{k}-W^{i,{T_1}}_{k} \right)^2
+        \\
+        & +  \frac{\lambda}{2}\sum_{i=0}^{L-1} \sum_{k}F^{B^i}_k\left(B^i_{k}-B^{i,{T_1}}_{k} \right)^2
+    \end{split}
+\end{equation}
+
+As proposed in Elastic Weight Consolidation (Section \ref{foundation_ewc}, \cite{elastic-weight-consolidation}) the authors use the Fisher Information Matrix for the loss calculation. It is calculated over all training samples:
+
+\begin{equation}
+    F_{ij} = 
+    \frac{1}{N} 
+    \sum_{n=1}^{N} 
+    \left(
+        \frac{\partial \mathcal{L} \left( x_n \right) }{\partial \theta_{i}} 
+        \cdot 
+        \frac{\partial \mathcal{L} \left( x_n \right) }{\partial \theta_{j}}
+    \right)
+\end{equation}
+
+In fact it is only the diagonal of the Fisher Information Matrix:
+
+\begin{equation}
+    \begin{split}
+        \vec{F} & = diag \left( F_{ij} \right)
+        \\
+        F_{j} & = 
+        \frac{1}{N} 
+        \sum_{n=1}^{N} 
+        \left(
+            \frac{\partial \mathcal{L} \left( x_n \right) }{\partial \theta_{j}}
+        \right)^2
+    \end{split}
+\end{equation}
+
+This matrix equation, which is calculated over all training samples N, split into the weight and bias vectors is the following:
+
+\begin{equation}
+    \begin{split}
+        \vec{F}^{W^i}_j & = 
+        \frac{1}{N} 
+        \sum_{n=1}^{N} 
+        \left(
+            \frac{\partial \mathcal{L} \left( x_n \right) }{\partial W^i_{j}}
+        \right)^2
+        \\
+        \vec{F}^{B^i}_j & = 
+        \frac{1}{N} 
+        \sum_{n=1}^{N} 
+        \left(
+            \frac{\partial \mathcal{L} \left( x_n \right) }{\partial B^i_{j}}
+        \right)^2
+    \end{split}
+\end{equation}
 
 The reports \cite{better-weight-consolidation,elastic-weight-consolidation} justify that the assumption of the diagonal FIM is common practice \cite{elastic-weight-consolidation,better-weight-consolidation,incremental-moment-matching}.
-It reduces the operations fom $O(N^2)$ to $O(N)$, where $N$ is the number of elements in $\theta$.
-This reulsts in a lot faster calculation even in large models.
-\cite{elastic-weight-consolidation,better-weight-consolidation}
+It reduces the operations from $O(N^2)$ to $O(N)$, where $N$ is the number of elements in $\theta$ \cite{elastic-weight-consolidation,better-weight-consolidation}.
+This reulsts in a lot faster calculation even in large models \cite{elastic-weight-consolidation,better-weight-consolidation}.
 Moreover, this justification receives rather promising results and holds in some cases.
 \cite{elastic-weight-consolidation,incremental-moment-matching}.
 
-The current reference implementation of EWC uses Tensorflow.
+So the main justificaion for the diagonal FIM seems to be the rather promising results.
+\newline
+This article tries another calculation on the EWC loss, that is not based on diagonal assumptions, but with a mathematical principle.
+\newline
+A closer look to the EWC appendix shows, that the term $(\theta_i - \theta^*_{T_1,i})^2$ calculates the divergence between the new calculated parameters and the parameters of the old task.
+With the square they are made positive.
+At this point is the original algorithm multiplied by the diagonal FIM, which provides the importance.
+So this article wants to find a way to measure the importance of the parameters.
+Here this article fills the gap with the first derivation of the loss by the parameters.
+The understanding of the first derivation is the slope of every parameter.
+So a change of the higher gradients compared to the other parameters would bring the network faster out of balance.
+And this is, what EWC algorithm wants to protect. Their goal is it to stay as close as possible to the old important parameters and just adjust the ones with less importance.
+The first derivation of the loss with the parameters over all training samples of a batch N:
+
+\begin{equation}
+    \begin{split}
+        \mathcal{L}_k & = 
+        \frac{1}{N}
+        + \sum_{n} 
+            \mathcal{L}(x_n)
+        \\
+        \frac{\partial \mathcal{L}(x_n)}{\partial \theta_k} & = 
+        \frac{1}{N}
+        + \sum_{n} 
+            \frac{\partial \mathcal{L}(x_n)}{\partial \theta_k}
+    \end{split}
+\end{equation}
+
+This first derivation gets squared to positive all results and bring the parameters into a higher value space.
+This operation is allowd, because the important factor in the matrix is the ranking between the values, which will not be changed.
+
+\begin{equation}
+    \left[
+        \frac{\partial \mathcal{L}(x_n)}{\partial \theta_k}
+        \right]^2
+    = 
+    \left[
+        \frac{1}{N}
+        + \sum_{n} 
+            \frac{\partial \mathcal{L}(x_n)}{\partial \theta_k}
+        \right]^2
+\end{equation}
+
+So the calculated matrix with the new approach is shown in Equation \eqref{eq:gradient_matrix}.
+
+\begin{equation}
+    \mathcal{F}_k =
+    \left(
+        \frac{1}{N}
+        + \sum_{n} 
+            \frac{\partial \mathcal{L}(x_n)}{\partial \theta_k}
+        \right)^2
+    \label{eq:gradient_matrix}
+\end{equation}
+
+This matrix calculated the first derivation over all the training samples $N$ in each batch
+Since $\theta$ only consists of weight and bias vectors, it can be re-arrange for the two matrices:
+
+\begin{equation}
+    \begin{split}
+        \vec{F}^{W^i}_j & = 
+        \left(
+            \frac{1}{N} 
+            \sum_{n=1}^{N}
+            \frac{\partial \mathcal{L} \left( x_n \right) }{\partial W^i_{j}}
+        \right)^2
+        \\
+        \vec{F}^{B^i}_j & = 
+        \left(
+            \frac{1}{N} 
+            \sum_{n=1}^{N} 
+            \frac{\partial \mathcal{L} \left( x_n \right) }{\partial B^i_{j}}
+        \right)^2
+    \end{split}
+\end{equation}
+
+% then: its is similiar to the orginial gradient but not the same -> show formula
+% clarifythe problem with tensorflow and that this equation is not the gradient
+
+For convenience this article uses the shorthand "GM" (Gradient Matrix) for the new matrix operation.
+\newline
+The comparison between FIM and GM shows that their similar, but not the same for $N > 1$.
+The FIM uses the square of the first derivation of each sample. GM on the other hand takes the gradient of a training set (batch) as an importance indicator and squares it for a positive result.
+However, in the case of $N=1$, the Gradient Matrix is identical to the FIM.
+$N=1$ means that the training set (batch) only contains one sample.
+
+The current reference implementation \footnote[1]{\url{https://github.com/ariseff/overcoming-catastrophic}} of EWC uses Tensorflow.
 A problem with calculating the FIM in Tensorflow is that it is neccesary to get the gradients for every sample but Tensorflow does not expose them.
-So this implementation built a complex workaround by hardcoding the gradients directly into the computation graph of Tensorflow.
-This solutions increases the memory consumption by the batch size.
-It results that the developer set the batch size for this computation to the fixed rate of 100, because the computation of a full batch would diretly run out of memory.
+So the reference implementation built a complex workaround by hardcoding the gradients directly into the computation graph of Tensorflow.
+This increases the memory consumption by the batch size.
+It results that the developer set the batch size for this computation to the fixed rate of 100, because the computation of a full batch would directly run out of memory.
 \cite{github_ewc_issue_one}
+The new matrix in contrast squares the gradient after averaged, which solves this problem.
 
-
-% -> break it down that is actualy just approximative calculation by gradients
-
-% show our approach and why this 
-
-The idea is it to narrow down the problem for a much easier calculation that receives the same results.
-The FIM just uses the diagonal.
-This means $\theta_i$ and $\theta_j$ will always be the same weight or bias matrix.
-So we can summarize them to one parameter $\theta_k$.
-This reults in a much simpler formula:
-
-$$diag \left(F_{ij}\right) = F_k = \frac{1}{N} \sum_{n}^{N} \left( \frac{\partial \mathcal{L}}{\partial \theta_{k}} \right)^2$$
-
-This simplification is still  based on a per gradient calculation.
-The further idea is it to take the square of the gradient of a complete mini-batch.
-Since it is common practice to create mini-batches for training a network, this modification of the matrix would solve the problem with Tensorflow and enables a much faster calculation of the matrix.
-The avereged gradients of a mini-batch shouldn't have much of a difference compared to the per sample gradients.
-This modification of the matrix looks like this:
-
-$$diag \left(F_{ij}\right) = F_k = \left( \frac{1}{N} \sum_{n}^{N} \frac{\partial \mathcal{L}}{\partial \theta_{k}} \right)^2$$
-
-An important note is that with an batch size of one, this modification would be the same as the FIM. 
 The following section tests this modification on the D9-1, D5-5 and P10-10 benchmarks.
 
 \newpage
 \section{Experimental Results}
 
-This sections show the results of EWC with the modified FIM and testing different values for the learningrate and lambda.
+This following section shows the results of EWC with the Gradient matrix.
+It tests several parameter values.
+Mainly the learning rate and lambda are varied.
 The network features are listed in Section \ref{foundations_deep_neural_network}.
 
 \subsection{Disjoint 9-1}
 
+% TODO first sentence
 All experiments with a disjoint nine to one test on MNIST are split in the task $T_1$ with numbers zero to eight and task $T_2$ with number nine.
 Task $T_1$ was trained on 54,000 samples, split into batches with a size of 100.
 The learnrate amounted 0.001.
 The calculation of the modified FIM was done with a batch size of 1,000.
 This reults in a performance of 95.72\% on the $T_1$ testset and 86.06\% on the complete set.
 
-Figure \ref{fig:exp_d9-1_bs1k} shows besides the training of $T_1$ the retraining of the network with $T_2$.
+Besides, Figure \ref{fig:exp_d9-1_bs1k} shows the training of $T_1$ the retraining of the network with $T_2$.
 $T_2$ included 5900 samples that were split into 59 batches and tarined in 2,500 iterations.
-The learnrate of the optimizer was 0.00001 and $\lambda = \frac{1}{0.00001} = 100,000$.
+The learning rate of the optimizer was 0.00001 and $\lambda = \frac{1}{0.00001} = 100,000$.
 $T_2$ achives a performance of 97.72\%.
 At the end of both trainings $T_1$ performs with 83.60\%.
 The complete testset indicates an accuracy of 84.72\%, a minus of 1.34\%.
