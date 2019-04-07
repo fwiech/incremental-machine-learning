@@ -264,8 +264,6 @@ if __name__ == '__main__':
     parser.add_argument('--lambda', type=float, required=False, help='optimizer learning rate')
     parser.add_argument('--permute', type=int, required=False, help='permute dataset? If -1: no permutation, if >= 0: random seed for permutation')
 
-    parser.add_argument('--notrain', dest='train', action='store_false')
-
     args = parser.parse_args()
 
     task(**vars(args))
