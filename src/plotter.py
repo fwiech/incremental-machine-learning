@@ -1,19 +1,12 @@
 #!/usr/bin/python3
 
-from dataset.mnist import *
-from network import Network
-
-import tensorflow as tf
-import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
 import sys
 import os
-import time
 import calendar
 import argparse
-import logging
 import json
 
 from pprint import pprint
@@ -36,8 +29,6 @@ def plotter(taskA, taskB, title):
     iters = []
     task = []
     complete = []
-
-    # task A
 
     iters = dataA['plots']['iters']
     task = dataA['plots']['plots']['Task']

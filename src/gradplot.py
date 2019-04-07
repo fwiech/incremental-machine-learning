@@ -1,10 +1,5 @@
 #!/usr/bin/python3
 
-from dataset.mnist import *
-from network import Network
-
-import tensorflow as tf
-import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
