@@ -86,7 +86,7 @@ This section shows the construct and math of the network used for the elastic we
 As described, a neural network is a collection of neurons connected with weights and paired together in layers.
 Each neuron receives values from all neurons on the layer before.
 Each connection holds a value which represents the importance.
-Therefore this connected value is called weight.
+Therefore, this connected value is called weight.
 The neuron computes all the input values (x) with the weights (w) and applies a bias (b) to predict the result (y).
 Figure \ref{fig:dnn_node_procedure} shows the computation structure of each neuron in the network.
 \cite{math_nn_skalski}
@@ -169,9 +169,9 @@ B = [ b_1 \dots b_j ]
     Y = X * W + B
 \end{equation}
 
-Finally the result of this calculation is passed through an activation function.
+Finally, the result of this calculation is passed through an activation function.
 This activation function is the key element of a neural network.
-Without it, a neural network would just be a combination of linear functions, which can be combined into on linear function.
+Without it, a neural network would just be a combination of linear functions, which can be combined into one linear function.
 The activation function modifies the result in a probabilistic way.
 Important to mention is, that the activation function has a significant impact on the speed of learning.
 The network in this article uses the ReLU as an activation function for the hidden layers \cite{math_nn_skalski,relu}:
@@ -183,7 +183,7 @@ The network in this article uses the ReLU as an activation function for the hidd
 The output of the last layer will be computed as logits:
 $$logits = (x*w)+b$$
 
-On the output layer it uses the softmax function, which realtes the output classes in a probabilistic way:
+On the output layer it uses the softmax function, which connects the output classes in a probabilistic way:
 
 \begin{equation}
     Softmax : \mathbb{R}^K \to \mathbb{R}^K
@@ -210,7 +210,8 @@ In this article the crossentropy loss function is used.
 \end{equation}
 
 This process of calculating a result of the network is called forward propagation.
-It puts an input into the network and it calculates based on the parameters and functions an output.
+Within this process, the network calculates a result based on the inputs.
+This is happening due to the parameters and functions of the network.
 On this output the learning process gets applied.
 This shows the accuracy of the network.
 \cite{math_nn_skalski, medium_nn_from_scratch}
@@ -227,9 +228,10 @@ By adjusting the learning rate of backpropagation, the developer has the control
 He defines how detailed each learning step should be.
 \cite{math_nn_andrey}
 \newline
-Running the Gradient Descent algorithm multiple times on different examples eventually result in a properly trained neural network.
+Iterating the Gradient Descent algorithm several times over different examples will most likely result in a properly trained neural network.
 
 \section{Catastrophic Forgetting}
+\label{catastrophic_forgetting}
 
 Catastrophic Forgetting is an affect that happens, when a trained network gets retrained with a new dataset.
 This dataset could include complete new classes (disjoint MNIST) or the same classes with new information (permuted MNIST).
@@ -251,7 +253,7 @@ Figure \ref{fig:catastrophic_forgetting_d91_example} shows the D9-1 benchmark. A
 
 \newpage
 
-In Figure \ref{fig:catastrophic_forgetting_d55_example} is the MNIST dataset split up into two task with each five classes.
+In Figure \ref{fig:catastrophic_forgetting_d55_example} is the MNIST dataset split up into two tasks with each five classes.
 The graph shows that after the training of task $T_1$, the accuracy of the complete set at 50\%.
 After the training start of task $T_2$, the accuracy of $T_1$ drops to zero.
 The complete set can just predict 50\%.
@@ -263,15 +265,16 @@ The complete set can just predict 50\%.
     \label{fig:catastrophic_forgetting_d55_example}
 \end{figure}
 
-Catastrophic forgetting was first discovered in 1989 in the article "Catastrophic Intereference" by McCloskey and Cohen.
-They broke the problem down into a rather simplified version to explain the problem:
+% TODO ausbauen | (not but), Nun soll es…
+Catastrophic forgetting was first discovered by McCloskey and Cohen in 1989.
+They documented their research in the article "Catastrophic Intereference" \cite{psychology_learning_mccloskey_cohen} and explained the problem in a rather simplified version:
 Figure \ref{fig:catastrophic_forgetting_clarification}A shows a reprensentation of a network in a simplified form.
 It has stored the facts $5 + 4 = 9$ and $6 + 4 = 10$.
 \hfill \break
 Now this network wants to learn new facts.
 Figure \ref{fig:catastrophic_forgetting_clarification}B shows the appendix of the new fact $7 + 4 = 11$.
 To be able to learn this fact it is represented seperate to the representation of other facts.
-This storing of facts does not disrupt the representation of presious learned knowledge.
+This storing of facts does not disrupt the representation of previous learned knowledge.
 \hfill \break
 But in a neural network the representation is quite different.
 All weights are involved in responding to many different inputs.
@@ -290,10 +293,10 @@ It results in changing weights to encode new information and alters previously l
 \section{Elastic Weight Consolidation}
 \label{foundation_ewc}
 
-In order to overcome this catastrophic forgetting or at least reduce it published a team of researchers a white paper called "Overcoming catastrophic forgetting" in 2016.
+In order to overcome this catastrophic forgetting or at least reduce it, a team of researchers published a white paper called "Overcoming catastrophic forgetting" in 2016.
 \cite{elastic-weight-consolidation}
 
-To begin with they analysed the human and other animal brains.
+At first they analysed the human brain as well as animal brains.
 Here they discovered that the mammalian brain may avoid catastrophic forgetting by protecting previously-acquired knowledge.
 They developed an algorithm for deep neural networks, which they call Elastic Weight Consolidation.
 By showing uses in supervised learning and reinforcement learning, several tasks could sequentially trained without forgetting older ones.
@@ -301,13 +304,13 @@ By showing uses in supervised learning and reinforcement learning, several tasks
 
 According to their paper many configurations of $\theta$ (set of weights and biases) will result in the same performance of the network.
 This is a crucial information for EWC.
-The goal for EWC is it to over-parametersize $\theta$ and find a solution for $\theta$ at the next task.
+Its goal is to over-parametersize $\theta$ and find a solution for $\theta$ at the next task.
 This solution needs to be close to the previous task solution of $\theta$.
 While learning the next task, EWC wants to protect the performance of the previous task by limiting the parameters.
 They should stay in a given region for a low error of the previous task.
 \cite{elastic-weight-consolidation}
 
-To determin which values are most important, they see the training from a probabilistic perspective.
+To determine which values are most important, they see the training from a probabilistic perspective.
 Here they discovered, that the catastrophic forgetting does not happen in a fully Bayesian way.
 \cite{elastic-weight-consolidation}
 
@@ -387,7 +390,7 @@ So the paper follows that this conditional probability contains information abou
 They state, that the true posterior distribution is intractable and follow with the Laplace approximation to approximate the posterior as a Gaussian distribution with mean given by the parameters of the previous task A and the diagonal precision by the diagonal of the Fisher information matrix.
 \cite{elastic-weight-consolidation}
 \newline
-Moreover they inform that the Fisher information matrix is equivalent to the second derivative of the loss near a minimum and that "…it can be computed from first-order derivatives alone and is thus easy to calculate even for large models…" \cite{elastic-weight-consolidation} and "…it is guaranteed to be positive semi-definite."
+Moreover, they inform that the Fisher information matrix is equivalent to the second derivative of the loss near a minimum and that "…it can be computed from first-order derivatives alone and is thus easy to calculate even for large models…" \cite{elastic-weight-consolidation} and "…it is guaranteed to be positive semi-definite."
 \cite{elastic-weight-consolidation}.
 \cite{elastic-weight-consolidation, schaeffer_ewc}
 \newline

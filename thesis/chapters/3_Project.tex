@@ -2,7 +2,7 @@
 
 \section{Code Concept}
 
-In extend to this article is a code base available \footnote{\url{https://www.github.com/florianwiech/incremental-machine-learning}}.
+In extend to this article a code base is available \footnote{\url{https://www.github.com/florianwiech/incremental-machine-learning}}.
 This code base includes the reimplementation of EWC and the extension of modifying the Fisher Information Matrix.
 It uses Python 3 with the packages NumPy (version 1.16.1) and Tensorflow (version 1.13.0).
 The concept documents the code structure and procedure.
@@ -24,7 +24,7 @@ After the calculation it returns the arrays in Python standard datastructures wi
 "\textbf{network.py}" holds the "Network" class.
 The class consists of all neccesary operations for the EWC algorithm with original and adaption.
 The contructor creates a neural network with 784 input neurons, three hidden layers with each 800 neurons and the ten mnist output classes.
-In addition to that it initializes all neccesary functions like loss and accuracy.
+In addition to that, it initializes all neccesary functions like loss and accuracy.
 After initialization the object offers several methods for training, testing and applying EWC to the task.
 Figure \ref{fig:concept_class_diagram} shows a class diagram of the Network class.
 
@@ -35,7 +35,7 @@ Figure \ref{fig:concept_class_diagram} shows a class diagram of the Network clas
     \label{fig:concept_class_diagram}
 \end{figure}
 
-While execution the networks occupies multiple states.
+During execution, the network occupies multiple states.
 The states distinguish if the network trains the first task or loads a previous state and retrains the network.
 Figure \ref{fig:concept_state_diagram} shows the state diagram for the network:
 
@@ -50,10 +50,13 @@ Figure \ref{fig:concept_state_diagram} shows the state diagram for the network:
 It offers an command line tool for specification of the neccesary parameters.
 \newline
 The main function executes one tasks and saves their state in a checkpoint.
-The task execution includes loading a checkpoint if it is not the first task or initialize a untrained network.
-After that training or retraining the network and calculating the matrix if the new network should be saved.
-Then perform an accuracy check on the testset and exit the script.
-To train the second task the script has to be started again with different parameters.
+It the executed task is the first task, the network gets initialized.
+The EWC appendix in the loss funtion is in this case not applied.
+In the formula would the lambda to be zero ($\lambda = 0$).
+The network gets trained, the matrix calculated and the final model with matrix calculation saved in a checkpoint.
+For each following ongoing task has the main file be restarted with new args value.
+In these cases the network will be initialized with the EWC loss function.
+The new created Tensorflow session loads a checkpoint given by the parameter (checkpoint of the task before) and the network gets retrained.
 
 The sequential execution is shown in a sequence diagram.
 The first part (Figure \ref{fig:concept_sequence_diagram_part_1}) shows the initialization of all neccesary parameter and objects.
@@ -81,11 +84,11 @@ The original EWC algorithm was tested in the constructed benchmarks described in
 
 \subsection{Disjoint 9-1 Benchmark}
 
-$T_1$ (blue, $\bigtriangleup$) trained with the classes zero to eight and reaches an accuracy of 95.72\% at the end of its training pahse.
-The task was trained with a learnrate of 0.001, 2,500 iterations and an batch size of 100.
+$T_1$, trained with the classes zero to eight, reaches an accuracy of 95.72\% at the end of its training period.
+The task was trained with a learnrate of 0.001, 2,500 iterations and a batch size of 100.
 In comparison to the complete dataset (green, line), the accuracy is 86.06\%.
 
-$T_2$ (yellow, $\bullet$) trained with the class nine further of $T_1$ uses a learnrate of 0.00001, 2,500 iterations and a batch size of 100.
+$T_2$ trained with the class nine further of $T_1$ uses a learnrate of 0.00001, 2,500 iterations and a batch size of 100.
 The lambda value is $\frac{1}{learnrate = 0.00001} = 100,000$.
 It reaches an accuracy of 97.81\%.
 
@@ -103,18 +106,18 @@ Figure \ref{fig:ewc_d9-1} shows the trainings of both tasks compared to the accu
 
 \subsection{Disjoint 5-5 Benchmark}
 
-Figure \ref{fig:ewc_d5-5} shows training of a disjoint mnist with a five class split.
+Figure \ref{fig:ewc_d5-5} shows training of a disjoint MNIST with a five class split.
 
-The first Task $T_1$ (blue, $\bigtriangleup$) with the classes zero to four, reached an accuracy of 98.66\% after the first training.
-$T_1$ is trained with a learnrate of 0.001, 2,500 iterations and a batch size of 100.
+The first Task $T_1$ with the classes zero to four reaches an accuracy of 98.66\% after the first training.
+$T_1$ was trained with a learnrate of 0.001, 2,500 iterations and a batch size of 100.
 Since there are only five of ten possible classes trained, the accuracy on the complete dataset amounts 50.70\%.
 
-In the second training phase with task $T_2$ (yellow, $\bullet$), the classes five to nine achieve an accuracy of 82.67\%.
+In the second training period with task $T_2$, the classes five to nine achieve an accuracy of 82.67\%.
 The learnrate of $T_2$ is 0.00001 and there were again 2,500 iterations and a batch size of 100.
 Since it is an ongoing task, the EWC appendix is applied to the loss.
 In this case lambda was set to $\frac{1}{learnrate = 0.00001} = 100,000$.
 
-After the second training had $T_1$ lost 22.22\%, but still shows a quality of 76.44\%.
+After the second training, $T_1$ lost 22.22\%, but still shows a quality of 76.44\%.
 The performance of the complete dataset ascended from 50.70\% to 79.39\%.
 
 \begin{figure}[H]
@@ -138,7 +141,7 @@ After the $T_1$ training, it shows an accuracy of 94.76\% which is equally to th
 $T_2$ on the other hand learned with a rate of 0.00001 with 20,000 iterations.
 The 60,000 samples were permuted with a seed of zero and split into batches with a size of 100.
 The importance of the EWC loss was $\lambda = \frac{1}{0.00001} = 100,000$.
-$T_2$ needed in this case a longer learnrate to be able to have an good accuracy.
+$T_2$ needed in this case a longer learnrate to be able to have a good accuracy.
 It shows a performance of 91.45\% and 90.53\% on the complete dataset.
 $T_1$ still performs with 94.78\%.
 
@@ -364,7 +367,8 @@ The complete testset indicates an accuracy of 84.72\%, a minus of 1.34\%.
 Table \ref{table:exp_d9-1} tests multiple learnrates and lambda values with $T_2$ on the complete dataset.
 Every parameter test was done with 2,500 iterations and a batch size of 100 and 5900 samples.
 \newline
-The results show that the best performance is with a learnrate of 0.00001 and a lambda value of 1,000,000. With these parameters performs $T_2$ with 87.78\%, $T_1$ has still a performance of 74.12\% and the complete dataset with 90.84\%.
+The results show that the best performance is with a learnrate of 0.00001 and a lambda value of 1,000,000.
+With these parameters $T_2$ performs 87.78\%, $T_1$ still has a performance of 74.12\% and the complete dataset of 90.84\%.
 
 \begin{table}[H]
     \centering
@@ -412,6 +416,7 @@ The results show that the best performance is with a learnrate of 0.00001 and a 
 
 \subsection{Disjoint 5-5}
 
+% TODO anfang verbessern (+zeiten)
 The disjoint 5-5 experiments a split into the first class with the numbers zero to four and second class with the numbers five to nine.
 $T_1$ has 30,500 samples split into 305 batches and trained with 2,500 batch cycles.
 The learnrate is 0.001, which results in a $T_1$ performance of 98.66\% and 50.70\% on the complete dataset.
@@ -432,8 +437,9 @@ This shows that the network achvieved an increase of 28.63\%.
 
 \newpage
 
-Table \ref{table:exp_d5-5} lists several parameter test.
-These tests were built on the same parameters for $T_2$ exept the learnrate and lambda was varied.
+Table \ref{table:exp_d5-5} lists several parameter tests.
+These tests are built with the same parameters for $T_2$ except of the learning rate and lambda.
+The results are based on a varied learning rate and lambda value.
 The best result is with the learnrate of 0.00001 and a lambda value of 1,000.
 It shows that the complete set has an accuracy of 81.87\%, $T_2$ of 93.64\% and $T_1$ of 71.16\%.
 

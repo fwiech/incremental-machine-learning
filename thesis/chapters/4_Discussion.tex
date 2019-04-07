@@ -1,32 +1,31 @@
 \chapter{Discussion}
 
 The EWC paper is currently one of the most known approaches for overcoming catastrophic forgetting.
-Their paper shows that it performs good on a permuted MNIST dataset with three sequential learning tasks.
+Their paper shows that it performs well on a permuted MNIST dataset with three sequential learning tasks.
 \newline
 Sadly the paper just delivers main facts and ideas behind the EWC solution.
-It leaves some important facts for understading their approaches and test benchmarks.
+It has a lack of some important facts for understading their approaches and test benchmarks.
 They do show the main idea, formula and advanatges by using them.
-But they do not explain why they are using the FIM, in fact just the diagonal of the FIM.
-Moreover, they leave out helpful formulas.
-Their FIM is not documented and they leave out deeper calculation insights for their idea.
-Even an code base is not available.
+Nevertheless, they do not explain why they are using the FIM, in fact just the diagonal of the FIM.
+Moreover, they do not documented helpful formulas, like the FIM or deeper calculation insights.
+Even a code base is not available.
 In the appendix are some parameters of their benchmarks documented.
-But their benachmarks for superviseed learning (Figure \ref{fig:ewc_permuted_example}) on the mnist dataset are not reproducible.
+Yet, their benchmarks for superviseed learning (Figure \ref{fig:ewc_permuted_example}) on the MNIST dataset are not reproducible.
 They do not present a solution for a reasonable lambda value, learning rate or iterations for the second task.
-Therefore, this article had to come up with its own benachmarks.
-The benchmarks refer to the report \cite{cf_application_oriented_study} which include an application-oriented study on the EWC algorithm.
+Therefore, this article had to come up with its own benchmarks.
+The benchmarks refer to the report \cite{cf_application_oriented_study} which includes an application-oriented study on the EWC algorithm.
 The network was given three hidden layers with 800 neurons.
-This feature base is a proven structure for the mnist problem.
+This feature base is a proven structure for the MNIST problem.
 The iterations and batch sizes are chosen from the study \cite{cf_application_oriented_study}.
 This article increased the iterations for the permuted benchmark to analyze the surpassing of the $T_2$ accuracy to the complete dataset.
-lambda was default set to $\lambda = \frac{1}{learning \: rate \: T_2}$.
+Lambda was initialized to $\lambda = \frac{1}{learning \: rate \: T_2}$ by default.
 
 Currently there are multiple implementations of EWC available.
 Most of them are created with PyTorch, a similar open-source machine learning library to Tensorflow.
-But there are two solutions implemented in Tensorflow and available on Github
+Still, there are two solutions implemented in Tensorflow and available on Github
 \footnote[1]{\url{https://github.com/ariseff/overcoming-catastrophic}}
 \footnote[2]{\url{https://github.com/stokesj/EWC}}.
-Both show a solution for an permuted mnist on supervised learning but not a disjoint mnist.
+Both show a solution for a permuted MNIST on supervised learning but not a disjoint mnist.
 The more popular implementation\footnotemark[1] modifies the original algorithm.
 For the FIM calulation it does not use the given labels from the dataset.
 It generates new labels based on a randomization of the softmax probabilities.
@@ -39,56 +38,60 @@ This code base was the inspiration for the default lambda value.
 The reimplementation of EWC in Python and Tensorflow for this article omits these drawbacks and enables the algorithm for the modification \ref{project_review_improvements}.
 
 The baseline showed that the EWC algorithm works with the three benchmarks.
-This EWC algorithm (Figures \ref{fig:ewc_d9-1}, \ref{fig:ewc_d5-5}, \ref{fig:ewc_p10-10}) shows that it reduces catastrophic forgetting (Figure \ref{fig:catastrophic_forgetting_example}).
-But it does not solve catastrophic forgetting for these benachmarks on the MNIST dataset.
+This EWC algorithm (Figures \ref{fig:ewc_d9-1}, \ref{fig:ewc_d5-5}, \ref{fig:ewc_p10-10}) shows that it reduces catastrophic forgetting (Figures \ref{fig:catastrophic_forgetting_d91_example}, \ref{fig:catastrophic_forgetting_d55_example}).
+However, it does not solve catastrophic forgetting for these benchmarks on the MNIST dataset.
 \newline
 The application-oriented study \cite{cf_application_oriented_study} discovered that EWC is in some way effective against CF for simple SLTs (D9-1 benchmark), but ineffective against CF for more complex problems (D5-5 benchmark) \cite{cf_application_oriented_study}.
 The complete dataset of their simple case (D9-1) has an accuracy after the second task of 71\% and a peak of 99\% \cite{cf_application_oriented_study}.
 The results of this article (Figure \ref{fig:ewc_d9-1}) are with 85\% at the end and a peak of 93\% on the complete dataset similar to the paper.
-The case of D5-5 they can not register any sign of learning.
+In the case of D5-5 they can not register any sign of learning.
 The second task has a end result of 31\% with a peak of 50\% \cite{cf_application_oriented_study}.
-In comparison to these results, the benchmarks in this article (Figure \ref{fig:ewc_d5-5}) show that there is a learning happending.
-This benchmark substantiates an end result of 79\% with an peak of 82\%.
-The thrid permuted benchmark in the reference paper \cite{cf_application_oriented_study} shows a peak of 100\% and an end result of 98\% at the second task training.
-The result of this article is slightly lower with 95\%.
+In comparison to these results, the benchmarks in this article (Figure \ref{fig:ewc_d5-5}) show that there is learning happending.
+This benchmark substantiates an end result of 79\% with a peak of 82\%.
+The third permuted benchmark in the reference paper \cite{cf_application_oriented_study} shows a peak of 100\% and an end result of 98\% at the second task training.
+The result of this article is slightly lower with a peak and end result of 95\%.
 \newline
 It is interesting, that the benchmark types D9-1 and D5-5 with the implementation of this article just work with a lot lower learning rate of 0.00001 for $T_2$.
 The learning rate of $T_1$ however is constantly 0.001.
 \newline
-The comparison of $T_2$ in Figure \ref{fig:ewc_d5-5} and $T_1$ in Figure \ref{fig:ewc_p10-10} shows that in the D5-5 benchmark it would be much easier to just train a new model with the complete mnist dataset.
-Because of the same iterations, batch size and a smaller learning rate of $T_1$ (in Figure \ref{fig:ewc_p10-10}) the perfromance of training the complete dataset instead of retraining with the EWC algorithm would increase the accuracy by 15.37\%.
-But these benchmarks are just a small representation of the problems in a largely scaled environment for models and datasets.
-In this case mnist just provides a simplification of the problem to be able to test an algorithm.
+The comparison of $T_2$ in Figure \ref{fig:ewc_d5-5} and $T_1$ in Figure \ref{fig:ewc_p10-10} shows that in the D5-5 benchmark it would be much easier to just train a new model with the complete MNIST dataset.
+Because of the same iterations, batch size and a smaller learning rate of $T_1$ (in Figure \ref{fig:ewc_p10-10}) the perfromance of training the complete dataset instead of retraining with the EWC algorithm would increase the accuracy.
+As proposed in Catastrophic Forgetting (Section \ref{catastrophic_forgetting}) there will be a sacrifice of knowledge.
+Though, these benchmarks are just a small representation of the problems in a largely scaled environment for models and datasets.
+In this case MNIST just provides a simplification of the problem to be able to test an algorithm.
 And it gives the ability to test several different parameters in a short amount of time and computation power.
 So these benchmarks help to get a better understanding of the algorithm.
-If the EWC would be used in real-worls scenarios, it would be used in cases, where the multitask learning (Figure \ref{fig:intro_motivation_multitask_learning_paradigm}) is not an option.
+Of course, as described in the motivation (Section \ref{intro_motivation}) the goal is it to get to a artificial general intelligence, where an algorithm can behave like a human brain.
+In order to get there the algorithm has to work on small datasets like MNIST as well.
+But if the main challenges of EWC are solved and the algorithm is ready for deployemnt, its first use would be in scenarios where multitask learning (Figure \ref{fig:intro_motivation_multitask_learning_paradigm}) is not an option.
+Because as we can clearly see, EWC reduces catastrophic forgetting, but does not solve it.
 
-For the implementation of the EWC algorithm with Python and Tensorflow exist multiple ways.
+There are multiple ways to implement the EWC algorithm with Python and Tensorflow.
 The attached codebase \footnote{\url{https://github.com/florianwiech/incremental-machine-learning}} tried multiple implementations.
-First implementations dealt with own coded dataset, iterator and network classes.
+First implementations dealt with own datasets, iterators and network classes.
 The advantage is that the developer has full control over the complete code.
-A big disadvantage is though, that other developers need a lot of effort to understand the code.
-This is why a developers should stick to given helper classes of the included frameworks.
-Most of the time they present a good documentation and other developers who know the framework are able to understand the code quiet quickly.
+Though, a big disadvantage is, that other developers need a lot of effort to understand the code.
+This is why developers should use the given helper classes of included frameworks.
+Most of the time they present a good documentation and other developers, who know the framework, are able to understand the code quite quickly.
 Because of that reason the code was converted to built-in Tensorflow classes like the Dataset, Iterator and autoloading of the MNIST dataset.
 This code sticks as close as possible to the Tensorflow provided classes and Low-Level API.
 But along the way of converting the code to the Tensorflow classes, the developer of the code just lost a lot of control and the ability to see what exactly being calculated by just looking at the code.
 This is a huge disadvantage with the built-in classes of Tensorflow.
 \newline
-Through the own implementation, the option between a FIM calculation and the modification is straightforward by adjusting the "batch\_fisher" variable.
-Since both computations with a batch size of 1 are the same, the modification is applied when the fisher batch size is higher than one.
+Through the own implementation, the option between a FIM calculation and the GM matrix is straightforward by adjusting the "batch\_matrix" variable.
+Since both computations with a batch size of 1 are the same, the modification is applied when the batch size is higher than one.
 
-The modification of the FIM was tested in the experiments.
+The GM was tested in the experiments.
 The comparison between the baseline benchmarks and experiments with the modification look encouraging.
 \newline
-The \textbf{benchmark type D9-1} in the experiment Figure \ref{fig:exp_d9-1_bs1k} compared to the baseline Figure \ref{fig:ewc_d9-1} show that the algorithm does work with this modification.
-This modification did not compute per-gradient, but rather averaged gradients over 1,000 samples.
-The complete dataset has in Figure \ref{fig:ewc_d9-1} a peak of 93.43\% and an end accuracy of 85.81\% compared to Figure \ref{fig:exp_d9-1_bs1k} with a peak of 93.26\% and at the end 85.01\%.
+The \textbf{benchmark type D9-1} in the experiment Figure \ref{fig:exp_d9-1_bs1k} compared to the baseline Figure \ref{fig:ewc_d9-1} shows that the algorithm does work with the GM.
+The training samples $N$ of each batch are 1,000 samples.
+The complete dataset in Figure \ref{fig:ewc_d9-1} has a peak of 93\% and an end accuracy of 86\% compared to Figure \ref{fig:exp_d9-1_bs1k} with a peak of 93\% and at the end 85\%.
 \newline
 To get deeper insights, Figure \ref{fig:dis_d91} shows the maximum calculated gradients of each layer in the matrices after the $T_1$ training.
 The Parameters represent the set of weights and biases of theta for each layer.
-It shows only the maximum values, because the minimum values are all approximatively zero and not  meaningful.
-It is interesting that in this case the maximum gradients of the modification are often nearly 200\% the size of the FIM gradients.
+It shows only the maximum values, because the minimum values are all approximatively zero and not meaningful.
+It is interesting that in this case the maximum gradients of the GM are often nearly 200\% the size of the FIM gradients.
 But the learning of $T_2$ is in both cases similar.
 
 \begin{figure}[H]
@@ -98,11 +101,9 @@ But the learning of $T_2$ is in both cases similar.
     \label{fig:dis_d91}
 \end{figure}
 
-\newpage
-
 Figure \ref{fig:ewc_d5-5} compared to Figure \ref{fig:exp_d5-5_bs1k} in the \textbf{benchmark type D5-5} are very similar.
 The result of the baseline was 79.52\% and of the experiment 79.45\%, with a peak of 81.52\% compared to the experiment of 81.16\%.
-So both calculations do work with the difference that the modification nearly took half the computation time of the original FIM calculation.
+So both calculations do work with the difference that the GM nearly took half the computation time of the original FIM calculation.
 Figure \ref{fig:dis_d55} shows a composition of the extrem gradient values:
 
 \begin{figure}[H]
@@ -112,23 +113,22 @@ Figure \ref{fig:dis_d55} shows a composition of the extrem gradient values:
     \label{fig:dis_d55}
 \end{figure}
 
-As well as the D9-1 benachmark, the gradient here show differences, but they do not make that big of a difference at the $T_2$ training.
+As well as the D9-1 benchmark, the gradient shows differences, yet, they do not make 
+a difference at the $T_2$ training.
 \newline
 These gradient figures of the two benchmarks (Figure \ref{fig:dis_d91}, Figure \ref{fig:dis_d55}) do show differences in the comparison of every value.
-Figure \ref{fig:dis_d91} exhibits seeable more variations.
-Both modifications were calculated with an average of 1,000 samples for one gradient.
-But their complete size of samples and the calculated weights and bias values differs.
+Figure \ref{fig:dis_d91} exhibits more variations.
+Both GM matrices were calculated with an training set $N$ of 1,000 samples.
+Nervertheless, their complete size of samples and the calculated weights and bias values differs.
 The D9-1 benchmarks calculated 54 averaged gradients or 54,000 per-gradients and the D5-5 benachmark 30 averaged gradients or 30,500 per-gradients.
 
-\newpage
-
-\textbf{Benchmark P10-10} with the baseline in Figure \ref{fig:ewc_p10-10} and the experiment Figure \ref{fig:exp_p10-10} show that both $T_2$ trainings result in the same accuracy of the complete dataset with 90.47\%.
+\textbf{Benchmark P10-10} with the baseline in Figure \ref{fig:ewc_p10-10} and the experiment Figure \ref{fig:exp_p10-10} shows that both $T_2$ trainings result in the same accuracy of the complete dataset with 90\%.
 \newline
 The several tests of the modification (Table \ref{table:exp_d10-10}) show, that multiple parameter combinations of learning rate and lambda have a auspicious result.
 The best results for this task are with a higher learning rate and lambda value.
 \newline
 Figure \ref{fig:dis_d1010} shows the comparison of the gradient maximums.
-As well as the other benchmarks, the maximum values of the comparison are much higher than the maximum values of the FIM.
+As well as the other benchmarks, the maximum values of the GM are much higher than the maximum values of the FIM.
 
 \begin{figure}[H]
     \centering
@@ -159,11 +159,12 @@ The EWC algorithm is not predictible to get any result, but multitask learning w
 
 \section{Conclusion}
 
-The experiments \& figueres from the discussion show that the modification of the FIM is a great simplification with the EWC algorithm.
-It delivers very similar results compared to the EWC results from the baseline, which makes it better than the calculation of the FIM.
+The experiments and figueres from the discussion show that the introduced Gradient Matrix is a great simplification for the EWC algorithm.
+It delivers very similar results compared to the Fisher information matrix results from the baseline.
+Since the Gradient matrix solves an issue with the EWC algorithm and Tensorflow framework it is a better alternative for the Fisher information matrix.
 The computation is decreased and the algorithm alleviates catastrophic forgetting, but does not prevent it.
 However, the EWC algorithm by itself deals with a lot of truble setting correct parameters.
-Overall the lack of knowledge about the correct value for these parameters makes the EWC algorithm as described in their paper not useable for real-world scenarios.
+Overall, the lack of knowledge about the correct value for these parameters makes the EWC algorithm as described in their paper not useable for real-world scenarios.
 So multitask learning will be the tool of choice for now.
 
 \section{Outlook}
@@ -172,3 +173,7 @@ Further investigations should be made by searching a solution for the parameter 
 This article presented a modification for the FIM which now should be tested with other popular datasets and continual learning algorithms that use this calculation as well.
 % As discribed in the related work seciton (Section …), the IMM and NGD algorithms use the FIM as well.
 Further tests could be, how much tasks the EWC algorithm can store until catastrophic fogetting occurs drastically.
+
+% Einsatz von EWC:
+% wenn das parameter problem gelöst ist, sehe ich schon einsatzgebiete
+% natürlich wird dieser algorithmus nicht 
