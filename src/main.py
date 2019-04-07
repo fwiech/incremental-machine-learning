@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from dataset.mnist import *
+from mnist import *
 from network import Network
 
 import tensorflow as tf
