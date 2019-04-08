@@ -23,6 +23,7 @@ __*
 *.lot
 *.icc
 *.ICC
+*.synctex*
 
 # dirs
 notes/
