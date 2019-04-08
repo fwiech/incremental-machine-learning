@@ -24,6 +24,7 @@ __*
 *.icc
 *.ICC
 *.synctex*
+*.ilg
 
 # dirs
 notes/
