@@ -1,15 +1,60 @@
 \makeatletter
 
-\newcommand*{\statementoforiginality}
-{
-    \begin{titlepage}
+\newcommand*{\place}[1]{\gdef\@place{#1}}
 
-        \section*{Statement of Originality}
+\newcommand*{\statementoforiginality}{
+	\begin{titlepage}
+		\newgeometry{left=3.8cm,right=2.5cm,top=8cm,bottom=2.5cm}
+			\begingroup
+			\fontsize{18pt}{20pt}\selectfont
+			{\bfseries Statement of Originality}
+			\endgroup
 
-        I hereby confirm that I have written the accompanying thesis by myself, without contributions from any sources other than those cited in the text and acknowledgements.
-        This applies also to all graphics, drawings, maps and images included in the thesis.
+			\vskip 0.8cm
 
-    \end{titlepage}
+			\begingroup
+			\fontsize{12pt}{14pt}\selectfont
+				{\@authorLastname} {\@authorFirstname}
+			\endgroup
+
+			\vskip -0.5cm
+
+			\noindent\rule{15cm}{0.4pt}
+
+			\vskip -0.4cm
+
+			\begingroup
+			\fontsize{8pt}{6pt}\selectfont
+			Name, First Name
+			\endgroup
+
+			\vskip 0.6cm
+			\begingroup
+			\fontsize{10.5pt}{11.5pt}\selectfont
+            I hereby confirm that I have written the accompanying thesis by myself, without contributions from any sources other than those cited in the text and acknowledgements.
+            This applies also to all graphics, drawings, maps and images included in the thesis.
+			\endgroup
+
+			\vskip 0.8cm
+
+			{
+			\fontsize{12pt}{14pt}\selectfont
+			{\@place}, den {\today}
+			}
+
+			\vskip -0.5cm
+
+			\noindent\rule{15cm}{0.4pt}
+
+			\vskip -0.3cm
+
+			\begingroup
+			\fontsize{8pt}{6pt}\selectfont
+			Place, Date, Signature
+			\endgroup
+
+
+		\restoregeometry
+	\end{titlepage}
 }
 \makeatother
-
