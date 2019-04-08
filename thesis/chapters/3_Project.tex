@@ -174,7 +174,7 @@ The EWC term has the following notation:
 \begin{equation}
     \begin{split}
         \mathcal{L} = \mathcal{L}^{CE}
-        & + \frac{\lambda}{2} \sum_{i=0}^{L-1} \sum_{k} F_{k}^{W^i}\left(W^i_{k}-W^{i,{T_1}}_{k} \right)^2
+        & + \frac{\lambda}{2} \sum_{i=0}^{L-1} \sum_{k, l} F_{k, l}^{W^i}\left(W^i_{k, l}-W^{i,{T_1}}_{k, l} \right)^2
         \\
         & +  \frac{\lambda}{2}\sum_{i=0}^{L-1} \sum_{k}F^{B^i}_k\left(B^i_{k}-B^{i,{T_1}}_{k} \right)^2
     \end{split}
@@ -253,12 +253,12 @@ The first derivative of the loss with the parameters over all training samples o
     \begin{split}
         \mathcal{L}_k & = 
         \frac{1}{N}
-        + \sum_{n} 
+        \sum_{n} 
             \mathcal{L}(x_n)
         \\
         \frac{\partial \mathcal{L}(x_n)}{\partial \theta_k} & = 
         \frac{1}{N}
-        + \sum_{n} 
+        \sum_{n} 
             \frac{\partial \mathcal{L}(x_n)}{\partial \theta_k}
     \end{split}
 \end{equation}
@@ -273,7 +273,7 @@ This operation is allowd, because the important factor in the matrix is the rank
     = 
     \left[
         \frac{1}{N}
-        + \sum_{n} 
+        \sum_{n} 
             \frac{\partial \mathcal{L}(x_n)}{\partial \theta_k}
         \right]^2
 \end{equation}
@@ -284,7 +284,7 @@ So the calculated matrix with the new approach is shown in Equation \eqref{eq:gr
     \mathcal{F}_k =
     \left(
         \frac{1}{N}
-        + \sum_{n} 
+        \sum_{n} 
             \frac{\partial \mathcal{L}(x_n)}{\partial \theta_k}
         \right)^2
     \label{eq:gradient_matrix}
