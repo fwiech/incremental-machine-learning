@@ -268,20 +268,20 @@ It explains all paradigms and current continual learning methods.
 One of the well-known approaches is the Elastic Weight Consolidation \cite{elastic-weight-consolidation}.
 This technique tries to encourage all important parameters to stay close to the old task.
 It proposes to add a term to the loss function that protects weights that are important for the previous sub-task(s) \cite{elastic-weight-consolidation}. 
-Importance is determined by approximating the diagonal Fisher Information Matrix of the DNN \cite{cf_application_oriented_study, elastic-weight-consolidation}.
+Importance is determined by approximating the diagonal Fisher information matrix of the DNN \cite{cf_application_oriented_study, elastic-weight-consolidation}.
 % better weight consolidation
 An improvement to this approach shows the Better Weight Consolidation \cite{better-weight-consolidation}.
 They specifically address the diagonal assumption made by the EWC algorithm \cite{better-weight-consolidation}.
 Their presented solution is the computation of a rotation matrix for a more valid diagonal FIM assumption \cite{better-weight-consolidation}.
 \newline
 % Incremental Moment Matching
-Incremental Moment Matching, another approach that trains ongoing sequential tasks on a new network and merges these two networks together by using the diagonal Fisher Information Matrix \cite{incremental-moment-matching}.
+Incremental Moment Matching, another approach that trains ongoing sequential tasks on a new network and merges these two networks together by using the diagonal Fisher information matrix \cite{incremental-moment-matching}.
 They propose two moment matching algorithms that are tested on various datasets \cite{incremental-moment-matching}.
 \newline
 % Natural Gradient Descent
 The Natural Gradient Descent (NGD) proposes an approximation of the FIM for convolutional neural networks \cite{natural_gradient_descent}.
 It consists of tracking a diagonal variance, not in parameter coordinates, but in a generalisation of the outer product \cite{natural_gradient_descent}.
-They show that their matrix is a better approximation of the Fisher Information Matrix in several neural network architectures \cite{natural_gradient_descent}.
+They show that their matrix is a better approximation of the Fisher information matrix in several neural network architectures \cite{natural_gradient_descent}.
 \newline
 % iCaRL
 iCaRL learns classifiers and a data representation simultaneously \cite{iCARL}.
@@ -324,7 +324,7 @@ This method is inspired by the lateral inhibition processes in the brain \cite{S
 \newline
 % Synaptic Intelligence
 Similar to EWC Synaptic Intelligence measure the importance of the tasks before \cite{Synaptic_Intelligence}.
-But instead of using the Fisher Information Matrix, they are putting forward a method which computes an importance measure online and along the entire learning trajectory \cite{Synaptic_Intelligence}.
+But instead of using the Fisher information matrix, they are putting forward a method which computes an importance measure online and along the entire learning trajectory \cite{Synaptic_Intelligence}.
 \newline
 % several test studies
 Several articles used these approaches and tested them on different models and multiple datasets with different circumstances.
@@ -343,12 +343,12 @@ Their results are that there is no method that avoids catastrophic forgetting un
 \label{project_goals}
 
 This article deals with specific parts of previous works on overcoming catastrophic forgetting.
-As proposed in the related works (Section \ref{intro_related_work}) many methods use the Fisher Information Matrix.
+As proposed in the related works (Section \ref{intro_related_work}) many methods use the Fisher information matrix.
 In fact many methods like EWC, BWC or IMM just use diagonal assumption of the FIM.
-So this article takes a closer look into simplifying the computation and interpretation of the Fisher Information Matrix.
-This simplification of the Fisher Information Matrix is tested on a reimplementation of the Elastic Weight Consolidation algorithm.
-As proposed later EWC uses the Fisher Information Matrix to protect weights of earlier learned tasks \cite{elastic-weight-consolidation}.
-Their paper does not establish why they use the Fisher Information Matrix, in fact just the diagonal of this matrix.
+So this article takes a closer look into simplifying the computation and interpretation of the Fisher information matrix.
+This simplification of the Fisher information matrix is tested on a reimplementation of the Elastic Weight Consolidation algorithm.
+As proposed later EWC uses the Fisher information matrix to protect weights of earlier learned tasks \cite{elastic-weight-consolidation}.
+Their paper does not establish why they use the Fisher information matrix, in fact just the diagonal of this matrix.
 So this article tries to come up with a explanation based on mathematical principles.
 To test the alternative together with the EWC algorithm, this article shows the performance on several sequential learning tasks (SLTs).
 

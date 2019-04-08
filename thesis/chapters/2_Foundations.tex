@@ -402,7 +402,7 @@ As a result they propose the new loss function for the upcoming training of task
 The loss $\mathcal{L}(\theta)$ for task B consists of the originial loss $\mathcal{L}^{CE}(\theta)$ and the EWC appendix.
 Lambda ($\lambda$) in the EWC appendix is a factor that determines how important the old task is compared to the new one \cite{elastic-weight-consolidation}.
 The parameter $i$ is the iterator for each parameter (weights and biases) of the matrices.
-The parameter F is the Fisher Information Matrix, which looks like this \cite{incremental-moment-matching}:
+The parameter F is the Fisher information matrix, which looks like this \cite{incremental-moment-matching}:
 
 \begin{equation}
     F_{ij} = \frac{1}{N} \sum_{n=1}^{N} \frac{\partial \mathcal{L} \left( x_n \right) }{\partial \theta_{i}} \cdot \frac{\partial \mathcal{L} \left( x_n \right) }{\partial \theta_{j}}

@@ -3,7 +3,7 @@
 \section{Code Concept}
 
 In extend to this article a code base is available \footnote{\url{https://www.github.com/florianwiech/incremental-machine-learning}}.
-This code base includes the reimplementation of EWC and the extension of modifying the Fisher Information Matrix.
+This code base includes the reimplementation of EWC and the extension of modifying the Fisher information matrix.
 It uses Python 3 with the packages NumPy (version 1.16.1) and Tensorflow (version 1.13.0).
 The concept documents the code structure and procedure.
 
@@ -181,7 +181,7 @@ The EWC terms has the following notation:
     \end{split}
 \end{equation}
 
-As proposed in Elastic Weight Consolidation (Section \ref{foundation_ewc}, \cite{elastic-weight-consolidation}) the authors use the Fisher Information Matrix for the loss calculation. It is calculated over all training samples:
+As proposed in Elastic Weight Consolidation (Section \ref{foundation_ewc}, \cite{elastic-weight-consolidation}) the authors use the Fisher information matrix for the loss calculation. It is calculated over all training samples:
 
 \begin{equation}
     F_{ij} = 
@@ -194,7 +194,7 @@ As proposed in Elastic Weight Consolidation (Section \ref{foundation_ewc}, \cite
     \right)
 \end{equation}
 
-In fact it is only the diagonal of the Fisher Information Matrix:
+In fact it is only the diagonal of the Fisher information matrix:
 
 \begin{equation}
     \begin{split}
