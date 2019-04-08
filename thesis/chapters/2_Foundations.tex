@@ -265,22 +265,21 @@ The complete set can just predict 50\%.
     \label{fig:catastrophic_forgetting_d55_example}
 \end{figure}
 
-% TODO ausbauen | (not but), Nun soll es…
 Catastrophic forgetting was first discovered by McCloskey and Cohen in 1989.
 They documented their research in the article "Catastrophic Intereference" \cite{psychology_learning_mccloskey_cohen} and explained the problem in a rather simplified version:
-Figure \ref{fig:catastrophic_forgetting_clarification}A shows a reprensentation of a network in a simplified form.
-It has stored the facts $5 + 4 = 9$ and $6 + 4 = 10$.
-\hfill \break
-Now this network wants to learn new facts.
-Figure \ref{fig:catastrophic_forgetting_clarification}B shows the appendix of the new fact $7 + 4 = 11$.
-To be able to learn this fact it is represented seperate to the representation of other facts.
-This storing of facts does not disrupt the representation of previous learned knowledge.
-\hfill \break
-But in a neural network the representation is quite different.
-All weights are involved in responding to many different inputs.
-To be able to predict the additional new desired outcome, it has to adjust the weights.
-This process will alter the network's response to the other input patterns.
-It results in changing weights to encode new information and alters previously learned responses to other inputs.
+\cite{psychology_learning_mccloskey_cohen}
+\newline
+Figure \ref{fig:catastrophic_forgetting_clarification} shows an propositional network representing artithmetic facts.
+The network structue and connections in Figure \ref{fig:catastrophic_forgetting_clarification}A represent two facts, $5 + 4 = 9$ and $6 + 4 = 10$.
+The learning of a new fact innvolves an exntension to the current propositional structure.
+Figure \ref{fig:catastrophic_forgetting_clarification}B shows the expansion of the fact $7 + 4 = 11$.
+The seperation of each fact does not disrupt any knowledge.
+\cite{psychology_learning_mccloskey_cohen}
+\newline
+Neural networks on the other hand are quite different.
+Each connection and node responses to many different inputs.
+In order to gain new knowledge the neural network requires a change of the connection values (weights) and neuron values (bias).
+Thus, the adjustement of the structure, to be able to respond correctly to the new disred inputs, results in a forgetting of old knowledge.
 \cite{psychology_learning_mccloskey_cohen}
 
 \begin{figure}[H]
