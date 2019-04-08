@@ -19,13 +19,13 @@ The complete code consists of three files.
 
 The "\textbf{mnist.py}" makes the MNIST dataset available.
 It loads the MNIST database automatically, reshapes the values and data structures and splits or permutes the dataset if neccesary.
-After the calculation it returns the arrays in Python standard datastructures with the extension of multi-dimensional arrays from NumPy.
+After the calculation, it returns the arrays in Python standard datastructures with the extension of multi-dimensional arrays from NumPy.
 \newline
 "\textbf{network.py}" holds the "Network" class.
 The class consists of all neccesary operations for the EWC algorithm with original and adaption.
-The contructor creates a neural network with 784 input neurons, three hidden layers with each 800 neurons and the ten MNIST output classes.
+The contructor creates a neural network with 784 input neurons, three hidden layers with 800 neurons each and the ten MNIST output classes.
 In addition to that, it initializes all neccesary functions like loss and accuracy.
-After initialization the object offers several methods for training, testing and applying EWC to the task.
+After the initialization, the object offers several methods for training, testing and applying EWC to the task.
 Figure \ref{fig:concept_class_diagram} shows a class diagram of the Network class.
 
 \begin{figure}[H]
@@ -47,19 +47,18 @@ Figure \ref{fig:concept_state_diagram} shows the state diagram for the network:
 \end{figure}
 
 "\textbf{main.py}" is the entrypoint of the code base.
-It offers an command line tool for specification of the neccesary parameters.
+It offers a command line tool for specification of the neccesary parameters.
 \newline
-The main function executes one tasks and saves their state in a checkpoint.
-It the executed task is the first task, the network gets initialized.
-The EWC appendix in the loss funtion is in this case not applied.
-In the formula would the lambda to be zero ($\lambda = 0$).
-The network gets trained, the matrix calculated and the final model with matrix calculation saved in a checkpoint.
-For each following ongoing task has the main file be restarted with new args value.
+The main function executes one task and saves their state in a checkpoint.
+If the executed task is the first task, the network gets initialized.
+In this case the EWC appendix in the loss funtion is not applied.
+The network gets trained, the matrix gets calculated and the final model with matrix calculation is saved in a checkpoint.
+For each following ongoing task the main file has to be restarted with new args values.
 In these cases the network will be initialized with the EWC loss function.
-The new created Tensorflow session loads a checkpoint given by the parameter (checkpoint of the task before) and the network gets retrained.
+The new created Tensorflow session restores a checkpoint given by the parameter (checkpoint of the task before) and the network gets retrained.
 
 The sequential execution is shown in a sequence diagram.
-The first part (Figure \ref{fig:concept_sequence_diagram_part_1}) shows the initialization of all neccesary parameter and objects.
+The first part (Figure \ref{fig:concept_sequence_diagram_part_1}) shows the initialization of all neccesary parameters and objects.
 Part 2 (Figure \ref{fig:concept_sequence_diagram_part_2}) shows the execution of training and testing the neural network.
 
 \begin{figure}[H]
@@ -79,8 +78,8 @@ Part 2 (Figure \ref{fig:concept_sequence_diagram_part_2}) shows the execution of
 \newpage
 \section{Baseline}
 
-Before adapting the EWC algorithm the codebase has to proof, that it delivers the results of the EWC paper.
-The original EWC algorithm was tested in the constructed benchmarks described in Project Goals (Section \ref{project_goals}):
+Before adapting the EWC algorithm, the codebase has to proof that it delivers the results of the EWC paper.
+The original EWC algorithm is tested in the constructed benchmarks described in Project Goals (Section \ref{project_goals}):
 
 \subsection{Disjoint 9-1 Benchmark}
 
@@ -170,7 +169,7 @@ The EWC loss function uses the original loss function with the EWC appendix:
 
 For a better understanding can the abstract parameter $\theta$ split into the explicit weight and bias parameters.
 The weights are represented as $W^i$ vectors and the biases as $B^i$ vectors, where the index $i$ is for each layer, $i \in \{ 0, \dots, L-1 \}$.
-The EWC terms has the following notation:
+The EWC term has the following notation:
 
 \begin{equation}
     \begin{split}
@@ -209,7 +208,8 @@ In fact it is only the diagonal of the Fisher information matrix:
     \end{split}
 \end{equation}
 
-This matrix equation, which is calculated over all training samples N, split into the weight and bias vectors is the following:
+This matrix equation calculates an average over all training samples N.
+As well as the EWC term, it can be split into the weight and bias vectors:
 
 \begin{equation}
     \begin{split}
@@ -243,11 +243,11 @@ A closer look to the EWC appendix shows, that the term $(\theta_i - \theta^*_{T_
 With the square they are made positive.
 At this point is the original algorithm multiplied by the diagonal FIM, which provides the importance.
 So this article wants to find a way to measure the importance of the parameters.
-Here this article fills the gap with the first derivation of the loss by the parameters.
-The understanding of the first derivation is the slope of every parameter.
+Here this article fills the gap with the first derivative of the loss by the parameters.
+The understanding of the first derivative is the slope of every parameter.
 So a change of the higher gradients compared to the other parameters would bring the network faster out of balance.
 And this is, what EWC algorithm wants to protect. Their goal is it to stay as close as possible to the old important parameters and just adjust the ones with less importance.
-The first derivation of the loss with the parameters over all training samples of a batch N:
+The first derivative of the loss with the parameters over all training samples of a batch N:
 
 \begin{equation}
     \begin{split}
@@ -263,7 +263,7 @@ The first derivation of the loss with the parameters over all training samples o
     \end{split}
 \end{equation}
 
-This first derivation gets squared to positive all results and bring the parameters into a higher value space.
+This first derivative gets squared to positive all results and bring the parameters into a higher value space.
 This operation is allowd, because the important factor in the matrix is the ranking between the values, which will not be changed.
 
 \begin{equation}

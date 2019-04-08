@@ -5,12 +5,12 @@
 \subsection*{Python}
 
 Python is an interpreted, object-oriented, high-level programming language with dynamic semantics.
-It is built for Rapid Application Development with easy to learn syntax for readability.
+The easy-to-learn syntax enables a Rapid Application Development and offers great readability.
 Key features are built in data structures, dynamic typing and binding.
 \cite{python-lang}
 It has its own package manager called "Python Package Index (PyPi)".
 The language is compiled at execution and is available for all major platforms without charge.
-The programming language is open source and maintained by the Pthon Software Foundation.
+The programming language is open-source and maintained by the Pthon Software Foundation.
 \cite{python-software-foundation}
 
 
@@ -25,9 +25,9 @@ It enables scientific computing with N-dimensional array objects and supports ar
 
 Tensorflow is an entire ecosystem for solving problems with machine learning.
 It is developed and maintained by the Google Brain team.
-In 2015 it was released unser the Apache 2.0 open-source license.
+In 2015 it was released under the Apache 2.0 open-source license.
 It offers multiple levels of abstraction for building, training and testing models.
-Visualisations of the code and intuitive debugging allow the deeloper more flexibility.
+Visualisations of the code and intuitive debugging allow the developers more flexibility.
 Large machine learning training tasks can be done with distributed training on different hardware configurations without changing the model definition.
 Trained models can be directly put into production.
 Moreover, Tensorflow offers support for multiple languages and platforms.
@@ -74,20 +74,21 @@ The digits are size-normalized and centered photos with a fixed-size of 28 by 28
 The numbers are created by approximately 250 writers. 
 \cite{mnist-database}
 The Dataset pertains to one of the most popular datasets for research and testing the performance of new networks.
-It is a great resource for testing new deep learning algorithms with supervised learning.
+It is a great resource to test new deep learning algorithms with supervised learning.
 
 
 \section{Deep Neural Network}
 \label{foundations_deep_neural_network}
 
-The Introduction gave a basic overview of the understanding and behind the scenes of a neural network.
-This section shows the construct and math of the network used for the elastic weight consolidation implementation and scenario testing.
+The Introduction gave a general overview for the understanding of a neural network.
+This section shows the construct and the mathematics of the network used for the elastic weight consolidation implementation and scenario testing.
 
-As described, a neural network is a collection of neurons connected with weights and paired together in layers.
-Each neuron receives values from all neurons on the layer before.
-Each connection holds a value which represents the importance.
-Therefore, this connected value is called weight.
-The neuron computes all the input values (x) with the weights (w) and applies a bias (b) to predict the result (y).
+As described, a neural network is a collection of layers.
+Every layer contains a fixed number of neurons.
+Each neuron is connected to all the neurons on the layer before.
+The connections are called weights and each weight holds a value.
+\newline
+Each neuron computes all the input values (x) with the weights (w) and applies a bias (b) to predict the result (y).
 Figure \ref{fig:dnn_node_procedure} shows the computation structure of each neuron in the network.
 \cite{math_nn_skalski}
 
@@ -143,17 +144,17 @@ Figure \ref{fig:dnn_node_procedure} shows the computation structure of each neur
     \label{fig:dnn_node_procedure}
 \end{figure}
 
-The value of each output neuron can be calculated as the following \cite{medium_nn_from_scratch}:
+The value of a neuron can be calculated like the following \cite{medium_nn_from_scratch}:
 
 \begin{equation}
 y = b + \sum_{i} x_i w_i
 \end{equation}
 
 To be able to ensure the quickest calculation possible, vectorisation and matrixes are used.
-All Weights on a layer get stacked to a matrix W together.
-The same process is applied to the biases on each layer.
+All Weights coming from the previous layer get stacked to a matrix W together.
+The biases on each layer are connected to a vector.
 This results in the following calculation
-\cite{medium_nn_from_scratch}:
+: \cite{medium_nn_from_scratch}
 
 \begin{equation}
 X = [ x_1 \dots x_i ]; \space W = 
@@ -181,50 +182,51 @@ The network in this article uses the ReLU as an activation function for the hidd
 \end{equation}
 
 The output of the last layer will be computed as logits:
-$$logits = (x*w)+b$$
+$$l = (x*w)+b$$
 
 On the output layer it uses the softmax function, which connects the output classes in a probabilistic way:
 
 \begin{equation}
-    Softmax : \mathbb{R}^K \to \mathbb{R}^K
+    \begin{split}
+        S & : \mathbb{R}^K \to \mathbb{R}^K
+        \\
+        S(x)_i & = \frac{e^{k_i}}{\sum_{k=1}^K e^{x_k}} \: ; i = 1, …, K
+    \end{split}
 \end{equation}
 \begin{equation}
-    Softmax(x)_i : \frac{e^{k_i}}{\sum_{k=1}^K e^{x_k}}
-\space ; i = 1, …, K
-\end{equation}
-\begin{equation}
-    probabilities = Softmax(logits)
+    p = S(l)
 \end{equation}
 
-After a prediction by the calculation of all neurons and layers the network needs source of information on the progress of the learning process.
+After a prediction by the calculation of all neurons and layers, the network needs a source of information on the progress of the learning process.
 This is where the loss function is introduced.
 It is designed to show how bad the classification to the right solution is.
 In this article the crossentropy loss function is used.
 \cite{math_nn_skalski, medium_nn_from_scratch}
 
 \begin{equation}
-    CrossEntropy(p,y) = -\sum_{i=1}^K y_i \log(p_i)
+    CE(r,y) = -\sum_{i=1}^K y_i \log(r_i)
 \end{equation}
 \begin{equation}
-    loss = CrossEntropy(probabilities, y)
+    loss = CE(p, y)
 \end{equation}
 
+In the training, the dataset is split into multiple batches.
+These batches include a fixed number of samples from the dataset.
+The joining of samples enables a much faster prediction process.
 This process of calculating a result of the network is called forward propagation.
 Within this process, the network calculates a result based on the inputs.
 This is happening due to the parameters and functions of the network.
 On this output the learning process gets applied.
-This shows the accuracy of the network.
 \cite{math_nn_skalski, medium_nn_from_scratch}
 \newline
-In the learning is the dataset split into multiple batches. These batches include a fixed number of samples from the dataset. The joining of samples enables a much faster learning process.
-The learning process is about adapting the weights and biases to optimise the accuracy.
-This is done by minimising the loss function.
-This process of the update of weights and biases is called Backpropagation.
-It is an algorithm which calculates error gradients with respect to each network variable.
+The learning process is about adapting the weights and biases to optimize the accuracy.
+This is done by minimizing the loss function.
+The process of updating the weights and biases is called Backpropagation.
+It is an algorithm which calculates error gradients with respect to each network variable. % TODO check if this is correct
 Those gradients are later used in an optimization algorithm called Gradient Descent.
-This method is used to find a function minimum.
-After the minimum is found, it would be applied to all parameters in the network.
-By adjusting the learning rate of backpropagation, the developer has the control over the value adjustment.
+This method searches a function minimum.
+After the minimum is found, it applies its results to all parameters in the network.
+By adjusting the learning rate of the backpropagation, the developer has the control over the value adjustment.
 He defines how detailed each learning step should be.
 \cite{math_nn_andrey}
 \newline
@@ -240,10 +242,10 @@ The effect is that the network completely forgets the information learned in the
 To show this effect in use, Figure \ref{fig:catastrophic_forgetting_d91_example} and Figure \ref{fig:catastrophic_forgetting_d55_example} present catastrophic forgetting in the two benchmarks D9-1 and D5-5.
 \newline
 The network is built with 784 inputs, 3 hidden layer with 800 neurons and 10 output classes.
-Each task trained with a learning rate of 0.001, 2,500 iterations and an batch size of 100.
+Each task trained with a learning rate of 0.001, 2,500 iterations and a batch size of 100.
 \newline
-Figure \ref{fig:catastrophic_forgetting_d91_example} shows the D9-1 benchmark. After the $T_1$ training, is the accuracy at 95.62\% for $T_1$. In the second task happens the catastrophic fogetting and at the end has $T_1$ 0\% accuracy.
-
+Figure \ref{fig:catastrophic_forgetting_d91_example} shows the D9-1 benchmark. After the $T_1$ training, the accuracy of $T_1$ is at 96\%. In the second task the catastrophic fogetting happens and $T_1$ ends up with an accuracy of 0\%.
+% TODO deeper description (T_2 and complete dataset)
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{D91_catastrophic_forgetting}
@@ -253,11 +255,15 @@ Figure \ref{fig:catastrophic_forgetting_d91_example} shows the D9-1 benchmark. A
 
 \newpage
 
-In Figure \ref{fig:catastrophic_forgetting_d55_example} is the MNIST dataset split up into two tasks with each five classes.
-The graph shows that after the training of task $T_1$, the accuracy of the complete set at 50\%.
+In Figure \ref{fig:catastrophic_forgetting_d55_example} the MNIST dataset is split up into two tasks with five classes each.
+The graph shows the accurancies of the two tasks.
+% TODO correct formulation
+The graph shows that the accuracy of the complete set is 50\% after the training of task $T_1$.
+The training of start $T_2$ immediately
+The training start of $T_2$ leads to a imidiatly drop to zero of the $T_1$ accuracy.
 After the training start of task $T_2$, the accuracy of $T_1$ drops to zero.
 The complete set can just predict 50\%.
-
+% TODO change figure (no complete dataset)
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{D55_catastrophic_forgetting}
@@ -269,17 +275,17 @@ Catastrophic forgetting was first discovered by McCloskey and Cohen in 1989.
 They documented their research in the article "Catastrophic Intereference" \cite{psychology_learning_mccloskey_cohen} and explained the problem in a rather simplified version:
 \cite{psychology_learning_mccloskey_cohen}
 \newline
-Figure \ref{fig:catastrophic_forgetting_clarification} shows an propositional network representing artithmetic facts.
-The network structue and connections in Figure \ref{fig:catastrophic_forgetting_clarification}A represent two facts, $5 + 4 = 9$ and $6 + 4 = 10$.
-The learning of a new fact innvolves an exntension to the current propositional structure.
+Figure \ref{fig:catastrophic_forgetting_clarification} shows a propositional network representing artithmetic facts.
+The network structure and connections in Figure \ref{fig:catastrophic_forgetting_clarification}A represent two facts, $5 + 4 = 9$ and $6 + 4 = 10$.
+The learning of a new fact involves an extension to the current propositional structure.
 Figure \ref{fig:catastrophic_forgetting_clarification}B shows the expansion of the fact $7 + 4 = 11$.
 The seperation of each fact does not disrupt any knowledge.
 \cite{psychology_learning_mccloskey_cohen}
 \newline
 Neural networks on the other hand are quite different.
 Each connection and node responses to many different inputs.
-In order to gain new knowledge the neural network requires a change of the connection values (weights) and neuron values (bias).
-Thus, the adjustement of the structure, to be able to respond correctly to the new disred inputs, results in a forgetting of old knowledge.
+In order to gain new knowledge, the neural network requires a change of the connection values (weights) and neuron values (bias).
+Thus, this adjustement of the structure results in forgetting the previously acquired knowledge.
 \cite{psychology_learning_mccloskey_cohen}
 
 \begin{figure}[H]
@@ -296,28 +302,30 @@ In order to overcome this catastrophic forgetting or at least reduce it, a team 
 \cite{elastic-weight-consolidation}
 
 At first they analysed the human brain as well as animal brains.
-Here they discovered that the mammalian brain may avoid catastrophic forgetting by protecting previously-acquired knowledge.
-They developed an algorithm for deep neural networks, which they call Elastic Weight Consolidation.
-By showing uses in supervised learning and reinforcement learning, several tasks could sequentially trained without forgetting older ones.
+Here, they discovered that the mammalian brain may avoid catastrophic forgetting by protecting previously-acquired knowledge.
+They developed an algorithm for deep neural networks and call it Elastic Weight Consolidation.
+By showing tests in supervised learning and reinforcement learning, several tasks could sequentially trained without forgetting older ones.
 \cite{elastic-weight-consolidation}
 
-According to their paper many configurations of $\theta$ (set of weights and biases) will result in the same performance of the network.
+According to their paper, many configurations of $\theta$ (set of weights and biases) will result in the same performance of the network.
 This is a crucial information for EWC.
-Its goal is to over-parametersize $\theta$ and find a solution for $\theta$ at the next task.
+Its goal is to over-parametersize $\theta$ and to find a solution for $\theta$ at the next task.
 This solution needs to be close to the previous task solution of $\theta$.
 While learning the next task, EWC wants to protect the performance of the previous task by limiting the parameters.
 They should stay in a given region for a low error of the previous task.
 \cite{elastic-weight-consolidation}
 
-To determine which values are most important, they see the training from a probabilistic perspective.
-Here they discovered, that the catastrophic forgetting does not happen in a fully Bayesian way.
+In order to determine which values are most important, they see the training from a probabilistic perspective.
+Here, they discovered that the catastrophic forgetting does not happen in a fully Bayesian way.
 \cite{elastic-weight-consolidation}
+
+% TODO Bayes inference
 
 The Bayes theorem describes the probability of an event, based on prior knowledge of conditions that might be related to the event \cite{Bayes_theorem}. \cite{elastic-weight-consolidation, schaeffer_ewc}
 \newline
-The dataset as $\mathcal{D}$ with included samples is given.
-Now the network has to find the conditional probability for $\theta$, in fact the likelihood of the parameter (weights and biases) in $\theta$ given the data from the dataset.
-This conditional probability $p \left(\theta | \mathcal{D} \right)$ is and calculated using the Bayes' rule: \cite{elastic-weight-consolidation, schaeffer_ewc}
+The dataset $\mathcal{D}$ with included samples is given.
+The network has to find the likelihood of the parameters (weights and biases) in $\theta$ given that $\mathcal{D}$ is occured.
+This conditional probability $p \left(\theta | \mathcal{D} \right)$ is calculated by using the Bayes' rule: \cite{elastic-weight-consolidation, schaeffer_ewc}
 
 \begin{equation}
     p \left( \theta | \mathcal{D} \right) = \frac{p \left(\mathcal{D}|\theta\right) p\left(\theta\right)}{p \left( \mathcal{D} \right)}
@@ -340,7 +348,7 @@ If the log-transform gets applied, the equation writes as follows: \cite{elastic
 \end{equation}
 
 The paper assumes now that the data is split into two independent parts. $\mathcal{D}_A$ for task A and data $\mathcal{D}_B$ for task B.
-This would work with more than two tasks, but for simplicity are only two used.
+This would work with more than two tasks, but for simplicity only two are used.
 The re-arragne of the equation is: \cite{elastic-weight-consolidation, schaeffer_ewc}
 
 \begin{equation}
@@ -371,7 +379,8 @@ The re-arragne of the equation is: \cite{elastic-weight-consolidation, schaeffer
     \end{split}
 \end{equation}
 
-This last re-arragement looks with the term in the brackets familiar with Formula \eqref{eq:bayes_applied_log}, except $\mathcal{D}$ is replaced by $\mathcal{D}_A$ task A.
+This last rearragement is almost similar to the Formula \eqref{eq:bayes_applied_log}.
+Only $\mathcal{D}_A$ is replaced by $\mathcal{D}$.
 Since they are equivalent to the conditional probability of the network's parameters given taskA's data, the equation can be modified to: \cite{elastic-weight-consolidation, schaeffer_ewc}
 
 \begin{equation}
@@ -383,13 +392,13 @@ Since they are equivalent to the conditional probability of the network's parame
 \end{equation}
 
 Interesting on this formula is, that it still calculates the entire dataset (left side of Formula \eqref{eq:bayesian_modified}). Moreover, the paper descibes, that the right hand side only depends on the loss function for task B $\log p(\mathcal{D}_B | \theta)$. All information about task A is absorbed into the conditional probability $\log p(\theta | \mathcal{D}_A)$, the posterior distribution.
-So the paper follows that this conditional probability contains information about which parameters are important in solving task A.
+The paper follows that this conditional probability contains information about which parameters are important in solving task A.
 \cite{elastic-weight-consolidation, schaeffer_ewc}
 \newline
-They state, that the true posterior distribution is intractable and follow with the Laplace approximation to approximate the posterior as a Gaussian distribution with mean given by the parameters of the previous task A and the diagonal precision by the diagonal of the Fisher information matrix.
+They state, that the true posterior distribution is intractable and follows with the Laplace approximation to approximate the posterior as a Gaussian distribution with mean given by the parameters of the previous task A and the diagonal precision by the diagonal of the Fisher information matrix.
 \cite{elastic-weight-consolidation}
 \newline
-Moreover, they inform that the Fisher information matrix is equivalent to the second derivative of the loss near a minimum and that "…it can be computed from first-order derivatives alone and is thus easy to calculate even for large models…" \cite{elastic-weight-consolidation} and "…it is guaranteed to be positive semi-definite."
+Furthermore, they inform that the Fisher information matrix is equivalent to the second derivative of the loss near a minimum and that "…it can be computed from first-order derivatives alone and is thus easy to calculate even for large models…" \cite{elastic-weight-consolidation} and "…it is guaranteed to be positive semi-definite."
 \cite{elastic-weight-consolidation}.
 \cite{elastic-weight-consolidation, schaeffer_ewc}
 \newline
@@ -408,7 +417,7 @@ The parameter F is the Fisher information matrix, which looks like this \cite{in
     F_{ij} = \frac{1}{N} \sum_{n=1}^{N} \frac{\partial \mathcal{L} \left( x_n \right) }{\partial \theta_{i}} \cdot \frac{\partial \mathcal{L} \left( x_n \right) }{\partial \theta_{j}}
 \end{equation}
 
-In this function N are all training samples, $\mathcal{L}$ is the loss function and $\theta$ is the set of all weights and biases.
+N represents all training samples, $\mathcal{L}$ the loss function and $\theta$ the set of all weights and biases.
 In the paper the authors show some results with their algorithm on three different tasks with supervised learning. Figure \ref{fig:ewc_permuted_example} shows three permuted MNIST tasks:
 \begin{figure}[H]
     \centering
