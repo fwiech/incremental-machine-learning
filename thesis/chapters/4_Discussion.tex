@@ -18,14 +18,14 @@ The network was given three hidden layers with 800 neurons.
 This feature base is a proven structure for the MNIST problem.
 The iterations and batch sizes are chosen from the study \cite{cf_application_oriented_study}.
 This article increased the iterations for the permuted benchmark to analyze the surpassing of the $T_2$ accuracy to the complete dataset.
-Lambda was initialized to $\lambda = \frac{1}{learning \: rate \: T_2}$ by default.
+Lambda was initialized to $\lambda = \frac{1}{learning_rate \: T_2}$ by default.
 
 Currently there are multiple implementations of EWC available.
 Most of them are created with PyTorch, a similar open-source machine learning library to Tensorflow.
 Still, there are two solutions implemented in Tensorflow and available on Github
 \footnote[1]{\url{https://github.com/ariseff/overcoming-catastrophic}}
 \footnote[2]{\url{https://github.com/stokesj/EWC}}.
-Both show a solution for a permuted MNIST on supervised learning but not a disjoint mnist.
+Both show a solution for a permuted MNIST on supervised learning but not a disjoint MNIST.
 The more popular implementation\footnotemark[1] modifies the original algorithm.
 For the FIM calulation it does not use the given labels from the dataset.
 It generates new labels based on a randomization of the softmax probabilities.
@@ -56,7 +56,7 @@ The learning rate of $T_1$ however is constantly 0.001.
 \newline
 The comparison of $T_2$ in Figure \ref{fig:ewc_d5-5} and $T_1$ in Figure \ref{fig:ewc_p10-10} shows that in the D5-5 benchmark it would be much easier to just train a new model with the complete MNIST dataset.
 Because of the same iterations, batch size and a smaller learning rate of $T_1$ (in Figure \ref{fig:ewc_p10-10}) the perfromance of training the complete dataset instead of retraining with the EWC algorithm would increase the accuracy.
-As proposed in Catastrophic Forgetting (Section \ref{catastrophic_forgetting}) there will be a sacrifice of knowledge.
+As proposed in catastrophic forgetting (Section \ref{catastrophic_forgetting}) there will be a sacrifice of knowledge.
 Though, these benchmarks are just a small representation of the problems in a largely scaled environment for models and datasets.
 In this case MNIST just provides a simplification of the problem to be able to test an algorithm.
 And it gives the ability to test several different parameters in a short amount of time and computation power.
@@ -141,7 +141,7 @@ The promising benchmarks in this article worked with fixed iteration counts, lea
 In the creation phase of the benchmarks, these three parameters had to be tested with multiple combinations.
 Currently there is no solution, how to choose the quantity of iterations, learning rate or the lambda value.
 So the developer needs to specify the importance of the EWC appendix.
-The reference implementation set it to $\lambda = \frac{1}{learning \: rate \: T_2 }$, but we can clearly see in Table \ref{table:exp_d9-1} and Table \ref{table:exp_d5-5} of the D9-1 and D5-5 benchmarks, that this does not output the best result.
+The reference implementation set it to $\lambda = \frac{1}{learning_rate \: T_2 }$, but we can clearly see in Table \ref{table:exp_d9-1} and Table \ref{table:exp_d5-5} of the D9-1 and D5-5 benchmarks, that this does not output the best result.
 Even the comparison of these tables together show, that the chosen values for the best result differ from each other.
 Regarding the tables it is important to note, that they just tested the learning rate and lambda value on a fixed iteration count.
 But the number of iterations is a important component in the training process and can quickly collide with the other two parameters.

@@ -17,13 +17,13 @@ The complete code consists of three files.
     \label{fig:concept_file_structure}
 \end{figure}
 
-The "\textbf{mnist.py}" makes the mnist dataset available.
-It loads the mnist database automatically, reshapes the values and data structures and splits or permutes the dataset if neccesary.
+The "\textbf{mnist.py}" makes the MNIST dataset available.
+It loads the MNIST database automatically, reshapes the values and data structures and splits or permutes the dataset if neccesary.
 After the calculation it returns the arrays in Python standard datastructures with the extension of multi-dimensional arrays from NumPy.
 \newline
 "\textbf{network.py}" holds the "Network" class.
 The class consists of all neccesary operations for the EWC algorithm with original and adaption.
-The contructor creates a neural network with 784 input neurons, three hidden layers with each 800 neurons and the ten mnist output classes.
+The contructor creates a neural network with 784 input neurons, three hidden layers with each 800 neurons and the ten MNIST output classes.
 In addition to that, it initializes all neccesary functions like loss and accuracy.
 After initialization the object offers several methods for training, testing and applying EWC to the task.
 Figure \ref{fig:concept_class_diagram} shows a class diagram of the Network class.
@@ -85,11 +85,11 @@ The original EWC algorithm was tested in the constructed benchmarks described in
 \subsection{Disjoint 9-1 Benchmark}
 
 $T_1$, trained with the classes zero to eight, reaches an accuracy of 95.72\% at the end of its training period.
-The task was trained with a learnrate of 0.001, 2,500 iterations and a batch size of 100.
+The task was trained with a learning rate of 0.001, 2,500 iterations and a batch size of 100.
 In comparison to the complete dataset (green, line), the accuracy is 86.06\%.
 
-$T_2$ trained with the class nine further of $T_1$ uses a learnrate of 0.00001, 2,500 iterations and a batch size of 100.
-The lambda value is $\frac{1}{learnrate = 0.00001} = 100,000$.
+$T_2$ trained with the class nine further of $T_1$ uses a learning rate of 0.00001, 2,500 iterations and a batch size of 100.
+The lambda value is $\frac{1}{0.00001} = 100,000$.
 It reaches an accuracy of 97.81\%.
 
 At the end of $T_2$ trainng phase designates $T_1$ to 84.50\% and the complete dataset 85.44\%.
@@ -109,13 +109,13 @@ Figure \ref{fig:ewc_d9-1} shows the trainings of both tasks compared to the accu
 Figure \ref{fig:ewc_d5-5} shows training of a disjoint MNIST with a five class split.
 
 The first Task $T_1$ with the classes zero to four reaches an accuracy of 98.66\% after the first training.
-$T_1$ was trained with a learnrate of 0.001, 2,500 iterations and a batch size of 100.
+$T_1$ was trained with a learning rate of 0.001, 2,500 iterations and a batch size of 100.
 Since there are only five of ten possible classes trained, the accuracy on the complete dataset amounts 50.70\%.
 
 In the second training period with task $T_2$, the classes five to nine achieve an accuracy of 82.67\%.
-The learnrate of $T_2$ is 0.00001 and there were again 2,500 iterations and a batch size of 100.
+The learning rate of $T_2$ is 0.00001 and there were again 2,500 iterations and a batch size of 100.
 Since it is an ongoing task, the EWC appendix is applied to the loss.
-In this case lambda was set to $\frac{1}{learnrate = 0.00001} = 100,000$.
+In this case lambda was set to $\frac{1}{0.00001} = 100,000$.
 
 After the second training, $T_1$ lost 22.22\%, but still shows a quality of 76.44\%.
 The performance of the complete dataset ascended from 50.70\% to 79.39\%.
@@ -132,7 +132,7 @@ The performance of the complete dataset ascended from 50.70\% to 79.39\%.
 EWC performance is shown in Figure \ref{fig:ewc_p10-10}.
 $T_1$ is trained with following parameters:
 all classes with a
-learnrate of 0.001,
+learning rate of 0.001,
 60,000 samples,
 batch size of 100 in
 2,500 iterations.
@@ -141,7 +141,7 @@ After the $T_1$ training, it shows an accuracy of 94.76\% which is equally to th
 $T_2$ on the other hand learned with a rate of 0.00001 with 20,000 iterations.
 The 60,000 samples were permuted with a seed of zero and split into batches with a size of 100.
 The importance of the EWC loss was $\lambda = \frac{1}{0.00001} = 100,000$.
-$T_2$ needed in this case a longer learnrate to be able to have a good accuracy.
+$T_2$ needed in this case a longer learning rate to be able to have a good accuracy.
 It shows a performance of 91.45\% and 90.53\% on the complete dataset.
 $T_1$ still performs with 94.78\%.
 
@@ -344,7 +344,7 @@ The network features are listed in Section \ref{foundations_deep_neural_network}
 % TODO first sentence
 All experiments with a disjoint nine to one test on MNIST are split in the task $T_1$ with numbers zero to eight and task $T_2$ with number nine.
 Task $T_1$ was trained on 54,000 samples, split into batches with a size of 100.
-The learnrate amounted 0.001.
+The learning rate amounted 0.001.
 The calculation of the modified FIM was done with a batch size of 1,000.
 This reults in a performance of 95.72\% on the $T_1$ testset and 86.06\% on the complete set.
 
@@ -364,10 +364,10 @@ The complete testset indicates an accuracy of 84.72\%, a minus of 1.34\%.
 
 \newpage
 
-Table \ref{table:exp_d9-1} tests multiple learnrates and lambda values with $T_2$ on the complete dataset.
+Table \ref{table:exp_d9-1} tests multiple learning rates and lambda values with $T_2$ on the complete dataset.
 Every parameter test was done with 2,500 iterations and a batch size of 100 and 5900 samples.
 \newline
-The results show that the best performance is with a learnrate of 0.00001 and a lambda value of 1,000,000.
+The results show that the best performance is with a learning rate of 0.00001 and a lambda value of 1,000,000.
 With these parameters $T_2$ performs 87.78\%, $T_1$ still has a performance of 74.12\% and the complete dataset of 90.84\%.
 
 \begin{table}[H]
@@ -419,11 +419,11 @@ With these parameters $T_2$ performs 87.78\%, $T_1$ still has a performance of 7
 % TODO anfang verbessern (+zeiten)
 The disjoint 5-5 experiments a split into the first class with the numbers zero to four and second class with the numbers five to nine.
 $T_1$ has 30,500 samples split into 305 batches and trained with 2,500 batch cycles.
-The learnrate is 0.001, which results in a $T_1$ performance of 98.66\% and 50.70\% on the complete dataset.
+The learning rate is 0.001, which results in a $T_1$ performance of 98.66\% and 50.70\% on the complete dataset.
 The matric calculation for the second task was done with an average gradient of 1,000 gradients.
 
 Figure \ref{fig:exp_d5-5_bs1k} show both tasks $T_1$ and $T_2$.
-In this case $T_2$ was trained with 29,400 samples, a batch size of 100 and a learnrate of 0.00001.
+In this case $T_2$ was trained with 29,400 samples, a batch size of 100 and a learning rate of 0.00001.
 The EWC loss was calculated with $\lambda = \frac{1}{0.00001} = 100,000$.
 The result of $T_2$ training is a performance of 82.30\% on $T_2$, 76.73\% on $T_1$ and an accuracy of 79.33\% on the complete dataset.
 This shows that the network achvieved an increase of 28.63\%.
@@ -440,7 +440,7 @@ This shows that the network achvieved an increase of 28.63\%.
 Table \ref{table:exp_d5-5} lists several parameter tests.
 These tests are built with the same parameters for $T_2$ except of the learning rate and lambda.
 The results are based on a varied learning rate and lambda value.
-The best result is with the learnrate of 0.00001 and a lambda value of 1,000.
+The best result is with the learning rate of 0.00001 and a lambda value of 1,000.
 It shows that the complete set has an accuracy of 81.87\%, $T_2$ of 93.64\% and $T_1$ of 71.16\%.
 
 \begin{table}[H]
@@ -491,7 +491,7 @@ It shows that the complete set has an accuracy of 81.87\%, $T_2$ of 93.64\% and 
 
 This experiment type performs in $T_1$ a training on the complete dataset and in $T_2$ on a permuted dataset with the random seed of zero.
 \newline
-$T_1$ properties are: 60,000 samples into 60 batches with a size of 100, a learnrate of 0.001 and 2,500 iterations.
+$T_1$ properties are: 60,000 samples into 60 batches with a size of 100, a learning rate of 0.001 and 2,500 iterations.
 This results in an accuracy of 94.76\%.
 The matrix calculation fot the EWC loss used a batch size of 1,000.
 \newline
@@ -510,7 +510,7 @@ The complete dataset shows an accuracy of 90.45\% and $T_1$ of still 94.76\%.
 
 Table \ref{table:exp_d10-10} shows the results of several experiments with the learning rate and lambda of $T_2$.
 The table shows that there are many good outcomes.
-The best outcomes are with the same learnrate as $T_1$ and rather small lambda value.
+The best outcomes are with the same learning rate as $T_1$ and rather small lambda value.
 
 \begin{table}[H]
     \centering
