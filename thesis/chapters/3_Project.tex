@@ -83,17 +83,37 @@ The original EWC algorithm is tested in the constructed benchmarks described in 
 
 \subsection{Disjoint 9-1 Benchmark}
 
-$T_1$, trained with the classes zero to eight, reaches an accuracy of 95.72\% at the end of its training period.
-The task was trained with a learning rate of 0.001, 2,500 iterations and a batch size of 100.
-In comparison to the complete dataset (green, line), the accuracy is 86.06\%.
+In this benchmark the MNIST dataset is split into two tasks.
+The first task $T_1$ includes the numbers zero to eight and the second task $T_2$ number nine.
 
-$T_2$ trained with the class nine further of $T_1$ uses a learning rate of 0.00001, 2,500 iterations and a batch size of 100.
-The lambda value is $\frac{1}{0.00001} = 100,000$.
-It reaches an accuracy of 97.81\%.
+The training of the tasks $T_1$ and $T_2$ is implemented with the following hyperparameters:
 
-At the end of $T_2$ trainng phase designates $T_1$ to 84.50\% and the complete dataset 85.44\%.
-The complete dataset reaches a peak of 93.43\% where $T_1$ has 94.87\% precision and $T_2$ 76.66\% precision.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |l|l|l|  }
+        \hline
+        Task $\to$ & $T_1$ & $T_2$ \\
+        \hline\hline
+        samples & 54,000 & 5,900 \\
+        \hline
+        batch size & 100 & 100 \\
+        \hline
+        training iterations & 2,500 & 2,500 \\
+        \hline
+        learning rate & 0.001 & 0.00001 \\
+        \hline
+        lambda ($\lambda$) & 0 & 100,000 \\
+        \hline
+    \end{tabular}
+    \caption{Baseline D9-1}
+    \label{table:base_d91}
+\end{table}
 
+At the end of the $T_1$ training period, the model reaches an accuracy of 96\% on $T_1$.
+The accuracy of the complete dataset is 86\%.
+In the second training ($T_2$ training), the complete dataset peaks at 92\%.
+After the second training period, $T_1$ decreases to 79\%.
+The complete dataset on the other hand reaches an accuracy of 80\% and the new aquired task $T_2$ 97\%.
 Figure \ref{fig:ewc_d9-1} shows the trainings of both tasks compared to the accuracy of the complete dataset:
 
 \begin{figure}[H]
@@ -105,19 +125,39 @@ Figure \ref{fig:ewc_d9-1} shows the trainings of both tasks compared to the accu
 
 \subsection{Disjoint 5-5 Benchmark}
 
-Figure \ref{fig:ewc_d5-5} shows training of a disjoint MNIST with a five class split.
+In this benchmark $T_1$ contains the numbers zero to four whereas $T_2$ includes the numbers five to nine.
 
-The first Task $T_1$ with the classes zero to four reaches an accuracy of 98.66\% after the first training.
-$T_1$ was trained with a learning rate of 0.001, 2,500 iterations and a batch size of 100.
-Since there are only five of ten possible classes trained, the accuracy on the complete dataset amounts 50.70\%.
+The training of the tasks $T_1$ and $T_2$ is implemented with the following hyperparameters:
 
-In the second training period with task $T_2$, the classes five to nine achieve an accuracy of 82.67\%.
-The learning rate of $T_2$ is 0.00001 and there were again 2,500 iterations and a batch size of 100.
-Since it is an ongoing task, the EWC appendix is applied to the loss.
-In this case lambda was set to $\frac{1}{0.00001} = 100,000$.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |l|l|l|  }
+        \hline
+        Task $\to$ & $T_1$ & $T_2$ \\
+        \hline\hline
+        samples & 30,500 & 29,400 \\
+        \hline
+        batch size & 100 & 100 \\
+        \hline
+        training iterations & 2,500 & 2,500 \\
+        \hline
+        learning rate & 0.001 & 0.00001 \\
+        \hline
+        lambda ($\lambda$) & 0 & 100,000 \\
+        \hline
+    \end{tabular}
+    \caption{Baseline D5-5}
+    \label{table:base_d55}
+\end{table}
 
-After the second training, $T_1$ lost 22.22\%, but still shows a quality of 76.44\%.
-The performance of the complete dataset ascended from 50.70\% to 79.39\%.
+The first Task $T_1$ reaches an accuracy of 99\%.
+Since $T_1$ only includes 50\% of the numbers from the MNIST dataset, the accuracy on the complete dataset amounts 51\%.
+In the second training period, the complete dataset reaches a peak of 87\% but designtes to 81\% at the end of the period.
+Then, $T_1$ and $T_2$ perform each with 81\%.
+\newline
+This shows the result, that $T_1$ lost 18\% knowledge, but the network gained 30\% knowledge. Both tasks predict the desired outcome with 81\% accuracy.
+\newline
+Figure \ref{fig:ewc_d5-5} shows the training of a disjoint MNIST with a five class split:
 
 \begin{figure}[H]
     \centering
@@ -128,21 +168,40 @@ The performance of the complete dataset ascended from 50.70\% to 79.39\%.
 
 \subsection{Permuted 10-10 Benchmark}
 
-EWC performance is shown in Figure \ref{fig:ewc_p10-10}.
-$T_1$ is trained with following parameters:
-all classes with a
-learning rate of 0.001,
-60,000 samples,
-batch size of 100 in
-2,500 iterations.
-After the $T_1$ training, it shows an accuracy of 94.76\% which is equally to the complete dataset.
-\newline
-$T_2$ on the other hand learned with a rate of 0.00001 with 20,000 iterations.
-The 60,000 samples were permuted with a seed of zero and split into batches with a size of 100.
-The importance of the EWC loss was $\lambda = \frac{1}{0.00001} = 100,000$.
-$T_2$ needed in this case a longer learning rate to be able to have a good accuracy.
-It shows a performance of 91.45\% and 90.53\% on the complete dataset.
-$T_1$ still performs with 94.78\%.
+This benchmark uses the complete MNIST dataset in the first task $T_1$ and permutes the complete dataset for the second task $T_2$.
+Figure \ref{fig:intro_mnist_permuted_example} shows a MNIST number and its permutation.
+
+The training of the tasks $T_1$ and $T_2$ is implemented with the following hyperparameters:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |l|l|l| }
+        \hline
+        Task $\to$ & $T_1$ & $T_2$ \\
+        \hline\hline
+        samples & 60,000 & 60,000 \\
+        \hline
+        permutation seed & - & 0 \\
+        \hline
+        batch size & 100 & 100 \\
+        \hline
+        training iterations & 2,500 & 20,000 \\
+        \hline
+        learning rate & 0.001 & 0.00001 \\
+        \hline
+        lambda ($\lambda$) & 0 & 100,000 \\
+        \hline
+    \end{tabular}
+    \caption{Baseline D5-5}
+    \label{table:base_d55}
+\end{table}
+
+$T_1$ achives an accuracy of 95\%.
+After the second training period, $T_1$ has the same accuracy.
+$T_2$ performs with 92\%.
+This results in 90\% accuracy on the complete dataset.
+
+Figure \ref{fig:ewc_p10-10} represents the performance of each tassk in both training periods:
 
 \begin{figure}[H]
     \centering
