@@ -48,7 +48,7 @@ The media uses the terms "Artificial Intelligence (AI)", "Machine Learning (ML)"
 \hfill \break
 Nvidia, an American technology company visualizes the relationship between these terms as concentric circles.
 At first the most commonly-used term artificial intelligence was introduced.
-After that machine learning emerged and finally deep learning, which fits inside both terms and drove major breakthroughs, was deployed.
+After that, machine learning emerged and finally deep learning, which fits inside both terms and drove major breakthroughs, was deployed.
 \cite{nvidia-ai-explained}
 
 \begin{figure}[H]
@@ -304,7 +304,7 @@ The algorithm was tested on multiple public datasets \cite{DEN}.
 Learning without Forgetting (LwF) is a strategy in convolutional neural networks \cite{LwF}.
 At first they lock the old fully connected layers \cite{LwF}.
 They append new fully connected layers to the convolutional layers and train the new task \cite{LwF}.
-After that they integrate both knowledges by a joint training \cite{LwF}.
+After that, they integrate both knowledges by a joint training \cite{LwF}.
 This framework is promising where both trainings are similar to each other \cite{incremental-moment-matching, LwF}.
 \newline
 % Keep and Learn
@@ -340,7 +340,7 @@ Their outlines are that none of the approaches solve the problem completely.
 \newline
 The paper "Measuring Catastrophic Forgetting in Neural Networks" compares five different mechanisms (regularization, ensembling, rehearsal, dual-memory, and sparse-coding) on real-world images and sounds \cite{measuring_cf_in_nns}.
 Their results are that the mechanisms vary on the training paradigm and type of data in the dataset \cite{measuring_cf_in_nns}.
-Yet they conclude that the catastrophic forgetting problem has to be solved \cite{measuring_cf_in_nns}.
+Yet, they conclude that the catastrophic forgetting problem has to be solved \cite{measuring_cf_in_nns}.
 \newline
 "A comprehensive, application-oriented study of catastrophic forgetting in DNNS" \cite{cf_application_oriented_study} tests multiple methods on the most popular datasets \cite{cf_application_oriented_study}.
 Their results are that there is no method that avoids catastrophic forgetting under application conditions \cite{cf_application_oriented_study}.
@@ -349,11 +349,11 @@ Their results are that there is no method that avoids catastrophic forgetting un
 \label{project_goals}
 
 This article deals with specific parts of previous works on overcoming catastrophic forgetting.
-As proposed in the related works (Section \ref{intro_related_work}) many methods use the Fisher information matrix.
-In fact, many methods like EWC, BWC or IMM use diagonal assumption of the FIM.
+As proposed in the related works (Section \ref{intro_related_work}), many methods use the Fisher information matrix.
+In fact, many methods like EWC, BWC or IMM use the diagonal assumption of the FIM.
 This article takes a closer look into simplifying the computation and interpretation of the Fisher information matrix.
 This simplification of the Fisher information matrix is tested on a reimplementation of the Elastic Weight Consolidation algorithm.
-As proposed later EWC uses the Fisher information matrix to protect weights of earlier learned tasks \cite{elastic-weight-consolidation}.
+As proposed later, EWC uses the Fisher information matrix to protect weights of earlier learned tasks \cite{elastic-weight-consolidation}.
 Their paper does not establish why they only use the diagonal of the Fisher information matrix.
 Hence, this article tries to come up with an explanation based on mathematical principles.
 In order to test the alternative together with the EWC algorithm, this article shows the performance on several sequential learning tasks (SLTs).
@@ -367,25 +367,30 @@ In order to test the alternative together with the EWC algorithm, this article s
     \label{fig:intro_mnist_examples}
 \end{figure}
 
-It uses the MNIST dataset to train the network and to create multiple sequential learning tasks (SLTs).
-MNIST is split into three types.
-Each task of every type has its own separated training set and test set.
-All sequential learning tasks of the types used in this article have two subtasks.
-The first task is $T_1$ and the second $T_2$.
+The MNIST dataset is used to train the network and to create multiple sequential learning tasks (SLTs).
+MNIST is a collection of pictures with handwritten numbers from zero to nine.
+All pictures with the same number characterize a class.
+\newline
+Three experiments include two sequential learning tasks.
+The first task is called $T_1$ and the second task is called $T_2$.
+The varied experiments are the following:
 
-\subsubsection*{Disjoint SLTs (D9-1 and D5-5)}
+\subsubsection*{Disjoint SLTs - D9-1}
 
-Two benchmark types are disjointed from the MNIST set.
-The D5-5 benchmark splits the MNIST set into each five classes.
-Apart from that, the D9-1 benchmark uses nine classes for the first task and one class for the second task.
-The layout of the numbers in the split tasks is not given.
-For convenience this article split always the number zero to four in $T_1$ and five to nine in $T_2$ for the D5-5 type.
-The D9-1 type is split into $T_1$ with the number zero to eight and $T_2$ with the number nine.
+In this experiment the MNIST dataset is disjointed.
+The first task $T_1$ contains nine randomly selected classes.
+The remaining class defines the task $T_2$.
 
-\subsubsection*{Permuted SLTs (P10-10)}
+\subsubsection*{Disjoint SLTs - D5-5}
 
-The thrid type consists of a permuted MNIST dataset.
-The first task is the original MNIST and the following tasks are permuted MNIST sets.
+As well as in the experiment explained above, the MNIST dataset is disjointed.
+The first task $T_1$ contains five randomly selected classes.
+The remaining five classes define the task $T_2$.
+
+\subsubsection*{Permuted SLTs - P10-10}
+
+This experiment consists of the original MNIST dataset as the first task $T_1$.
+The second task includes a permuted MNIST dataset.
 
 \begin{figure}[H]
     \centering
