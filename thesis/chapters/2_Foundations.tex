@@ -81,8 +81,8 @@ It is a great resource to test new neural network algorithms in a supervised lea
 \section{Deep Neural Network}
 \label{foundations_deep_neural_network}
 
-The Introduction gave a general overview for the understanding of a neural network.
-This section shows the construct and the mathematics of the network used for the elastic weight consolidation implementation and scenario testing.
+The Introduction provides a general overview of a neural network.
+This section shows the construct and the mathematics of the network, that the reimplementation of the Elastic Weight Consolidation uses.
 
 As described, a neural network is a collection of layers.
 Every layer contains a fixed number of neurons.
@@ -145,7 +145,7 @@ Figure \ref{fig:dnn_node_procedure} shows the computation structure of each neur
     \label{fig:dnn_node_procedure}
 \end{figure}
 
-The value of a neuron can be calculated like the following \cite{medium_nn_from_scratch}:
+The output of each neuron is calculated as follows: \cite{medium_nn_from_scratch}
 
 \begin{equation}
 y = b + \sum_{i} x_i w_i
@@ -173,19 +173,21 @@ B = [ b_1 \dots b_j ]
 
 Finally, the result of this calculation is passed through an activation function.
 This activation function is the key element of a neural network.
-Without it, a neural network would just be a combination of linear functions, which can be combined into one linear function.
-The activation function modifies the result in a probabilistic way.
+Without it, a neural network would just be a combination of linear functions, which could be combined into one linear function.
+The activation function modifies the result.
 Important to mention is, that the activation function has a significant impact on the speed of learning.
-The network in this article uses the ReLU as an activation function for the hidden layers \cite{math_nn_skalski,relu}:
+The network in this article uses the ReLU as the activation function for all hidden layers \cite{math_nn_skalski,relu}:
 
 \begin{equation}
     ReLU(x) = max(0,x)
 \end{equation}
 
-The output of the last layer will be computed as logits:
+The unnormalized predictions (logits) of the last layer are computed without the activation function.
+Still, they are quiet similar to the hidden layer calculations:
+
 $$l = (x*w)+b$$
 
-On the output layer it uses the softmax function, which connects the output classes in a probabilistic way:
+The softmax function normalizes the logits:
 
 \begin{equation}
     \begin{split}
@@ -198,17 +200,14 @@ On the output layer it uses the softmax function, which connects the output clas
     p = S(l)
 \end{equation}
 
-After a prediction by the calculation of all neurons and layers, the network needs a source of information on the progress of the learning process.
+After a prediction the network needs a source of information on the progress of the learning process.
 This is where the loss function is introduced.
 It is designed to show how bad the classification to the right solution is.
 In this article the crossentropy loss function is used.
 \cite{math_nn_skalski, medium_nn_from_scratch}
 
 \begin{equation}
-    CE(r,y) = -\sum_{i=1}^K y_i \log(r_i)
-\end{equation}
-\begin{equation}
-    loss = CE(p, y)
+    \mathcal{L}^{CE}(p,y) = -\sum_{i=1}^K y_i \log(p_i)
 \end{equation}
 
 In the training, the dataset is split into multiple batches.
@@ -223,7 +222,7 @@ On this output the learning process gets applied.
 The learning process is about adapting the weights and biases to optimize the accuracy.
 This is done by minimizing the loss function.
 The process of updating the weights and biases is called Backpropagation.
-It is an algorithm which calculates error gradients with respect to each network variable. % TODO check if this is correct
+It is an algorithm which calculates error gradients with respect to each network variable.
 Those gradients are later used in an optimization algorithm called Gradient Descent.
 This method searches a function minimum.
 After the minimum is found, it applies its results to all parameters in the network.
