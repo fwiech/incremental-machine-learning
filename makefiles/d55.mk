@@ -1,4 +1,4 @@
-.PHONY: D55 D55_FIM_A D55_FIM_B D55_GM_A D55_GM_B
+.PHONY: D55 D55_FIM_A D55_FIM_B D55_GM_A D55_GM_B plot_D55 plot_D55_FIM plot_D55_GM
 
 checkpoint_55_A_FIM := '55_FIM_A'
 checkpoint_55_B_FIM := '55_FIM_B'
@@ -6,7 +6,9 @@ checkpoint_55_B_FIM := '55_FIM_B'
 checkpoint_55_A_GM := '55_GM_A'
 checkpoint_55_B_GM := '55_GM_B'
 
-D55: D55_FIM_A D55_FIM_B D55_GM_A D55_GM_B
+D55: D55_FIM_A D55_FIM_B D55_GM_A D55_GM_B plot_D55_FIM plot_D55_GM
+
+plot_D55: plot_D55_FIM plot_D55_GM
 
 D55_FIM_A:
 	@echo "train first task with FIM"
@@ -53,3 +55,17 @@ D55_GM_B:
 	--batch_matrix 1000 \
 	-s ${checkpoint_55_B_GM} \
 	-d 50
+
+plot_D55_FIM:
+	python3 src/plots/training.py \
+	--title 'D5-5 FIM' \
+	-t1 checkpoints/${checkpoint_55_A_FIM}/ \
+	-t2 checkpoints/${checkpoint_55_B_FIM}/ \
+	-s D55_FIM
+
+plot_D55_GM:
+	python3 src/plots/training.py \
+	--title 'D5-5 GM' \
+	-t1 checkpoints/${checkpoint_55_A_GM}/ \
+	-t2 checkpoints/${checkpoint_55_B_GM}/ \
+	-s D55_GM
