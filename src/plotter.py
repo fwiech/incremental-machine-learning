@@ -11,7 +11,7 @@ import json
 
 from pprint import pprint
 
-def plotter(taskA, taskB, title):
+def plotter(taskA, taskB, title, save=None):
     title_font_size = 25
     legend_font_size = 15
 
@@ -36,32 +36,31 @@ def plotter(taskA, taskB, title):
     complete = dataA['plots']['plots']['Complete']
 
     lastAindex = dataA['plots']['iters'][-1]
-
-    if 'Inverse_Task' in dataA['plots']['plots']:
-        if dataA['plots']['plots']['Inverse_Task'][-1] == 0.:
-            inverse_b_iters = [(x+lastAindex) for x in list(dataB['plots']['iters'])]
-            task_b = dataB['plots']['plots']['Task']
-        else:
-            inverse_b_iters = iters + [(x+lastAindex)
-                               for x in list(dataB['plots']['iters'])]
-            task_b = dataA['plots']['plots']['Inverse_Task'] + dataB['plots']['plots']['Task']
-    else:
-        inverse_b_iters = [(x+lastAindex)
-                           for x in list(dataB['plots']['iters'])]
-        task_b = dataB['plots']['plots']['Task']
-
+    
     task += dataB['plots']['plots']['Inverse_Task']
     iters += [(x+lastAindex) for x in list(dataB['plots']['iters'])]
 
+    inverse_b_iters = [(x+lastAindex)
+                       for x in list(dataB['plots']['iters'])]
+    task_b = dataB['plots']['plots']['Task']
+
     complete += dataB['plots']['plots']['Complete']
 
-    plt.plot(iters, task, '^', label="D1", linewidth=4.0,
-             markersize=10, markerfacecolor='w', markeredgecolor='black')
 
-    plt.plot(inverse_b_iters, task_b, 'o', label="D2",
-             linewidth=4.0, markersize=10, markerfacecolor='w', markeredgecolor='black')
+    plt.plot(iters, task, '-^', color="blue", label="T1", linewidth=2.0,
+             markersize=10, markerfacecolor='w', markeredgecolor='black', markevery=5)
 
-    plt.plot(iters, complete, '-', color='black', label="D1 + D2", linewidth=4.0, markersize=10)
+    plt.plot(inverse_b_iters, task_b, '-s', color="red", label="T2",
+             linewidth=2.0, markersize=10, markerfacecolor='w', markeredgecolor='black', markevery=5)
+
+    plt.plot(iters, complete, '-o', color='green', label="T1 + T2",
+             linewidth=2.0, markersize=10, markerfacecolor='w', markeredgecolor='black', markevery=5)
+
+    plt.axis([0, iters[-1], 0, 100])
+
+    plt.grid()
+    plt.margins(0)  # remove default margins (matplotlib verision 2+)
+    plt.axvspan(lastAindex, iters[-1], facecolor='black', alpha=0.2)
 
     plt.legend(loc=4, prop=legend_font)
     plt.ylabel('Accuracy')
@@ -69,52 +68,37 @@ def plotter(taskA, taskB, title):
 
     plt.title(title, fontsize=title_font_size)
 
-    plt.show()
+    if save is None:
+        plt.show()
+    else:
+        plot_train_dir = os.path.join("plots", "training")
+        os.makedirs(plot_train_dir, exist_ok=True)
+        plt.savefig(
+            os.path.join(plot_train_dir, save + ".png")
+        )
 
 
 if __name__ == '__main__':
 
-    # title = "D9-1 FIM"
-    # taskA = "checkpoints91/91_A_FIM/stats.json"
-    # taskB = "checkpoints91/91_B_FIM/stats.json"
-    # plotter(taskA, taskB, title)
+        # argparse
+    parser = argparse.ArgumentParser(description='plot trained models')
 
-    title = "D9-1"
-    taskA = "checkpoints91/91_A_BS1000/stats.json"
-    taskB = "checkpoints91/91_B_BS1000/stats.json"
-    plotter(taskA, taskB, title)
+    # required arguments
+    parser.add_argument('--title', type=str,
+                        required=True, help='plot title')
+    parser.add_argument('-t1', '--taskT1', type=str,
+                        required=True, help='checkpoint directory path')
+    parser.add_argument('-t2', '--taskT2', type=str,
+                        required=True, help='checkpoint directory path')
 
+    parser.add_argument('-s', '--save', nargs='?', type=str,
+                        required=False, help='plot filename')
 
+    args = parser.parse_args()
 
-    # title = "D5-5 FIM"
-    # taskA = "checkpoints55/55_A_FIM/stats.json"
-    # taskB = "checkpoints55/55_B_FIM/stats.json"
-    # plotter(taskA, taskB, title)
-
-    title = "D5-5"
-    taskA = "checkpoints55/55_A_BS1000/stats.json"
-    taskB = "checkpoints55/55_B_BS1000/stats.json"
-    plotter(taskA, taskB, title)
-
-
-
-    # title = "P10-10 FIM"
-    # taskA = "checkpointsPM/PM_A_FIM/stats.json"
-    # taskB = "checkpointsPM/PM_B_FIM/stats.json"
-    # plotter(taskA, taskB, title)
-
-    title = "P10-10"
-    taskA = "checkpointsPM_IT20k/PM_A_BS1000/stats.json"
-    taskB = "checkpointsPM_IT20k/PM_B_BS1000/stats.json"
-    plotter(taskA, taskB, title)
-
-
-    # title = "P10-10 FIM"
-    # taskA = "checkpoints/PM_A_FIM/stats.json"
-    # taskB = "checkpoints/PM_B_FIM/stats.json"
-    # plotter(taskA, taskB, title)
-
-    # title = "P10-10"
-    # taskA = "checkpoints/PM_A_BS1000/stats.json"
-    # taskB = "checkpoints/PM_B_BS1000/stats.json"
-    # plotter(taskA, taskB, title)
+    pprint(vars(args))
+    params = vars(args)
+    taskA = os.path.join(params['taskT1'], "stats.json")
+    taskB = os.path.join(params['taskT2'], "stats.json")
+    print(taskA)
+    plotter(taskA, taskB, params['title'], save=params['save'])

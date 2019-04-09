@@ -8,5 +8,6 @@ mnist.pkl.gz
 # tmp files
 checkpoints/
 checkpoints*/
+plots/*
 analyze*.*
 nohup*.out
