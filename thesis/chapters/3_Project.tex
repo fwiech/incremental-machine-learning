@@ -3,7 +3,7 @@
 \section{Code Concept}
 
 In extend to this article a code base is available \footnote{\url{https://www.github.com/florianwiech/incremental-machine-learning}}.
-This code base includes the reimplementation of EWC and the extension of modifying the Fisher information matrix.
+This code base includes the reimplementation of \acrshort{ewc} and the extension of modifying the Fisher information matrix.
 It uses Python 3 with the packages NumPy (version 1.16.1) and Tensorflow (version 1.13.0).
 The concept documents the code structure and procedure.
 
@@ -22,10 +22,10 @@ It loads the MNIST database automatically, reshapes the values and data structur
 After the calculation, it returns the arrays in Python standard datastructures with the extension of multi-dimensional arrays from NumPy.
 \newline
 "\textbf{network.py}" holds the "Network" class.
-The class consists of all neccesary operations for the EWC algorithm with original and adaption.
+The class consists of all neccesary operations for the \acrshort{ewc} algorithm with original and adaption.
 The contructor creates a neural network with 784 input neurons, three hidden layers with 800 neurons each and the ten MNIST output classes.
 In addition to that, it initializes all neccesary functions like loss and accuracy.
-After the initialization, the object offers several methods for training, testing and applying EWC to the task.
+After the initialization, the object offers several methods for training, testing and applying \acrshort{ewc} to the task.
 Figure \ref{fig:concept_class_diagram} shows a class diagram of the Network class.
 
 \begin{figure}[H]
@@ -51,10 +51,10 @@ It offers a command line tool for specification of the neccesary parameters.
 \newline
 The main function executes one task and saves their state in a checkpoint.
 If the executed task is the first task, the network gets initialized.
-In this case the EWC appendix in the loss funtion is not applied.
+In this case the \acrshort{ewc} appendix in the loss funtion is not applied.
 The network gets trained, the matrix gets calculated and the final model with matrix calculation is saved in a checkpoint.
 For each following ongoing task the main file has to be restarted with new args values.
-In these cases the network will be initialized with the EWC loss function.
+In these cases the network will be initialized with the \acrshort{ewc} loss function.
 The new created Tensorflow session restores a checkpoint given by the parameter (checkpoint of the task before) and the network gets retrained.
 
 The sequential execution is shown in a sequence diagram.
@@ -78,8 +78,8 @@ Part 2 (Figure \ref{fig:concept_sequence_diagram_part_2}) shows the execution of
 \newpage
 \section{Baseline}
 
-Before adapting the EWC algorithm, the codebase has to proof that it delivers the results of the EWC paper.
-The original EWC algorithm is tested in the constructed benchmarks described in Project Goals (Section \ref{project_goals}):
+Before adapting the \acrshort{ewc} algorithm, the codebase has to proof that it delivers the results of the \acrshort{ewc} paper.
+The original \acrshort{ewc} algorithm is tested in the constructed benchmarks described in Project Goals (Section \ref{project_goals}):
 
 \subsection{Disjoint 9-1 Benchmark}
 
@@ -119,7 +119,7 @@ Figure \ref{fig:ewc_d9-1} shows the trainings of both tasks compared to the accu
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{project/baseline/D91_FIM}
-    \caption{EWC D9-1}
+    \caption{\acrshort{ewc} D9-1}
     \label{fig:ewc_d9-1}
 \end{figure}
 
@@ -162,7 +162,7 @@ Figure \ref{fig:ewc_d5-5} shows the training of a disjoint MNIST with a five cla
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{project/baseline/D55_FIM}
-    \caption{EWC D5-5}
+    \caption{\acrshort{ewc} D5-5}
     \label{fig:ewc_d5-5}
 \end{figure}
 
@@ -206,16 +206,16 @@ Figure \ref{fig:ewc_p10-10} represents the performance of each tassk in both tra
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{project/baseline/P10-10_FIM_IT20k}
-    \caption{EWC P10-10}
+    \caption{\acrshort{ewc} P10-10}
     \label{fig:ewc_p10-10}
 \end{figure}
 
 \newpage
 
-\section{Critical review of EWC and improvements}
+\section{Critical review of \acrshort{ewc} and improvements}
 \label{project_review_improvements}
 
-The EWC loss function uses the original loss function with the EWC appendix:
+The \acrshort{ewc} loss function uses the original loss function with the \acrshort{ewc} appendix:
 
 \begin{equation}
     \mathcal{L} = 
@@ -228,7 +228,7 @@ The EWC loss function uses the original loss function with the EWC appendix:
 
 For a better understanding can the abstract parameter $\theta$ split into the explicit weight and bias parameters.
 The weights are represented as $W^i$ vectors and the biases as $B^i$ vectors, where the index $i$ is for each layer, $i \in \{ 0, \dots, L-1 \}$.
-The EWC term has the following notation:
+The \acrshort{ewc} term has the following notation:
 
 \begin{equation}
     \begin{split}
@@ -268,7 +268,7 @@ In fact it is only the diagonal of the Fisher information matrix:
 \end{equation}
 
 This matrix equation calculates an average over all training samples N.
-As well as the EWC term, it can be split into the weight and bias vectors:
+As well as the \acrshort{ewc} term, it can be split into the weight and bias vectors:
 
 \begin{equation}
     \begin{split}
@@ -288,24 +288,24 @@ As well as the EWC term, it can be split into the weight and bias vectors:
     \end{split}
 \end{equation}
 
-The reports \cite{better-weight-consolidation,elastic-weight-consolidation} justify that the assumption of the diagonal FIM is common practice \cite{elastic-weight-consolidation,better-weight-consolidation,incremental-moment-matching}.
+The reports \cite{better-weight-consolidation,elastic-weight-consolidation} justify that the assumption of the diagonal \acrshort{fim} is common practice \cite{elastic-weight-consolidation,better-weight-consolidation,incremental-moment-matching}.
 It reduces the operations from $O(N^2)$ to $O(N)$, where $N$ is the number of elements in $\theta$ \cite{elastic-weight-consolidation,better-weight-consolidation}.
 This reulsts in a lot faster calculation even in large models \cite{elastic-weight-consolidation,better-weight-consolidation}.
 Moreover, this justification receives rather promising results and holds in some cases.
 \cite{elastic-weight-consolidation,incremental-moment-matching}.
 
-So the main justificaion for the diagonal FIM seems to be the rather promising results.
+So the main justificaion for the diagonal \acrshort{fim} seems to be the rather promising results.
 \newline
-This article tries another calculation on the EWC loss, that is not based on diagonal assumptions, but with a mathematical principle.
+This article tries another calculation on the \acrshort{ewc} loss, that is not based on diagonal assumptions, but with a mathematical principle.
 \newline
-A closer look to the EWC appendix shows, that the term $(\theta_i - \theta^*_{T_1,i})^2$ calculates the divergence between the new calculated parameters and the parameters of the old task.
+A closer look to the \acrshort{ewc} appendix shows, that the term $(\theta_i - \theta^*_{T_1,i})^2$ calculates the divergence between the new calculated parameters and the parameters of the old task.
 With the square they are made positive.
 At this point is the original algorithm multiplied by the diagonal FIM, which provides the importance.
 So this article wants to find a way to measure the importance of the parameters.
 Here this article fills the gap with the first derivative of the loss by the parameters.
 The understanding of the first derivative is the slope of every parameter.
 So a change of the higher gradients compared to the other parameters would bring the network faster out of balance.
-And this is, what EWC algorithm wants to protect. Their goal is it to stay as close as possible to the old important parameters and just adjust the ones with less importance.
+And this is, what \acrshort{ewc} algorithm wants to protect. Their goal is it to stay as close as possible to the old important parameters and just adjust the ones with less importance.
 The first derivative of the loss with the parameters over all training samples of a batch N:
 
 \begin{equation}
@@ -370,15 +370,15 @@ Since $\theta$ only consists of weight and bias vectors, it can be re-arrange fo
     \end{split}
 \end{equation}
 
-For convenience this article uses the shorthand "GM" (Gradient Matrix) for the new matrix operation.
+For convenience this article uses the shorthand \acrfull{gm} for the new matrix operation.
 \newline
-The comparison between FIM and GM shows that their similar, but not the same for $N > 1$.
-The FIM uses the square of the first derivation of each sample. GM on the other hand takes the gradient of a training set (batch) as an importance indicator and squares it for a positive result.
-However, in the case of $N=1$, the Gradient Matrix is identical to the FIM.
+The comparison between \acrshort{fim} and \acrshort{gm} shows that their similar, but not the same for $N > 1$.
+The \acrshort{fim} uses the square of the first derivation of each sample. \acrshort{gm} on the other hand takes the gradient of a training set (batch) as an importance indicator and squares it for a positive result.
+However, in the case of $N=1$, the Gradient Matrix is identical to the \acrshort{fim}.
 $N=1$ means that the training set (batch) only contains one sample.
 
-The current reference implementation \footnote[1]{\url{https://github.com/ariseff/overcoming-catastrophic}} of EWC uses Tensorflow.
-A problem with calculating the FIM in Tensorflow is that it is neccesary to get the gradients for every sample but Tensorflow does not expose them.
+The current reference implementation \footnote[1]{\url{https://github.com/ariseff/overcoming-catastrophic}} of \acrshort{ewc} uses Tensorflow.
+A problem with calculating the \acrshort{fim} in Tensorflow is that it is neccesary to get the gradients for every sample but Tensorflow does not expose them.
 So the reference implementation built a complex workaround by hardcoding the gradients directly into the computation graph of Tensorflow.
 This increases the memory consumption by the batch size.
 It results that the developer set the batch size for this computation to the fixed rate of 100, because the computation of a full batch would directly run out of memory.
@@ -390,7 +390,7 @@ The following section tests this modification on the D9-1, D5-5 and P10-10 bench
 \newpage
 \section{Experimental Results}
 
-This following section shows the results of EWC with the Gradient matrix.
+This following section shows the results of \acrshort{ewc} with the Gradient matrix.
 It tests several parameter values.
 Mainly the learning rate and lambda are varied.
 The network features are listed in Section \ref{foundations_deep_neural_network}.
@@ -401,7 +401,7 @@ The network features are listed in Section \ref{foundations_deep_neural_network}
 All experiments with a disjoint nine to one test on MNIST are split in the task $T_1$ with numbers zero to eight and task $T_2$ with number nine.
 Task $T_1$ was trained on 54,000 samples, split into batches with a size of 100.
 The learning rate amounted 0.001.
-The calculation of the modified FIM was done with a batch size of 1,000.
+The calculation of the modified \acrshort{fim} was done with a batch size of 1,000.
 This reults in a performance of 95.72\% on the $T_1$ testset and 86.06\% on the complete set.
 
 Besides, Figure \ref{fig:exp_d9-1_bs1k} shows the training of $T_1$ the retraining of the network with $T_2$.
@@ -480,7 +480,7 @@ The matric calculation for the second task was done with an average gradient of 
 
 Figure \ref{fig:exp_d5-5_bs1k} show both tasks $T_1$ and $T_2$.
 In this case $T_2$ was trained with 29,400 samples, a batch size of 100 and a learning rate of 0.00001.
-The EWC loss was calculated with $\lambda = \frac{1}{0.00001} = 100,000$.
+The \acrshort{ewc} loss was calculated with $\lambda = \frac{1}{0.00001} = 100,000$.
 The result of $T_2$ training is a performance of 82.30\% on $T_2$, 76.73\% on $T_1$ and an accuracy of 79.33\% on the complete dataset.
 This shows that the network achvieved an increase of 28.63\%.
 
@@ -549,7 +549,7 @@ This experiment type performs in $T_1$ a training on the complete dataset and in
 \newline
 $T_1$ properties are: 60,000 samples into 60 batches with a size of 100, a learning rate of 0.001 and 2,500 iterations.
 This results in an accuracy of 94.76\%.
-The matrix calculation fot the EWC loss used a batch size of 1,000.
+The matrix calculation fot the \acrshort{ewc} loss used a batch size of 1,000.
 \newline
 This experiment was as well as the baseline trained with 20,000 iterations on $T_2$.
 The change of the learning rate to 0.00001 and $\lambda = \frac{1}{0.00001} = 100,000$, $T_2$ achives a performance of 91.53\%.

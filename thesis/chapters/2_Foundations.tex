@@ -308,10 +308,10 @@ By showing tests in supervised learning and reinforcement learning, several task
 \cite{elastic-weight-consolidation}
 
 According to their paper, many configurations of $\theta$ (set of weights and biases) will result in the same performance of the network.
-This is a crucial information for EWC.
+This is a crucial information for \acrshort{ewc}.
 Its goal is to over-parametersize $\theta$ and to find a solution for $\theta$ at the next task.
 This solution needs to be close to the previous task solution of $\theta$.
-While learning the next task, EWC wants to protect the performance of the previous task by limiting the parameters.
+While learning the next task, \acrshort{ewc} wants to protect the performance of the previous task by limiting the parameters.
 They should stay in a given region for a low error of the previous task.
 \cite{elastic-weight-consolidation}
 
@@ -408,8 +408,8 @@ As a result they propose the new loss function for the upcoming training of task
     \mathcal{L}(\theta) = \mathcal{L}^{CE}(\theta) + \sum_{i} \frac{\lambda}{2} F_{i} (\theta_{i} - \theta_{A,i}^{*})^2
 \end{equation}
 
-The loss $\mathcal{L}(\theta)$ for task B consists of the originial loss $\mathcal{L}^{CE}(\theta)$ and the EWC appendix.
-Lambda ($\lambda$) in the EWC appendix is a factor that determines how important the old task is compared to the new one \cite{elastic-weight-consolidation}.
+The loss $\mathcal{L}(\theta)$ for task B consists of the originial loss $\mathcal{L}^{CE}(\theta)$ and the \acrshort{ewc} appendix.
+Lambda ($\lambda$) in the \acrshort{ewc} appendix is a factor that determines how important the old task is compared to the new one \cite{elastic-weight-consolidation}.
 The parameter $i$ is the iterator for each parameter (weights and biases) of the matrices.
 The parameter F is the Fisher information matrix, which looks like this \cite{incremental-moment-matching}:
 
