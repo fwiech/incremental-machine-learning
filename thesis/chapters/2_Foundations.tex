@@ -302,16 +302,14 @@ In order to overcome this catastrophic forgetting or at least reduce it, a team 
 
 At first they analysed the human brain as well as animal brains.
 Here, they discovered that the mammalian brain may avoid catastrophic forgetting by protecting previously-acquired knowledge.
-They developed an algorithm for deep neural networks and call it Elastic Weight Consolidation.
+They developed an algorithm for deep neural networks and called it Elastic Weight Consolidation.
 By showing tests in supervised learning and reinforcement learning, several tasks could sequentially trained without forgetting older ones.
 \cite{elastic-weight-consolidation}
 
 According to their paper, many configurations of $\theta$ (set of weights and biases) will result in the same performance of the network.
-This is a crucial information for \acrshort{ewc}.
-Its goal is to over-parametersize $\theta$ and to find a solution for $\theta$ at the next task.
-This solution needs to be close to the previous task solution of $\theta$.
+An over-parameterization of $\theta$ enables to find a solution for the next task, where the parameters are close to the previous task.
 While learning the next task, \acrshort{ewc} wants to protect the performance of the previous task by limiting the parameters.
-They should stay in a given region for a low error of the previous task.
+They should stay in a given region for a low error.
 \cite{elastic-weight-consolidation}
 
 In order to determine which values are most important, they see the training from a probabilistic perspective.
