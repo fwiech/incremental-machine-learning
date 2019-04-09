@@ -78,10 +78,10 @@ Part 2 (Figure \ref{fig:concept_sequence_diagram_part_2}) shows the execution of
 \newpage
 \section{Baseline}
 
-Before adapting the \acrshort{ewc} algorithm, the codebase has to proof that it delivers the results of the \acrshort{ewc} paper.
-The original \acrshort{ewc} algorithm is tested in the constructed benchmarks described in Project Goals (Section \ref{project_goals}):
+Before adapting the \acrshort{ewc} algorithm, the codebase has to proof that it delivers the results of the \acrshort{ewc} paper \cite{elastic-weight-consolidation}.
+The implemented \acrshort{ewc} algorithm is tested in the constructed benchmarks described in Project Goals (Section \ref{project_goals}):
 
-\subsection{Disjoint 9-1 Benchmark}
+\subsection{Disjoint 9-1}
 
 In this benchmark the MNIST dataset is split into two tasks.
 The first task $T_1$ includes the numbers zero to eight and the second task $T_2$ number nine.
@@ -109,13 +109,6 @@ The training of the tasks $T_1$ and $T_2$ is implemented with the following hype
     \label{table:base_d91}
 \end{table}
 
-At the end of the $T_1$ training period, the model reaches an accuracy of 96\% on $T_1$.
-The accuracy of the complete dataset is 86\%.
-In the second training ($T_2$ training), the complete dataset peaks at 92\%.
-After the second training period, $T_1$ decreases to 79\%.
-The complete dataset on the other hand reaches an accuracy of 80\% and the new aquired task $T_2$ 97\%.
-Figure \ref{fig:ewc_d9-1} shows the trainings of both tasks compared to the accuracy of the complete dataset:
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{project/baseline/D91_FIM}
@@ -123,7 +116,16 @@ Figure \ref{fig:ewc_d9-1} shows the trainings of both tasks compared to the accu
     \label{fig:ewc_d9-1}
 \end{figure}
 
-\subsection{Disjoint 5-5 Benchmark}
+Figure \ref{fig:ewc_d9-1} shows the training of task $T_1$ (white background) and re-training with task $T_2$ (gray background).
+The blue line ($\triangle$) represents the accuracy on $T_1$, the red line ($\square$) on $T_2$ and the green line ($\bigcirc$) the complete dataset ($T_1 + T_2$).
+After the training, $T_1$ results in 96\% accuracy.
+While re-training, the complete dataset peaks at 92\% and decreases to 80\%.
+Compared to the performance at the end of the training, it indicates a loss of 6\% after the re-training.
+At the end of the re-training, $T_1$ is decreased to 78\% and $T_2$ measures 97\% accuracy.
+\newline
+This documents that the reimplementation works with sequential learning tasks that contain small amounts of data.
+
+\subsection{Disjoint 5-5}
 
 In this benchmark $T_1$ contains the numbers zero to four whereas $T_2$ includes the numbers five to nine.
 
@@ -150,15 +152,6 @@ The training of the tasks $T_1$ and $T_2$ is implemented with the following hype
     \label{table:base_d55}
 \end{table}
 
-The first Task $T_1$ reaches an accuracy of 99\%.
-Since $T_1$ only includes 50\% of the numbers from the MNIST dataset, the accuracy on the complete dataset amounts 51\%.
-In the second training period, the complete dataset reaches a peak of 87\% but designtes to 81\% at the end of the period.
-Then, $T_1$ and $T_2$ perform each with 81\%.
-\newline
-This shows the result, that $T_1$ lost 18\% knowledge, but the network gained 30\% knowledge. Both tasks predict the desired outcome with 81\% accuracy.
-\newline
-Figure \ref{fig:ewc_d5-5} shows the training of a disjoint MNIST with a five class split:
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{project/baseline/D55_FIM}
@@ -166,10 +159,19 @@ Figure \ref{fig:ewc_d5-5} shows the training of a disjoint MNIST with a five cla
     \label{fig:ewc_d5-5}
 \end{figure}
 
-\subsection{Permuted 10-10 Benchmark}
+Figure \ref{fig:ewc_d5-5} shows the training of task $T_1$ (white background) and re-training with task $T_2$ (gray background).
+The blue line ($\triangle$) represents the accuracy on $T_1$, the red line ($\square$) on $T_2$ and the green line ($\bigcirc$) the complete dataset ($T_1 + T_2$).
+After the training, $T_1$ results in 99\% accuracy.
+While re-training, the complete dataset increases its accuracy from 51\% to 81\%.
+At the end of the re-training, $T_1$ is decreased to 80\% and $T_2$ measures 81\% accuracy.
+\newline
+It shows that the reimplementation of the \acrshort{ewc} algorithm works.
+Catastrophic forgetting is reduced in the re-training of an approximately equally task.
+
+\subsection{Permuted 10-10}
 
 This benchmark uses the complete MNIST dataset in the first task $T_1$ and permutes the complete dataset for the second task $T_2$.
-Figure \ref{fig:intro_mnist_permuted_example} shows a MNIST number and its permutation.
+Figure \ref{fig:intro_mnist_permuted_example} shows a MNIST picture with the number zero and its permutation.
 
 The training of the tasks $T_1$ and $T_2$ is implemented with the following hyperparameters:
 
@@ -196,19 +198,21 @@ The training of the tasks $T_1$ and $T_2$ is implemented with the following hype
     \label{table:base_p1010}
 \end{table}
 
-$T_1$ achives an accuracy of 95\%.
-After the second training period, $T_1$ has the same accuracy.
-$T_2$ performs with 92\%.
-This results in 90\% accuracy on the complete dataset.
-
-Figure \ref{fig:ewc_p10-10} represents the performance of each tassk in both training periods:
-
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{project/baseline/P10-10_FIM_IT20k}
+    \includegraphics[width=\textwidth]{project/baseline/PM_FIM}
     \caption{\acrshort{ewc} P10-10}
     \label{fig:ewc_p10-10}
 \end{figure}
+
+Figure \ref{fig:ewc_p10-10} shows the training of task $T_1$ (white background) and re-training with task $T_2$ (gray background).
+The blue line ($\triangle$) represents the accuracy on $T_1$, the red line ($\square$) on $T_2$ and the green line ($\bigcirc$) the complete dataset ($T_1 + T_2$).
+After the training, $T_1$ results in 95\% accuracy.
+The complete dataset starts with 84\% accuracy into the re-training.
+It is able to gain 6\% and quantifies 90\% accuracy at the end of the re-training.
+$T_1$ still measures 95\% accuracy and $T_2$ amounts 92\% accuracy.
+\newline
+The reimplementation is able to learn different data from the same classes, as shown in the EWC paper \cite{elastic-weight-consolidation} (Figure \ref{fig:ewc_permuted_example}).
 
 \newpage
 
