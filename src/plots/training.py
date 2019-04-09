@@ -33,8 +33,6 @@ def plotter(taskA, taskB, title, save=None):
     iters = dataA['plots']['iters']
     task = dataA['plots']['plots']['Task']
 
-    complete = dataA['plots']['plots']['Complete']
-
     lastAindex = dataA['plots']['iters'][-1]
     
     task += dataB['plots']['plots']['Inverse_Task']
@@ -44,8 +42,8 @@ def plotter(taskA, taskB, title, save=None):
                        for x in list(dataB['plots']['iters'])]
     task_b = dataB['plots']['plots']['Task']
 
-    complete += dataB['plots']['plots']['Complete']
-
+    complete = dataB['plots']['plots']['Complete']
+    complete_iter = inverse_b_iters
 
     plt.plot(iters, task, '-^', color="blue", label="T1", linewidth=3.0,
              markersize=15, markerfacecolor='w', markeredgecolor='black', markevery=7)
@@ -53,7 +51,7 @@ def plotter(taskA, taskB, title, save=None):
     plt.plot(inverse_b_iters, task_b, '-s', color="red", label="T2",
              linewidth=3.0, markersize=15, markerfacecolor='w', markeredgecolor='black', markevery=7)
 
-    plt.plot(iters, complete, '-o', color='green', label="T1 + T2",
+    plt.plot(complete_iter, complete, '-o', color='green', label="T1 + T2",
              linewidth=3.0, markersize=15, markerfacecolor='w', markeredgecolor='black', markevery=7)
 
     plt.axis([0, iters[-1], 0, 100])

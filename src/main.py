@@ -152,9 +152,12 @@ def task(**kwargs):
 
 
     plots = {
-        "Task": iter_test_task,
-        "Complete": iter_test
+        "Task": iter_test_task
     }
+    
+    if len(classes) != 10:
+        plots["Complete"] = iter_test
+    
     if mnist_task_inverse is not None:
         plots['Inverse_Task'] = iter_test_task_inverse
     
