@@ -13,7 +13,7 @@ from pprint import pprint
 
 def plotter(taskA, taskB, title, save=None):
     title_font_size = 25
-    legend_font_size = 15
+    legend_font_size = 25
 
     plt.figure(figsize=(20, 10))
 
@@ -47,14 +47,14 @@ def plotter(taskA, taskB, title, save=None):
     complete += dataB['plots']['plots']['Complete']
 
 
-    plt.plot(iters, task, '-^', color="blue", label="T1", linewidth=2.0,
-             markersize=10, markerfacecolor='w', markeredgecolor='black', markevery=5)
+    plt.plot(iters, task, '-^', color="blue", label="T1", linewidth=3.0,
+             markersize=15, markerfacecolor='w', markeredgecolor='black', markevery=7)
 
     plt.plot(inverse_b_iters, task_b, '-s', color="red", label="T2",
-             linewidth=2.0, markersize=10, markerfacecolor='w', markeredgecolor='black', markevery=5)
+             linewidth=3.0, markersize=15, markerfacecolor='w', markeredgecolor='black', markevery=7)
 
     plt.plot(iters, complete, '-o', color='green', label="T1 + T2",
-             linewidth=2.0, markersize=10, markerfacecolor='w', markeredgecolor='black', markevery=5)
+             linewidth=3.0, markersize=15, markerfacecolor='w', markeredgecolor='black', markevery=7)
 
     plt.axis([0, iters[-1], 0, 100])
 
