@@ -420,34 +420,50 @@ The network features are listed in Section \ref{foundations_deep_neural_network}
 
 \subsection{Disjoint 9-1}
 
-% TODO first sentence
-All experiments with a disjoint nine to one test on MNIST are split in the task $T_1$ with numbers zero to eight and task $T_2$ with number nine.
-Task $T_1$ was trained on 54,000 samples, split into batches with a size of 100.
-The learning rate amounted 0.001.
-The calculation of the modified \acrshort{fim} was done with a batch size of 1,000.
-This reults in a performance of 95.72\% on the $T_1$ testset and 86.06\% on the complete set.
+In this experiment the MNIST dataset is split into two tasks.
+The first task $T_1$ includes the numbers zero to eight and the second task $T_2$ number nine.
 
-Besides, Figure \ref{fig:exp_d9-1_bs1k} shows the training of $T_1$ the retraining of the network with $T_2$.
-$T_2$ included 5900 samples that were split into 59 batches and tarined in 2,500 iterations.
-The learning rate of the optimizer was 0.00001 and $\lambda = \frac{1}{0.00001} = 100,000$.
-$T_2$ achives a performance of 97.72\%.
-At the end of both trainings $T_1$ performs with 83.60\%.
-The complete testset indicates an accuracy of 84.72\%, a minus of 1.34\%.
+The training of the tasks $T_1$ and $T_2$ is implemented with the following hyperparameters:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |l|l|l|  }
+        \hline
+        Task $\to$ & $T_1$ & $T_2$ \\
+        \hline\hline
+        samples & 54,000 & 5,900 \\
+        \hline
+        training batch size & 100 & 100 \\
+        \hline
+        training iterations & 2,500 & 2,500 \\
+        \hline
+        learning rate & 0.001 & 0.00001 \\
+        \hline
+        \acrshort{gm} batch size & 1,000 & - \\
+        \hline
+        lambda ($\lambda$) & 0 & 100,000 \\
+        \hline
+    \end{tabular}
+    \caption{Experiment D9-1 parameters}
+    \label{table:exp_d91_params}
+\end{table}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{project/experiments/D91_BS1k}
+    \includegraphics[width=\textwidth]{project/experiments/D91_GM}
     \caption{Experiment D9-1}
     \label{fig:exp_d9-1_bs1k}
 \end{figure}
 
-\newpage
-
-Table \ref{table:exp_d9-1} tests multiple learning rates and lambda values with $T_2$ on the complete dataset.
-Every parameter test was done with 2,500 iterations and a batch size of 100 and 5900 samples.
+Figure \ref{fig:exp_d9-1_bs1k} shows the training of task $T_1$ (white background) and re-training with task $T_2$ (gray background).
+The blue line ($\triangle$) represents the accuracy on $T_1$, the red line ($\square$) on $T_2$ and the green line ($\bigcirc$) the complete dataset ($T_1 + T_2$).
+After the training, $T_1$ results in 96\% accuracy.
+While re-training, the complete dataset peaks at 92\% and decreases to 81\%.
+Compared to the performance at the end of the training, it indicates a loss of 5\% after the re-training.
+At the end of the re-training, $T_1$ is decreased to 79\% and $T_2$ measures 97\% accuracy.
 \newline
-The results show that the best performance is with a learning rate of 0.00001 and a lambda value of 1,000,000.
-With these parameters $T_2$ performs 87.78\%, $T_1$ still has a performance of 74.12\% and the complete dataset of 90.84\%.
+It indicates, that the \acrshort{ewc} algorithm with the Gradient matrix is capable of learning small amounts of data.
+However, it exhibits a significant sacrifice.
 
 \begin{table}[H]
     \centering
@@ -491,42 +507,60 @@ With these parameters $T_2$ performs 87.78\%, $T_1$ still has a performance of 7
     \label{table:exp_d9-1}
 \end{table}
 
-\newpage
+Table \ref{table:exp_d9-1} tests multiple learning rates and lambda values with $T_2$ and the complete dataset.
+Every parameter test was done with 2,500 iterations and a batch size of 100 and 5,900 samples.
+\newline
+The results show that the training delivers the best performance with a learning rate of 0.00001 and a lambda value of 1,000,000.
+With these parameters $T_2$ performs 87.78\%, $T_1$ still has a performance of 74.12\% and the complete dataset of 90.84\%.
 
 \subsection{Disjoint 5-5}
 
-% TODO anfang verbessern (+zeiten)
-The disjoint 5-5 experiments a split into the first class with the numbers zero to four and second class with the numbers five to nine.
-$T_1$ has 30,500 samples split into 305 batches and trained with 2,500 batch cycles.
-The learning rate is 0.001, which results in a $T_1$ performance of 98.66\% and 50.70\% on the complete dataset.
-The matric calculation for the second task was done with an average gradient of 1,000 gradients.
+In this experiment, $T_1$ contains the numbers zero to four whereas $T_2$ includes the numbers five to nine.
 
-Figure \ref{fig:exp_d5-5_bs1k} show both tasks $T_1$ and $T_2$.
-In this case $T_2$ was trained with 29,400 samples, a batch size of 100 and a learning rate of 0.00001.
-The \acrshort{ewc} loss was calculated with $\lambda = \frac{1}{0.00001} = 100,000$.
-The result of $T_2$ training is a performance of 82.30\% on $T_2$, 76.73\% on $T_1$ and an accuracy of 79.33\% on the complete dataset.
-This shows that the network achvieved an increase of 28.63\%.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{project/experiments/D55_BS1k}
-    \caption{Experiment D-5}
-    \label{fig:exp_d5-5_bs1k}
-\end{figure}
-
-\newpage
-
-Table \ref{table:exp_d5-5} lists several parameter tests.
-These tests are built with the same parameters for $T_2$ except of the learning rate and lambda.
-The results are based on a varied learning rate and lambda value.
-The best result is with the learning rate of 0.00001 and a lambda value of 1,000.
-It shows that the complete set has an accuracy of 81.87\%, $T_2$ of 93.64\% and $T_1$ of 71.16\%.
+The training of the tasks $T_1$ and $T_2$ is implemented with the following hyperparameters:
 
 \begin{table}[H]
     \centering
-    \begin{tabular}{ |c|l|l|l|  }
+    \begin{tabular}{ |l|l|l|  }
         \hline
-        \multicolumn{2}{|c|}{parameters} & \multicolumn{2}{c|}{accuracy after $T_2$ training} \\
+        Task $\to$ & $T_1$ & $T_2$ \\
+        \hline\hline
+        samples & 30,500 & 29,400 \\
+        \hline
+        batch size & 100 & 100 \\
+        \hline
+        training iterations & 2,500 & 2,500 \\
+        \hline
+        learning rate & 0.001 & 0.00001 \\
+        \hline
+        \acrshort{gm} batch size & 1,000 & - \\
+        \hline
+        lambda ($\lambda$) & 0 & 100,000 \\
+        \hline
+    \end{tabular}
+    \caption{Experiment D5-5 parameters}
+    \label{table:exp_d55_params}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{project/experiments/D55_GM}
+    \caption{Experiment D5-5}
+    \label{fig:exp_d5-5_bs1k}
+\end{figure}
+
+Figure \ref{fig:exp_d5-5_bs1k} shows the training of task $T_1$ (white background) and re-training with task $T_2$ (gray background).
+The blue line ($\triangle$) represents the accuracy on $T_1$, the red line ($\square$) on $T_2$ and the green line ($\bigcirc$) the complete dataset ($T_1 + T_2$).
+After the training, $T_1$ results in 99\% accuracy.
+While re-training, the complete dataset increases its accuracy from 51\% to 80\%.
+At the end of the re-training, $T_1$ is decreased to 79\% and $T_2$ measures 82\% accuracy.
+It shows that the \acrshort{ewc} algorithm with the Gradient matrix reduces catastrophic forgetting in the re-training of an approximately equally task.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |c|l|l|l| }
+        \hline
+        \multicolumn{2}{|c|}{parameters} & \multicolumn{2}{c|}{accuracy} \\
         \hline
         learning rate & lambda & $T_2$ & complete dataset\\
         \hline
@@ -564,32 +598,60 @@ It shows that the complete set has an accuracy of 81.87\%, $T_2$ of 93.64\% and 
     \label{table:exp_d5-5}
 \end{table}
 
+Table \ref{table:exp_d5-5} summarizes several parameter tests based on Table \ref{table:exp_d55_params}.
+It lists the end accuracy on $T_2$ as well as the complete dataset ($T_1 + T_2$) after the re-training.
+\newline
+A learning rate of 0.00001 and lambda value of 1,000 delivers the best incremental learning quality.
+$T_2$ measures 94\% accuracy and the complete dataset results in 81\%.
+
 \newpage
 
 \subsection{Permuted 10-10}
 
-This experiment type performs in $T_1$ a training on the complete dataset and in $T_2$ on a permuted dataset with the random seed of zero.
+This experiment uses the complete MNIST dataset in the training of task $T_1$ and permutes the complete dataset for the re-training with task $T_2$.
 \newline
-$T_1$ properties are: 60,000 samples into 60 batches with a size of 100, a learning rate of 0.001 and 2,500 iterations.
-This results in an accuracy of 94.76\%.
-The matrix calculation fot the \acrshort{ewc} loss used a batch size of 1,000.
-\newline
-This experiment was as well as the baseline trained with 20,000 iterations on $T_2$.
-The change of the learning rate to 0.00001 and $\lambda = \frac{1}{0.00001} = 100,000$, $T_2$ achives a performance of 91.53\%.
-The complete dataset shows an accuracy of 90.45\% and $T_1$ of still 94.76\%.
+The training of the tasks $T_1$ and $T_2$ is implemented with the following hyperparameters:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ |l|l|l| }
+        \hline
+        Task $\to$ & $T_1$ & $T_2$ \\
+        \hline\hline
+        samples & 60,000 & 60,000 \\
+        \hline
+        permutation seed & - & 0 \\
+        \hline
+        batch size & 100 & 100 \\
+        \hline
+        training iterations & 2,500 & 20,000 \\
+        \hline
+        learning rate & 0.001 & 0.00001 \\
+        \hline
+        \acrshort{gm} batch size & 1,000 & - \\
+        \hline
+        lambda ($\lambda$) & 0 & 100,000 \\
+        \hline
+    \end{tabular}
+    \caption{Experiment P10-10 parameters}
+    \label{table:exp_p1010_params}
+\end{table}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{project/experiments/P10-10_BS1k_IT20k}
-    \caption{P10-10}
+    \includegraphics[width=\textwidth]{project/experiments/PM_GM}
+    \caption{Experiment P10-10}
     \label{fig:exp_p10-10}
 \end{figure}
 
-\newpage
-
-Table \ref{table:exp_d10-10} shows the results of several experiments with the learning rate and lambda of $T_2$.
-The table shows that there are many good outcomes.
-The best outcomes are with the same learning rate as $T_1$ and rather small lambda value.
+Figure \ref{fig:exp_p10-10} shows the training of task $T_1$ (white background) and re-training with task $T_2$ (gray background).
+The blue line ($\triangle$) represents the accuracy on $T_1$, the red line ($\square$) on $T_2$ and the green line ($\bigcirc$) the complete dataset ($T_1 + T_2$).
+After the training, $T_1$ results in 95\% accuracy.
+The complete dataset starts with 84\% accuracy into the re-training.
+It is able to gain 6\% and quantifies 90\% accuracy at the end of the re-training.
+$T_1$ still measures 95\% accuracy and $T_2$ amounts 92\% accuracy.
+\newline
+The challenge of learning different data with the same output classes turns out to be feasible.
 
 \begin{table}[H]
     \centering
@@ -630,5 +692,11 @@ The best outcomes are with the same learning rate as $T_1$ and rather small lamb
         \hline
     \end{tabular}
     \caption{Experiment P10-10}
-    \label{table:exp_d10-10}
+    \label{table:exp_p10-10}
 \end{table}
+
+Table \ref{table:exp_p10-10} summarizes several parameter tests based on Table \ref{table:exp_p1010_params}.
+It lists the end accuracy on $T_2$ and the complete dataset ($T_1 + T_2$) after the re-training.
+\newline
+Many parameter combinations offer promising results.
+Nevertheless, the combination of a small learning rate and a small lambda value outperform higher parameter values.
