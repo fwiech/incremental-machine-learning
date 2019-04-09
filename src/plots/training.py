@@ -96,9 +96,9 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    pprint(vars(args))
+    # pprint(vars(args))
     params = vars(args)
     taskA = os.path.join(params['taskT1'], "stats.json")
     taskB = os.path.join(params['taskT2'], "stats.json")
-    print(taskA)
+    # print(taskA)
     plotter(taskA, taskB, params['title'], save=params['save'])
