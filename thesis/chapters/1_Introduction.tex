@@ -367,11 +367,12 @@ In order to test the alternative together with the \acrshort{ewc} algorithm, thi
     \label{fig:intro_mnist_examples}
 \end{figure}
 
+All benchmarks and experiments use a fully connected deep neural network with 784 inputs, three hidden layers with 800 neurons each and ten output classes.
 The MNIST dataset is used to train the network and to create multiple \acrlong{slt}s.
-MNIST is a collection of pictures with handwritten numbers from zero to nine.
+MNIST is a collection of pictures with handwritten numbers from zero to nine (Figure \ref{fig:intro_mnist_examples}).
 All pictures with the same number characterize a class.
 \newline
-Three experiments include two sequential learning tasks.
+All experiments include two sequential learning tasks.
 The first task is called $T_1$ and the second task is called $T_2$.
 The varied experiments are the following:
 
@@ -380,17 +381,25 @@ The varied experiments are the following:
 In this experiment the MNIST dataset is disjointed.
 The first task $T_1$ contains nine randomly selected classes.
 The remaining class defines the task $T_2$.
+\newline
+This experiment discovers if the algorithm is capable of a re-training with small datasets.
+In this case, a data volume of approximately 10\% is added.
 
 \subsubsection*{Disjoint \acrshort{slt} - D5-5}
 
-As well as in the experiment explained above, the MNIST dataset is disjointed.
+As well as in the experiment above, the MNIST dataset is disjointed.
 The first task $T_1$ contains five randomly selected classes.
 The remaining five classes define the task $T_2$.
+\newline
+% TODO maybe insert, that it should not forget old knowledge
+This experiment challenges the algorithm to handle a re-training with approximately the same data volume like the previous task.
 
 \subsubsection*{Permuted \acrshort{slt} - P10-10}
 
 This experiment consists of the original MNIST dataset as the first task $T_1$.
 The second task includes a permuted MNIST dataset.
+\newline
+This experiment challenges the algorithm to learn  different data-chunks of the same output classes.
 
 \begin{figure}[H]
     \centering
