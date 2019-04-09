@@ -1,10 +1,10 @@
 .PHONY: PM PM_FIM_A PM_FIM_B PM_GM_A PM_GM_B
 
-checkpoint_PM_A_FIM := 'PM_A_FIM'
-checkpoint_PM_B_FIM := 'PM_B_FIM'
+checkpoint_PM_A_FIM := 'PM_FIM_A'
+checkpoint_PM_B_FIM := 'PM_FIM_B'
 
-checkpoint_PM_A_GM := 'PM_A_GM'
-checkpoint_PM_B_GM := 'PM_B_GM'
+checkpoint_PM_A_GM := 'PM_GM_A'
+checkpoint_PM_B_GM := 'PM_GM_B'
 
 PM: PM_FIM_A PM_FIM_B PM_GM_A PM_GM_B
 

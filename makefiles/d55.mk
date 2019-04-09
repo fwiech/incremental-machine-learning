@@ -1,10 +1,10 @@
 .PHONY: D55 D55_FIM_A D55_FIM_B D55_GM_A D55_GM_B
 
-checkpoint_55_A_FIM := '55_A_FIM'
-checkpoint_55_B_FIM := '55_B_FIM'
+checkpoint_55_A_FIM := '55_FIM_A'
+checkpoint_55_B_FIM := '55_FIM_B'
 
-checkpoint_55_A_GM := '55_A_GM'
-checkpoint_55_B_GM := '55_B_GM'
+checkpoint_55_A_GM := '55_GM_A'
+checkpoint_55_B_GM := '55_GM_B'
 
 D55: D55_FIM_A D55_FIM_B D55_GM_A D55_GM_B
 

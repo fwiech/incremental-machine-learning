@@ -1,10 +1,10 @@
 .PHONY: D91 D91_FIM_A D91_FIM_B D91_GM_A D91_GM_B
 
-checkpoint_91_A_FIM := '91_A_FIM'
-checkpoint_91_B_FIM := '91_B_FIM'
+checkpoint_91_A_FIM := '91_FIM_A'
+checkpoint_91_B_FIM := '91_FIM_B'
 
-checkpoint_91_A_GM := '91_A_GM'
-checkpoint_91_B_GM := '91_B_GM'
+checkpoint_91_A_GM := '91_GM_A'
+checkpoint_91_B_GM := '91_GM_B'
 
 D91: D91_FIM_A D91_FIM_B D91_GM_A D91_GM_B
 
