@@ -230,8 +230,10 @@ The \acrshort{ewc} loss function uses the original loss function with the \acrsh
         (\theta_{i} - \theta_{T_1,i}^{*})^2
 \end{equation}
 
-For a better understanding can the abstract parameter $\theta$ split into the explicit weight and bias parameters.
-The weights are represented as $W^i$ vectors and the biases as $B^i$ vectors, where the index $i$ is for each layer, $i \in \{ 0, \dots, L-1 \}$.
+For a better understanding the abstract parameter $\theta$ can be split into the explicit weight and bias parameters.
+The weights are represented as $W^i$ matrices and the biases as $B^i$ vectors.
+The index $i$ stands for each layer, $i \in \{ 0, \dots, L-1 \}$.
+
 The \acrshort{ewc} term has the following notation:
 
 \begin{equation}
@@ -243,7 +245,9 @@ The \acrshort{ewc} term has the following notation:
     \end{split}
 \end{equation}
 
-As proposed in Elastic Weight Consolidation (Section \ref{foundation_ewc}, \cite{elastic-weight-consolidation}) the authors use the Fisher information matrix for the loss calculation. It is calculated over all training samples:
+As proposed in Elastic Weight Consolidation (Section \ref{foundation_ewc}, \cite{elastic-weight-consolidation}) the authors use the Fisher information matrix for the loss calculation.
+The Formula \ref{eq:original_fisher} shows the \acrshort{fim}.
+$N$ represents the training samples, $\mathcal{L}$ the loss functions and $\theta$ the set of weight matrices and bias vectors:
 
 \begin{equation}
     F_{ij} = 
@@ -254,9 +258,10 @@ As proposed in Elastic Weight Consolidation (Section \ref{foundation_ewc}, \cite
         \cdot 
         \frac{\partial \mathcal{L} \left( x_n \right) }{\partial \theta_{j}}
     \right)
+    \label{eq:original_fisher}
 \end{equation}
 
-In fact it is only the diagonal of the Fisher information matrix:
+In fact, they only use the diagonal of the Fisher information matrix:
 
 \begin{equation}
     \begin{split}
@@ -269,18 +274,18 @@ In fact it is only the diagonal of the Fisher information matrix:
             \frac{\partial \mathcal{L} \left( x_n \right) }{\partial \theta_{j}}
         \right)^2
     \end{split}
+    \label{eq:ewc_diagonal_fisher}
 \end{equation}
 
-This matrix equation calculates an average over all training samples N.
-As well as the \acrshort{ewc} term, it can be split into the weight and bias vectors:
+As well as the \acrshort{ewc} term, this matrix can be split into the weight matrices and the bias vectors:
 
 \begin{equation}
     \begin{split}
-        \vec{F}^{W^i}_j & = 
+        F^{W^i}_{j,k} & = 
         \frac{1}{N} 
         \sum_{n=1}^{N} 
         \left(
-            \frac{\partial \mathcal{L} \left( x_n \right) }{\partial W^i_{j}}
+            \frac{\partial \mathcal{L} \left( x_n \right) }{\partial W^i_{j,k}}
         \right)^2
         \\
         \vec{F}^{B^i}_j & = 
@@ -292,25 +297,34 @@ As well as the \acrshort{ewc} term, it can be split into the weight and bias vec
     \end{split}
 \end{equation}
 
-The reports \cite{better-weight-consolidation,elastic-weight-consolidation} justify that the assumption of the diagonal \acrshort{fim} is common practice \cite{elastic-weight-consolidation,better-weight-consolidation,incremental-moment-matching}.
-It reduces the operations from $O(N^2)$ to $O(N)$, where $N$ is the number of elements in $\theta$ \cite{elastic-weight-consolidation,better-weight-consolidation}.
-This reulsts in a lot faster calculation even in large models \cite{elastic-weight-consolidation,better-weight-consolidation}.
-Moreover, this justification receives rather promising results and holds in some cases.
+% structure for understandability
+The reports \cite{better-weight-consolidation,elastic-weight-consolidation} justify that assuming the \acrshort{fim} is diagonal is common practice \cite{elastic-weight-consolidation,better-weight-consolidation,incremental-moment-matching}.
+The assumption, \acrshort{fim} being diagonal, reduces the operations from $O(N^2)$ to $O(N)$ \cite{elastic-weight-consolidation,better-weight-consolidation}.
+$N$ is the number of elements in $\theta$ \cite{elastic-weight-consolidation,better-weight-consolidation}.
+Because of that, matrices - even large ones - are calculated much faster \cite{elastic-weight-consolidation,better-weight-consolidation}.
+In general, this assumption receives rather promising results. % in use with the algorithm
 \cite{elastic-weight-consolidation,incremental-moment-matching}.
 
-So the main justificaion for the diagonal \acrshort{fim} seems to be the rather promising results.
+It seems that the rather promising results are the main justification for using only the diagonal of the \acrshort{fim}.
 \newline
-This article tries another calculation on the \acrshort{ewc} loss, that is not based on diagonal assumptions, but with a mathematical principle.
+This article describes another calculation of the \acrshort{ewc} loss.
+This time the \acrshort{ewc} loss is not based on diagonal assumptions, but instead on a mathematical principle.
 \newline
-A closer look to the \acrshort{ewc} appendix shows, that the term $(\theta_i - \theta^*_{T_1,i})^2$ calculates the divergence between the new calculated parameters and the parameters of the old task.
-With the square they are made positive.
-At this point is the original algorithm multiplied by the diagonal FIM, which provides the importance.
-So this article wants to find a way to measure the importance of the parameters.
-Here this article fills the gap with the first derivative of the loss by the parameters.
-The understanding of the first derivative is the slope of every parameter.
-So a change of the higher gradients compared to the other parameters would bring the network faster out of balance.
-And this is, what \acrshort{ewc} algorithm wants to protect. Their goal is it to stay as close as possible to the old important parameters and just adjust the ones with less importance.
-The first derivative of the loss with the parameters over all training samples of a batch N:
+A closer look to the \acrshort{ewc} appendix shows, that the term $(\theta_i - \theta^*_{T_1,i})^2$ calculates the divergence between the new calculated parameters and the parameters of the previously learned task.
+The square is used to receive only positive values.
+\newline
+The original algorithm uses the diagonal \acrshort{fim}, which shows the importance of the parameters.
+By multiplying the diagonal \acrshort{fim} with the calculated divergence, the algorithm knows, which parameters should be protected.
+\newline
+% In contrast to that, this time, a new way to measure the important parameters is needed.
+% TODO formulation
+In contrast to that, this time, the first derivative of the loss $\mathcal{L}$ according to the parameters is used to measure the importance of the parameters.
+The first derivative of the loss $\mathcal{L}$ according to the parameters is its slope.
+Network adjustments alter the parameters with high gradients significantly compared to the parameters with lower gradients.
+By changing parameters with higher gradients, the network balance is destroyed faster.
+This is why parameters with high gradients are more important than the ones with lower gradients.
+
+Formula \ref{eq:loss_with_derivative} shows the loss function and its first derivative according to the parameters $\theta$. $N$ represents the training samples.
 
 \begin{equation}
     \begin{split}
@@ -324,10 +338,11 @@ The first derivative of the loss with the parameters over all training samples o
         \sum_{n} 
             \frac{\partial \mathcal{L}(x_n)}{\partial \theta_k}
     \end{split}
+    \label{eq:loss_with_derivative}
 \end{equation}
 
-This first derivative gets squared to positive all results and bring the parameters into a higher value space.
-This operation is allowd, because the important factor in the matrix is the ranking between the values, which will not be changed.
+The first derivative gets squared in order to receive positive and higher values.
+The operation is allowed because it does not change the difference of the values, which is the important factor.
 
 \begin{equation}
     \left[
@@ -341,7 +356,7 @@ This operation is allowd, because the important factor in the matrix is the rank
         \right]^2
 \end{equation}
 
-So the calculated matrix with the new approach is shown in Equation \eqref{eq:gradient_matrix}.
+Equation \eqref{eq:gradient_matrix} shows the new approach. $N$ represent the training samples.
 
 \begin{equation}
     \mathcal{F}_k =
@@ -353,16 +368,15 @@ So the calculated matrix with the new approach is shown in Equation \eqref{eq:gr
     \label{eq:gradient_matrix}
 \end{equation}
 
-This matrix calculated the first derivation over all the training samples $N$ in each batch
-Since $\theta$ only consists of weight and bias vectors, it can be re-arrange for the two matrices:
+Since $\theta$ only consists of weight matrices and bias vectors, it can be re-arranged as illustrated:
 
 \begin{equation}
     \begin{split}
-        \vec{F}^{W^i}_j & = 
+        F^{W^i}_{j,k} & = 
         \left(
             \frac{1}{N} 
             \sum_{n=1}^{N}
-            \frac{\partial \mathcal{L} \left( x_n \right) }{\partial W^i_{j}}
+            \frac{\partial \mathcal{L} \left( x_n \right) }{\partial W^i_{j,k}}
         \right)^2
         \\
         \vec{F}^{B^i}_j & = 
@@ -374,22 +388,27 @@ Since $\theta$ only consists of weight and bias vectors, it can be re-arrange fo
     \end{split}
 \end{equation}
 
-For convenience this article uses the shorthand \acrfull{gm} for the new matrix operation.
+The new approach is termed as \acrfull{gm}.
 \newline
-The comparison between \acrshort{fim} and \acrshort{gm} shows that their similar, but not the same for $N > 1$.
-The \acrshort{fim} uses the square of the first derivation of each sample. \acrshort{gm} on the other hand takes the gradient of a training set (batch) as an importance indicator and squares it for a positive result.
-However, in the case of $N=1$, the Gradient Matrix is identical to the \acrshort{fim}.
-$N=1$ means that the training set (batch) only contains one sample.
+The comparison of Formula \ref{eq:ewc_diagonal_fisher} and Formula \ref{eq:gradient_matrix} points out, that both formulas are quite similar.
+Both compute the expectation values over loss gradients.
+\newline
+The \acrshort{fim} specifies to square the gradient of every sample.
+Since, it is common practice to use mini-batches, the gradients are summed up over the mini-batch and averaged at the end of the training step.
+By contrast, the \acrlong{gm} squares the gradient of every mini-batch.
+\newline
+In the case of $N=1$ they are equivalent.
 
 The current reference implementation \footnote[1]{\url{https://github.com/ariseff/overcoming-catastrophic}} of \acrshort{ewc} uses Tensorflow.
-A problem with calculating the \acrshort{fim} in Tensorflow is that it is neccesary to get the gradients for every sample but Tensorflow does not expose them.
-So the reference implementation built a complex workaround by hardcoding the gradients directly into the computation graph of Tensorflow.
+A problem by calculating the \acrshort{fim} in Tensorflow is that it is neccesary to get the gradients for every sample but Tensorflow does not expose them.
+That is why the reference implementation builds a complex workaround by hardcoding the gradients directly into the computation graph of Tensorflow.
 This increases the memory consumption by the batch size.
-It results that the developer set the batch size for this computation to the fixed rate of 100, because the computation of a full batch would directly run out of memory.
+The computation of a full batch would directly run out of memory.
+As a consequence the developer sets the batch size for this computation to the fixed rate of 100.
+In Contrast, the \acrlong{gm} squares the gradients, which solve the problem.
 \cite{github_ewc_issue_one}
-The new matrix in contrast squares the gradient after averaged, which solves this problem.
 
-The following section tests this modification on the D9-1, D5-5 and P10-10 benchmarks.
+The following section tests the \acrlong{gm} on the D9-1, D5-5 and P10-10 benchmarks.
 
 \newpage
 \section{Experimental Results}
