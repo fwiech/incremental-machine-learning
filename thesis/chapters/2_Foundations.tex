@@ -235,17 +235,17 @@ Iterating the Gradient Descent algorithm several times over different examples w
 \section{Catastrophic Forgetting}
 \label{catastrophic_forgetting}
 
-Catastrophic forgetting is an affect that happens, when a trained network gets retrained with a new dataset.
-This dataset could include complete new classes (disjoint MNIST) or the same classes with new information (permuted MNIST).
-The effect is that the network completely forgets the information learned in the dataset before.
+Catastrophic forgetting happens, when a trained network gets retrained with a new dataset.
+This dataset could include completely new classes (disjoint MNIST) or the same classes with new information (permuted MNIST).
+The effect is that the network forgets all the information learned in the previous training.
 \newline
-To show this effect in use, Figure \ref{fig:catastrophic_forgetting_d91_example} and Figure \ref{fig:catastrophic_forgetting_d55_example} present catastrophic forgetting in the two benchmarks D9-1 and D5-5.
+Figure \ref{fig:catastrophic_forgetting_d91_example} and Figure \ref{fig:catastrophic_forgetting_d55_example} show catastrophic forgetting in action.
+The figures demonstrate the training of task $T_1$ (white background) and re-training with task $T_2$ (gray background).
+The blue line ($\triangle$) represents the accuracy on $T_1$ and the red line ($\square$) on $T_2$.
 \newline
-The network is built with 784 inputs, 3 hidden layer with 800 neurons and 10 output classes.
-Each task trained with a learning rate of 0.001, 2,500 iterations and a batch size of 100.
-\newline
-Figure \ref{fig:catastrophic_forgetting_d91_example} shows the D9-1 benchmark. After the $T_1$ training, the accuracy of $T_1$ is at 96\%. In the second task the catastrophic fogetting happens and $T_1$ ends up with an accuracy of 0\%.
-% TODO deeper description (T_2 and complete dataset)
+The neural network uses 784 inputs, 3 hidden layer with 800 neurons and 10 output classes.
+Each task is trained with a learning rate of 0.001, 2,500 iterations and a batch size of 100.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{D91_catastrophic_forgetting}
@@ -253,23 +253,22 @@ Figure \ref{fig:catastrophic_forgetting_d91_example} shows the D9-1 benchmark. A
     \label{fig:catastrophic_forgetting_d91_example}
 \end{figure}
 
-\newpage
+Figure \ref{fig:catastrophic_forgetting_d91_example} shows the D9-1 benchmark.
+After the training, $T_1$ results in 96\% accurcay.
+With the start of the re-training, the accuracy of $T_1$ drops immediately.
+$T_2$ on the other side gets quick results.
+\newline
+The immidiate drop of knowledge is represented by catastrophic forgetting.
 
-In Figure \ref{fig:catastrophic_forgetting_d55_example} the MNIST dataset is split up into two tasks with five classes each.
-The graph shows the accurancies of the two tasks.
-% TODO correct formulation
-The graph shows that the accuracy of the complete set is 50\% after the training of task $T_1$.
-The training of start $T_2$ immediately
-The training start of $T_2$ leads to a imidiatly drop to zero of the $T_1$ accuracy.
-After the training start of task $T_2$, the accuracy of $T_1$ drops to zero.
-The complete set can just predict 50\%.
-% TODO change figure (no complete dataset)
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{D55_catastrophic_forgetting}
     \caption{Catastrophic forgetting D5-5 example}
     \label{fig:catastrophic_forgetting_d55_example}
 \end{figure}
+
+Figure \ref{fig:catastrophic_forgetting_d55_example} shows the D5-5 benchmark.
+As well as in Figure \ref{fig:catastrophic_forgetting_d91_example} the catastrophic forgetting happens immediately after the start of the re-training.
 
 Catastrophic forgetting was first discovered by McCloskey and Cohen in 1989.
 They documented their research in the article "Catastrophic Intereference" \cite{psychology_learning_mccloskey_cohen} and explained the problem in a rather simplified version:
