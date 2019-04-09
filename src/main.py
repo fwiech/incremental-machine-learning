@@ -154,8 +154,8 @@ def task(**kwargs):
     plots = {
         "Task": iter_test_task
     }
-    
-    if len(classes) != 10:
+
+    if len(classes) != 10 and previous is not '':
         plots["Complete"] = iter_test
     
     if mnist_task_inverse is not None:
