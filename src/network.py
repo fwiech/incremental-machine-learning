@@ -202,6 +202,11 @@ class Network():
         
         # timeline plot
         if bool(test_iter_inits):
+
+            iters.append(training_iters)
+            for label, item in test_iter_inits.items():
+                plots['plots'][label].append(self.test(sess, item))
+
             plots['iters'] = iters
             return plots
 
