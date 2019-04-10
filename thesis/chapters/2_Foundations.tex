@@ -232,6 +232,40 @@ He defines how detailed each learning step should be.
 \newline
 Iterating the Gradient Descent algorithm several times over different examples will most likely result in a properly trained neural network.
 
+\subsection{Bayesian Neural Network}
+\label{foundation_bayesian_nn}
+
+The training of a network creates a model.
+The trained model is capable of predicting the learned data.
+However, the model does not predict well for unseen data.
+\cite{bayesian_nn_need, explain_bayesian_nn}
+\newline
+An example for this case would be a neural network that is able to classify dogs and cats image classes.
+If the model now predicts an image of a giraffe, it should ideally predict neither dog or cat. In this case would the probabilities be 50\% each.
+Nevertheless, the softmax function on the output layer always maximizes the probability score of one class.
+This leads to a overconfident decision for one class.
+This is a problem that a Bayesian neural network can solve.
+\cite{bayesian_nn_need, explain_bayesian_nn}
+\newline
+The key idea in the Bayesian view is that everything has a probability distribution attached.
+This means that all model parameters are not specific to one value, but have similar entities.
+These are called random variables and return a different result in each access.
+The process of getting a new value is called sampling.
+The outcome of the variable depends on the associated probability distribution.
+A wider probability distribution results in a more uncertainty.
+\cite{bayesian_nn_need, explain_bayesian_nn}
+\newline
+Traditional neural networks contain fixed weights and biases.
+These determine the transofmration of an input to an output.
+In a Bayesian neural network, all weights and biases have a probability distribution attached to them.
+The image classification consists of multiple prediction iterations.
+Each iteration is a new set of randomized weights and biases applied to the model.
+Instead of a single output prediction, it returns multiple outputs.
+The set of outputs represent a probability distribution as well.
+This receives a confidence and uncertainty in each of the outputs.
+The result of this prediction is, that the network is able to refuse uncertain images.
+\cite{bayesian_nn_need, explain_bayesian_nn}
+
 \section{Catastrophic Forgetting}
 \label{catastrophic_forgetting}
 
@@ -312,11 +346,9 @@ While learning the next task, \acrshort{ewc} wants to protect the performance of
 They should stay in a given region for a low error.
 \cite{elastic-weight-consolidation}
 
-In order to determine which values are most important, they see the training from a probabilistic perspective.
+In order to determine which values are most important, they see the training from a probabilistic perspective (Section \ref{foundation_bayesian_nn}).
 Here, they discovered that the catastrophic forgetting does not happen in a fully Bayesian way.
 \cite{elastic-weight-consolidation}
-
-% TODO Bayes inference
 
 The Bayes theorem describes the probability of an event, based on prior knowledge of conditions that might be related to the event \cite{Bayes_theorem}. \cite{elastic-weight-consolidation, schaeffer_ewc}
 \newline
