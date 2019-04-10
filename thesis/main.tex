@@ -1,0 +1,54 @@
+\include{resources/settings}
+
+\include{titles/graduation}
+\include{titles/statement_of_originality}
+\include{resources/glossaries}
+
+\include{resources/layout}
+
+\begin{document}
+    \pagenumbering{gobble}
+
+    \maketitle
+    \thispagestyle{empty}
+    \newpage
+
+    \statementoforiginality
+    \thispagestyle{empty}
+    \newpage
+
+    \input{chapters/0_Abstract.tex}
+    \thispagestyle{empty}
+    \newpage
+
+    \tableofcontents
+    \thispagestyle{empty}
+    \newpage
+
+    \printnoidxglossary[type=\acronymtype,title=List of Abbreviations, toctitle=List of Abbreviations, nonumberlist, nopostdot]
+    \thispagestyle{empty}
+    \newpage
+
+    % chapters
+    \pagenumbering{arabic}
+
+    \input{chapters/1_Introduction.tex}
+    \newpage
+    \input{chapters/2_Foundations.tex}
+    \newpage
+    \input{chapters/3_Project.tex}
+    \newpage
+    \input{chapters/4_Discussion.tex}
+    \newpage
+
+    \pagenumbering{Roman}
+
+    \cleardoublepage
+    \phantomsection
+    \addcontentsline{toc}{chapter}{References}
+    \printbibliography[title=References]
+
+    \listoffigures
+    \listoftables
+
+\end{document}

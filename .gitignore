@@ -11,3 +11,34 @@ checkpoints*/
 plots/*
 analyze*.*
 nohup*.out
+# latex
+# files
+*.pdf
+*.out
+*.log
+*.fls
+*.aux
+*.fdb_latexmk
+*.gz
+__*
+*.bbl
+*.blg
+*.toc
+*.run.xml
+*.bcf
+*.toc
+*.aux
+*.lof
+*.glo
+*.ist
+*.acn
+*.xmpi
+*.lot
+*.icc
+*.ICC
+*.synctex*
+*.ilg
+
+# dirs
+notes/
+notex/

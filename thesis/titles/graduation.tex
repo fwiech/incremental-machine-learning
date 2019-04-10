@@ -1,0 +1,160 @@
+\makeatletter
+\newcommand*{\englishTitle}[1]{\gdef\@englishTitle{#1}}
+\newcommand*{\gradeType}[1]{\gdef\@gradeType{#1}}
+\newcommand*{\firstExaminer}[1]{\gdef\@firstExaminer{#1}}
+\newcommand*{\secondExaminer}[1]{\gdef\@secondExaminer{#1}}
+\newcommand*{\authorBirthplace}[1]{\gdef\@authorBirthplace{#1}}
+\newcommand*{\submitDate}[1]{\gdef\@submitDate{#1}}
+\newcommand*{\courseOfStudies}[1]{\gdef\@courseOfStudies{#1}}
+\newcommand*{\university}[1]{\gdef\@university{#1}}
+\newcommand*{\authorLastname}[1]{\gdef\@authorLastname{#1}}
+\newcommand*{\authorFirstname}[1]{\gdef\@authorFirstname{#1}}
+
+
+\renewcommand*{\maketitle}{
+	\begin{titlepage}
+		\newgeometry{left=3.8cm,right=2.5cm,top=4.6cm,bottom=2.5cm}
+			\begingroup
+				\fontsize{44pt}{46pt}\selectfont
+				{\bfseries Bachelor Thesis}
+			\endgroup
+
+			\vskip 1.44cm
+
+			\begingroup
+			\fontsize{8pt}{6pt}\selectfont
+			Title of Thesis
+			\endgroup
+
+			\vskip -0.02cm
+
+			\begingroup
+			\fontsize{16pt}{16pt}\selectfont
+			{\bfseries \@englishTitle\par}
+			\endgroup
+			\vskip -0.1cm
+
+			\noindent\rule{15cm}{0.4pt}
+			
+			\vskip 0.05cm
+
+			\begingroup
+			\fontsize{8pt}{6pt}\selectfont
+			Degree
+			\endgroup
+
+			\vskip -0.15cm
+
+			\begingroup
+			\fontsize{12pt}{14pt}\selectfont
+				{\@gradeType}
+			\endgroup
+			\vskip -0.15cm
+
+			\noindent\rule{15cm}{0.4pt}
+			
+			\vskip 0.05cm
+
+			\begingroup
+			\fontsize{8pt}{6pt}\selectfont
+			Name, Place of Birth
+			\endgroup
+
+			\vskip -0.15cm
+
+			\begingroup
+			\fontsize{12pt}{14pt}\selectfont
+				{\@authorFirstname} {\@authorLastname}, {\@authorBirthplace}
+			\endgroup
+			\vskip -0.15cm
+
+			\noindent\rule{15cm}{0.4pt}
+			
+			\vskip 0.05cm
+
+			\begingroup
+			\fontsize{8pt}{6pt}\selectfont
+			University
+			\endgroup
+
+			\vskip -0.15cm
+
+			\begingroup
+			\fontsize{12pt}{14pt}\selectfont
+				{\@university}
+			\endgroup
+			\vskip -0.15cm
+
+			\noindent\rule{15cm}{0.4pt}
+			
+			\vskip 0.05cm
+
+			\begingroup
+			\fontsize{8pt}{6pt}\selectfont
+			Course of Study
+			\endgroup
+
+			\vskip -0.15cm
+
+			\begingroup
+			\fontsize{12pt}{14pt}\selectfont
+				{\@courseOfStudies}
+			\endgroup
+			\vskip -0.15cm
+
+			\noindent\rule{15cm}{0.4pt}
+			
+			\vskip 0.05cm
+
+			\begingroup
+			\fontsize{8pt}{6pt}\selectfont
+			First Examiner
+			\endgroup
+
+			\vskip -0.15cm
+
+			\begingroup
+			\fontsize{12pt}{14pt}\selectfont
+				{\@firstExaminer}
+			\endgroup
+			\vskip -0.15cm
+
+			\noindent\rule{15cm}{0.4pt}
+			
+			\vskip 0.05cm
+
+			\begingroup
+			\fontsize{8pt}{6pt}\selectfont
+			Second Examiner
+			\endgroup
+
+			\vskip -0.15cm
+
+			\begingroup
+			\fontsize{12pt}{14pt}\selectfont
+				{\@secondExaminer}
+			\endgroup
+			\vskip -0.15cm
+
+			\noindent\rule{15cm}{0.4pt}
+			
+			\vskip 0.05cm
+
+			\begingroup
+			\fontsize{8pt}{6pt}\selectfont
+			Date of Submission
+			\endgroup
+
+			\vskip -0.15cm
+
+			\begingroup
+			\fontsize{12pt}{14pt}\selectfont
+				{\@submitDate}
+			\endgroup
+			\vskip -0.15cm
+
+			\noindent\rule{15cm}{0.4pt}
+		\restoregeometry
+	\end{titlepage}
+}
+\makeatother

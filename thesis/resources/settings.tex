@@ -1,0 +1,80 @@
+\documentclass[
+    chapterprefix=false, 
+    12pt, 
+    a4paper, 
+    oneside, 
+    numbers=noendperiod
+]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+\usepackage[english]{babel}
+
+
+% ILLUSTRATIONS
+
+% vector graphic
+\usepackage{tikz}
+\usetikzlibrary{matrix,chains,positioning,decorations.pathreplacing,arrows}
+
+% illustrations (jpg, png, etc.)
+\usepackage{graphicx}
+\graphicspath{{./resources/images/}}
+
+
+% CONTENT
+
+% for placing images at the exact location in latex code
+\usepackage{float}
+
+% enable math
+\usepackage{mathtools}
+\usepackage{amsfonts}
+
+% enables glossaries
+% \usepackage{longtable}
+% \usepackage[acronym]{glossaries}
+
+% XMP data for pdf
+\usepackage{hyperxmp}
+
+% enables links inside the document
+\usepackage[pdftex, pdfa, hidelinks, english]{hyperref}
+% sets links to the figure, not caption. important to load it after hyperref package
+\usepackage[all]{hypcap}
+
+% \usepackage{xmpinclude}
+
+\usepackage[toc, acronym]{glossaries}
+
+% TYPOGRAPHIE
+
+% change Table of Contents title in babel or polyglossia package
+% For the report document class, the command \chapter is defined in the file report.cls, starting on line 339 or so. Contained in the definition of the \chapter macro is the instruction \thispagestyle{plain}, instructing LaTeX to set the chapter's first page in the so-called "plain" style.
+% To switch the page style of the first page of a chapter from "plain" to "fancy", you could load the etoolbox package and patch the definition of the \chapter macro:
+\usepackage{etoolbox}
+\patchcmd{\chapter}{\thispagestyle{plain}}{\thispagestyle{fancy}}{}{}
+
+% References
+% https://ftp.fau.de/ctan/macros/latex/contrib/biblatex/doc/biblatex.pdf
+\usepackage[style=alphabetic,sorting=none]{biblatex}
+\addbibresource{references.bib}
+
+% add references to list of contents
+\usepackage[nottoc]{tocbibind}
+
+% multirow tables
+\usepackage{multirow}
+
+% table diagonal split
+\usepackage{diagbox}
+
+% PAGE STYLE
+
+\usepackage{fancyhdr}
+% for use of \pageref{LastPage}
+\usepackage{lastpage}
+
+\usepackage[bottom=35mm,left=25mm,right=25mm]{geometry}
+
+\usepackage[parfill]{parskip}
