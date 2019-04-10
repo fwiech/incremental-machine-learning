@@ -220,7 +220,7 @@ On this output the learning process gets applied.
 \cite{math_nn_skalski, medium_nn_from_scratch}
 \newline
 The learning process is about adapting the weights and biases to optimize the accuracy.
-This is done by minimizing the loss function.
+This is done by minimizing the error of the loss function.
 The process of updating the weights and biases is called Backpropagation.
 It is an algorithm which calculates error gradients with respect to each network variable.
 Those gradients are later used in an optimization algorithm called Gradient Descent.
@@ -232,19 +232,20 @@ He defines how detailed each learning step should be.
 \newline
 Iterating the Gradient Descent algorithm several times over different examples will most likely result in a properly trained neural network.
 
-\subsection{Bayesian Neural Network}
+\subsection*{Bayesian Neural Network}
 \label{foundation_bayesian_nn}
 
 The training of a network creates a model.
 The trained model is capable of predicting the learned data.
-However, the model does not predict well for unseen data.
+However, the model is not able to determine, if the input is unrelated to the learned data and does not fit in any output class of the network.
 \cite{bayesian_nn_need, explain_bayesian_nn}
 \newline
 An example for this case would be a neural network that is able to classify dogs and cats image classes.
-If the model now predicts an image of a giraffe, it should ideally predict neither dog or cat. In this case would the probabilities be 50\% each.
-Nevertheless, the softmax function on the output layer always maximizes the probability score of one class.
-This leads to a overconfident decision for one class.
-This is a problem that a Bayesian neural network can solve.
+If the model classifies an image of a giraffe, it should ideally predict neither dog or cat.
+At the end of a correct classification process, the probabilities of the two output classes should be 50\% each.
+Nevertheless, the softmax function on the output layer maximizes the probability scores.
+This leads to an overconfident decision for one class.
+It is a problem that a Bayesian neural network can solve.
 \cite{bayesian_nn_need, explain_bayesian_nn}
 \newline
 The key idea in the Bayesian view is that everything has a probability distribution attached.
@@ -252,18 +253,18 @@ This means that all model parameters are not specific to one value, but have sim
 These are called random variables and return a different result in each access.
 The process of getting a new value is called sampling.
 The outcome of the variable depends on the associated probability distribution.
-A wider probability distribution results in a more uncertainty.
+A wider probability distribution results in a greater uncertainty.
 \cite{bayesian_nn_need, explain_bayesian_nn}
 \newline
 Traditional neural networks contain fixed weights and biases.
-These determine the transofmration of an input to an output.
+These determine the transformation of an input to an output.
 In a Bayesian neural network, all weights and biases have a probability distribution attached to them.
 The image classification consists of multiple prediction iterations.
 Each iteration is a new set of randomized weights and biases applied to the model.
-Instead of a single output prediction, it returns multiple outputs.
-The set of outputs represent a probability distribution as well.
-This receives a confidence and uncertainty in each of the outputs.
-The result of this prediction is, that the network is able to refuse uncertain images.
+Instead of a single output prediction it returns multiple outputs.
+The set of outputs represents a probability distribution as well.
+This shows either confidence or uncertainty concerning the output.
+At the end of this prediction, the network is able to refuse uncertain classifications.
 \cite{bayesian_nn_need, explain_bayesian_nn}
 
 \section{Catastrophic Forgetting}
