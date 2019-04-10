@@ -235,9 +235,9 @@ Iterating the Gradient Descent algorithm several times over different examples w
 \section{Catastrophic Forgetting}
 \label{catastrophic_forgetting}
 
-Catastrophic forgetting happens, when a trained network gets retrained with a new dataset.
+Catastrophic forgetting happens, when a trained model gets retrained with a new dataset.
 This dataset could include completely new classes (disjoint MNIST) or the same classes with new information (permuted MNIST).
-The effect is that the network forgets all the information learned in the previous training.
+The effect is that the model forgets all the information learned in the previous training.
 \newline
 Figure \ref{fig:catastrophic_forgetting_d91_example} and Figure \ref{fig:catastrophic_forgetting_d55_example} show catastrophic forgetting in action.
 The figures demonstrate the training of task $T_1$ (white background) and re-training with task $T_2$ (gray background).
