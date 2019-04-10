@@ -1,2 +1,15 @@
 \chapter*{Abstract}
 \label{abstract}
+
+The ability to learn and remember many different tasks is crucial for artificial intelligence.
+Neural networks are not capable of this.
+They suffer from catastrophic forgetting.
+Prior research in the domain of incremental or continual learning shows different approaches, such as Elastic Weight Consolidation \cite{elastic-weight-consolidation} or Incremental Moment Matching \cite{incremental-moment-matching}.
+Some approaches rely on the computation of a so called Fisher information matrix.
+The Fisher information matrix shows rather promising results, but relies on a diagonal assumption and the context of Bayesian neural networks.
+Furthermore, the implementation of the Fisher information matrix in the machine learning framework Tensorflow requires a workaround that greatly increases memory consumtion.
+\newline
+This article proposes a new way of calculating a matrix that replaces the Fisher information matrix.
+It is computed similar as the Fisher information matrix, but does not requirde additional assumptions.
+Moreover, this matrix enables an easy computation in the Tensorflow framework.
+The article documents several benchmarks of an own reimplementation of the Elastic Weight Consolidation \cite{elastic-weight-consolidation} algorithm and the adoption of the new matrix.
