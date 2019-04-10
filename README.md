@@ -1,22 +1,34 @@
-# Incremental Machine Learning
-comparative evaluation of incremental machine learning methods
+# Comparative Evaluation of Incremental Machine Learning
 
-## Elastic Weight Consolidation
-This is an implementation of "Overcoming catastrophic forgetting in neural networks" (https://arxiv.org/abs/1612.00796) for supervised learning in TensorFlow.
+## Abstract
 
-## Running Code
+The ability to learn and remember many different tasks is crucial for artificial intelligence. Neural networks are not capable of this. They suffer from catastrophic forgetting. Prior research in the domain of incremental or continual learning shows different approaches, such as [Elastic Weight Consolidation](https://arxiv.org/abs/1612.00796) or [Incremental Moment Matching](https://arxiv.org/abs/1703.08475). Some approaches rely on the computation of a so called Fisher information matrix. The Fisher information matrix shows rather promising results, but relies on a diagonal as- sumption and the context of Bayesian neural networks. Furthermore, the implementation of the Fisher information matrix in the machine learning framework Tensorflow requires a workaround that greatly increases memory consumtion.
+This article proposes a new way of calculating a matrix that replaces the Fisher infor- mation matrix. It is computed similar as the Fisher information matrix, but does not requirde additional assumptions. Moreover, this matrix enables an easy computation in the Tensorflow framework. The article documents several benchmarks of an own reim- plementation of the [Elastic Weight Consolidation](https://arxiv.org/abs/1612.00796) algorithm and the adoption of the new matrix.
 
-### Show Help
+## Quick start
 
-`python3 main.py -h`
-
-### Example
-
-#### Task 0-8 & 9
+Build all experiments and models with make:
 
 ```bash
-python3 src/main.py --classes 0 1 2 3 4 5 6 7 8 --learnrate 0.001 --iterations 2500 --batch 100 --batch_fisher 1 --save FISH09
+make
 ```
+
+### Benchmarks
+
+#### D9-1
+
 ```bash
-python3 src/main.py --classes 9 --learnrate 0.00001 --iterations 2500 --batch 100 --previous FISH09
+make D91
+```
+
+#### D5-5
+
+```bash
+make D55
+```
+
+#### P10-10
+
+```bash
+make PM
 ```
