@@ -51,10 +51,10 @@ def load_mnist(classes=[], permute_seed=None, reshape=False):
         invert_train = get_partial(x_train, y_train, invert_classes)
         invert_test = get_partial(x_test, y_test, invert_classes)
 
-        if permute_seed is not None:
-            x_train, x_test, train, test, invert_train, invert_test = permute(
-                permute_seed, x_train, x_test, train, test, invert_train, invert_test
-            )
+        # if permute_seed is not None:
+        #     x_train, x_test, train, test, invert_train, invert_test = permute(
+        #         permute_seed, x_train, x_test, train, test, invert_train, invert_test
+        #     )
 
         mnist = ((x_train, y_train), (x_test, y_test))
         return mnist, (train, test), (invert_train, invert_test)
