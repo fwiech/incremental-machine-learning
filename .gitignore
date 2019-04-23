@@ -38,6 +38,8 @@ __*
 *.ICC
 *.synctex*
 *.ilg
+*.nav
+*.snm
 
 # dirs
 notes/
