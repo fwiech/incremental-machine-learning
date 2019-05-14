@@ -1,25 +1,66 @@
 \documentclass[t]{beamer}
 
-\title{Comparative Evaluation of Incremental Machine Learning}
-\subtitle{University of Applied Sciences Fulda}
+% % Handouts
+% \documentclass[handout,t]{beamer}
+% \usepackage{pgfpages}
+% \pgfpagesuselayout{4 on 1}[a4paper,border shrink=5mm,landscape]
+
 \usetheme[
     faculty=phil,
     logo=title_university
     ]{fibeamer}
 
+\usepackage{graphicx}
+\graphicspath{{./resources/images/}}
+
+\usepackage[style=alphabetic,sorting=none]{biblatex}
+\addbibresource{references.bib}
+
+\usepackage{tikz}
+\usetikzlibrary{matrix,chains,positioning,decorations.pathreplacing,arrows}
+
+
+\title{Comparative Evaluation of\\Incremental Machine Learning}
+\subtitle{Colloquium}
+\author{Florian Wiech}
+\institute{University of Applied Sciences Fulda}
+\date{\today}
+
 \begin{document}
-	\frame {
-		\titlepage
-    }
-    \frame{
+
+    \begin{frame}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=\textwidth]{agi}
+            \caption{\cite{agi} AGI - Artificial General Intelligence}
+            \label{fig:agi}
+        \end{figure}
+    \end{frame}
+
+    \begin{frame}[c]
+        \titlepage
+    \end{frame}
+
+    \begin{frame}
         \frametitle{Table of Contents}
-        \framesubtitle{}
-        \begin{itemize}
-            \item …
-        \end{itemize}
-    }
-    \frame{
-        \frametitle{Title}
-        …
-    }
+        \tableofcontents
+    \end{frame}
+    
+    \include{sections/1_Introduction}
+
+    \include{sections/2_EWC}
+
+    \include{sections/3_Conclusion_Outlook}
+
+    \begin{frame}[c]
+        \centering \Huge
+        Thank You!
+    \end{frame}
+
+    % \section{References}
+    \begin{frame}[allowframebreaks]
+        \frametitle{References}
+        \printbibliography
+    \end{frame}
+
 \end{document}
